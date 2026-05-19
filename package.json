@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production --base-href /ng-package-compat/ --prerender true",
     "build:ssr": "ng build --configuration production",
     "serve:ssr": "node --env-file-if-exists=.env dist/ng-package-compat/server/server.mjs",
     "dev:proxy": "node --env-file-if-exists=.env scripts/dev-proxy.mjs",
@@ -17,7 +17,8 @@
     "e2e": "ng e2e",
     "ngpc": "node ./cli/ngpc.mjs",
     "test:cli": "node ./cli/test.mjs",
-    "setup:appwrite": "node ./scripts/bootstrap-appwrite.mjs"
+    "setup:appwrite": "node ./scripts/bootstrap-appwrite.mjs",
+    "deploy": "npx angular-cli-ghpages --dir=dist/ng-package-compat/browser"
   },
   "bin": {
     "ngpc": "./cli/ngpc.mjs"
@@ -57,6 +58,7 @@
     "@types/jasmine": "~5.1.4",
     "@types/node": "^20.14.0",
     "@types/semver": "^7.5.8",
+    "angular-cli-ghpages": "^3.0.3",
     "jasmine-core": "~5.3.0",
     "karma": "~6.4.4",
     "karma-chrome-launcher": "~3.2.0",
