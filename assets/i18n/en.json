@@ -1,0 +1,842 @@
+{
+  "autocomplete": {
+    "searching": "Searching npm…",
+    "resultsCount": "{{ n }} suggestions"
+  },
+  "install": {
+    "ariaLabel": "Install this app",
+    "title": "Install ng-package-compat",
+    "subtitle": "Use it offline, install once, update automatically.",
+    "iosHint": "On iOS: tap Share, then Add to Home Screen.",
+    "button": "Install",
+    "later": "Not now"
+  },
+  "github": {
+    "title": "Import from GitHub",
+    "placeholder": "https://github.com/org/repo or org/repo",
+    "button": "Fetch package.json",
+    "success": "Imported {{ path }} from {{ owner }}/{{ repo }}@{{ ref }}",
+    "error": "Could not fetch package.json from that URL."
+  },
+  "sync": {
+    "title": "Sync",
+    "signIn": "Sign in",
+    "now": "Sync now",
+    "syncing": "Syncing…",
+    "banner": {
+      "aria": "Sign-in suggestion",
+      "history": "Sign in to keep your search history in sync across devices.",
+      "favorites": "Sign in to keep your favorites in sync across devices.",
+      "signIn": "Sign in",
+      "notNow": "Not now",
+      "dismiss": "Dismiss this banner"
+    }
+  },
+  "share": {
+    "button": "Copy share link",
+    "copied": "Link copied to clipboard!",
+    "loaded": "Loaded a shared analysis. You can re-run it freely."
+  },
+  "registry": {
+    "title": "Private registry (Artifactory / GitHub Packages / Verdaccio)",
+    "scope": "Scope",
+    "url": "URL",
+    "auth": "Auth",
+    "tokenYes": "token saved",
+    "tokenNo": "(none)",
+    "globalOverride": "(all packages)",
+    "remove": "Remove",
+    "empty": "No private registries configured. Public npm is used by default.",
+    "addTitle": "Add a registry binding",
+    "token": "Bearer token",
+    "add": "Add binding",
+    "reset": "Reset",
+    "importTitle": "Or paste an .npmrc",
+    "importPlaceholder": "@acme:registry=https://npm.acme.co/\n//npm.acme.co/:_authToken=ghp_xxx",
+    "import": "Import .npmrc",
+    "clearAll": "Clear all"
+  },
+  "policy": {
+    "title": "Policy & rules",
+    "lede": "Block or warn on packages, licenses, scopes, or versions you don't allow in your codebase.",
+    "summary": {
+      "count": "{{ count }} rule(s) · {{ enabled }} enabled",
+      "empty": "No rules — defaults apply."
+    },
+    "remove": "Remove",
+    "add": {
+      "title": "Add a rule",
+      "kind": "Rule kind",
+      "version": "Version",
+      "license": "License (SPDX or glob)",
+      "scopes": "Approved scopes (comma-separated)",
+      "severity": "Severity",
+      "label": "Label (optional)",
+      "note": "Note (optional)",
+      "cta": "Add rule"
+    },
+    "severity": {
+      "block": "Block",
+      "warn": "Warn"
+    },
+    "io": {
+      "title": "Import / export rules (JSON)",
+      "lede": "Paste a JSON array to import; click export to copy your current rules.",
+      "import": "Import",
+      "export": "Export",
+      "clear": "Clear all"
+    },
+    "banner": {
+      "blocked": "{{ count }} policy violation(s) blocking this upgrade",
+      "warning": "{{ count }} policy warning(s) to review",
+      "lede": "Configured rules fired against the current report. Adjust rules above or address the package directly."
+    }
+  },
+  "monitor": {
+    "title": "Monitoring digest",
+    "lede": "What changed since you last ran each project's compatibility analysis.",
+    "lastCheck": "Last check {{ time }}",
+    "healthDelta": "health",
+    "stop": "Stop monitoring",
+    "noChanges": "No changes since last check."
+  },
+  "pr": {
+    "title": "Pull request preview",
+    "lede": "Generated patch and PR description. Open directly on GitHub if you've signed in.",
+    "empty": "No version bumps required — nothing to PR.",
+    "changedCount": "{{ count }} dependency line(s) updated",
+    "diff": "package.json diff",
+    "body": "PR body (Markdown)",
+    "copyDiff": "Copy diff",
+    "copyBody": "Copy body",
+    "repo": "Repository",
+    "activeRepo": "Active repository",
+    "private": "Private",
+    "selectRepo": "Pick a repository…",
+    "typeManually": "Type a different repo manually",
+    "pickFromList": "Pick from your repos",
+    "repoFormatHint": "Use the format owner/repo — e.g. AJ69-i/Miads",
+    "baseBranch": "Base branch",
+    "loadingBranches": "Loading branches…",
+    "targetingBranch": "Targeting branch",
+    "openOnGitHub": "Create Pull Request on GitHub",
+    "openOnGitHubFor": "Create Pull Request for {{ repo }} on GitHub",
+    "openOnGitLab": "Create Merge Request on GitLab",
+    "openOnGitLabFor": "Create Merge Request for {{ repo }} on GitLab",
+    "openOnBitbucket": "Create Pull Request on Bitbucket",
+    "openOnBitbucketFor": "Create Pull Request for {{ repo }} on Bitbucket",
+    "openExistingPr": "Open existing Pull Request #{{ number }}",
+    "openExistingMr": "Open existing Merge Request !{{ number }}",
+    "alreadyMergedPr": "Already merged into {{ branch }} — view PR #{{ number }}",
+    "alreadyMergedMr": "Already merged into {{ branch }} — view MR !{{ number }}",
+    "branchGroup": {
+      "project": "Project branches",
+      "previousUpdates": "Previous tool updates · stack here"
+    },
+    "opening": "Opening…",
+    "opened": "PR opened:",
+    "openedMr": "MR opened:",
+    "signInForButtonGeneric": "Sign in with GitHub, GitLab, or Bitbucket on the workspace page to enable one-click PR/MR creation.",
+    "manualGitlabOnly": {
+      "title": "Type-a-repo entry isn't supported on GitLab yet",
+      "body": "GitLab needs a numeric project id to create a Merge Request, which can't be typed by hand. Pick your project from the scanned list — or sign in with GitHub if you'd rather paste a repo name.",
+      "scanGitlab": "Scan my GitLab projects →",
+      "linkGitHub": "Sign in with GitHub"
+    }
+  },
+  "snapshotDiff": {
+    "title": "Snapshot diff",
+    "lede": "Compare any two saved snapshots — what changed, what got added, what's gone.",
+    "notEnough": "You need at least 2 captured snapshots to compare. You currently have {{ count }}.",
+    "from": "From",
+    "to": "To",
+    "package": "Package",
+    "kind": "Change",
+    "added": "added",
+    "removed": "removed",
+    "changed": "changed"
+  },
+  "wizard": {
+    "title": "Guided upgrade",
+    "lede": "A step-by-step walkthrough — drop your package.json and we'll only show what matters at each stage.",
+    "denseLink": "Switch to dense view",
+    "target": "Target Angular major",
+    "next": "Continue",
+    "back": "Back",
+    "startOver": "Start over",
+    "analyzing": "Analyzing dependencies…",
+    "steps": {
+      "upload": "Upload",
+      "blockers": "Blockers",
+      "bumps": "Bumps",
+      "pr": "Open PR"
+    },
+    "upload": {
+      "title": "Drop your package.json",
+      "lede": "We accept package.json on its own, or together with angular.json, tsconfig.json, .browserslistrc, or a lockfile for richer analysis.",
+      "depsFound": "dependencies parsed",
+      "waiting": "Waiting for a file…"
+    },
+    "blockers": {
+      "title": "Anything that should stop the upgrade",
+      "lede": "Three checks must pass before we go further: policy rules, breaking changes, and deprecated packages.",
+      "policy": "Policy rules",
+      "policyGood": "No policy rules are blocking this upgrade.",
+      "policyBad": "{{ count }} blocking violation(s) — fix these before continuing.",
+      "warns": "warning(s)",
+      "breaking": "Breaking changes",
+      "breakingGood": "No conflicts detected for this Angular target.",
+      "breakingBad": "{{ count }} package(s) won't work on the target Angular version yet.",
+      "deprecated": "Deprecated packages",
+      "deprecatedGood": "Nothing in your tree is officially deprecated.",
+      "deprecatedNote": "{{ count }} package(s) are deprecated — review before merging.",
+      "cantContinue": "Resolve policy blockers first."
+    },
+    "bumps": {
+      "title": "Review the bumps",
+      "lede": "These are the version changes the upgrade will apply, with bundle-size impact summarized above.",
+      "package": "Package",
+      "from": "From",
+      "to": "To",
+      "status": "Status",
+      "empty": "No version bumps required for this target."
+    },
+    "pr": {
+      "title": "Open the pull request",
+      "lede": "Generated patch and PR description. Open it on GitHub in one click if you've signed in."
+    }
+  },
+  "bundleDelta": {
+    "title": "Bundle-size impact",
+    "lede": "Net gzip change across every recommended bump in this report.",
+    "noData": "Bundle data is still loading or unavailable for this set of packages.",
+    "grows": "larger after upgrade",
+    "shrinks": "smaller after upgrade",
+    "flat": "no meaningful change",
+    "splitAria": "Split bar showing share of bytes added vs. removed",
+    "coverage": "Based on {{ withData }} packages with bundle data ({{ missing }} missing).",
+    "growers": "Top growers",
+    "shrinkers": "Top shrinkers"
+  },
+  "orgScan": {
+    "title": "Scan an entire npm org",
+    "placeholder": "@my-org",
+    "button": "Scan org",
+    "scanning": "Scanning…",
+    "summary": "{{ total }} packages: {{ fresh }} fresh / {{ stale }} stale / {{ abandoned }} abandoned / {{ deprecated }} deprecated"
+  },
+  "ai": {
+    "settingsTitle": "AI assistant key",
+    "provider": "Provider",
+    "apiKey": "API key",
+    "model": "Model (optional)",
+    "save": "Save",
+    "verify": "Verify",
+    "clear": "Remove key",
+    "stored": "Your key is stored in this browser only.",
+    "verified": "Key verified — ready to use.",
+    "failed": "Could not reach the provider with that key.",
+    "ask": "Ask the AI assistant",
+    "placeholder": "How do I migrate ngrx 13 to standalone APIs?",
+    "send": "Send",
+    "thinking": "Thinking…",
+    "notConfigured": "Add a provider key in Settings to enable AI answers."
+  },
+  "pdf": {
+    "button": "Export PDF",
+    "preparing": "Preparing PDF…"
+  },
+  "jira": {
+    "button": "Export Jira CSV",
+    "description": "Bulk-import every affected package into Jira."
+  },
+  "summaryBar": {
+    "title": "Project health at a glance",
+    "critical": "Critical",
+    "warning": "Warning",
+    "healthy": "Healthy",
+    "all": "All",
+    "filterAria": "Filter by severity",
+    "active": "Showing {{ shown }} of {{ total }} packages"
+  },
+  "app": {
+    "title": "ng-package-compat",
+    "tagline": "Angular npm package compatibility analyzer",
+    "skipToContent": "Skip to content",
+    "announce": {
+      "routeChanged": "Loaded {{ name }}"
+    },
+    "footer": {
+      "label": "Site footer",
+      "about": "About",
+      "built": "ng-package-compat — built with Angular 21.",
+      "palette": "Press {{ mod }}+{{ k }} for the command palette.",
+      "rights": "© 2026 Ahmed Jab. All rights reserved.",
+      "independence": "This tool is an independent project and is not affiliated with, nor endorsed by, Google or the Angular team."
+    }
+  },
+  "nav": {
+    "search": "Search",
+    "compare": "Compare",
+    "upgrade": "Upgrade",
+    "history": "History",
+    "about": "About",
+    "toggle": "Toggle navigation",
+    "language": "Language",
+    "packageManager": "Package manager",
+    "lightMode": "Switch to light mode",
+    "darkMode": "Switch to dark mode",
+    "signIn": "Sign in",
+    "projects": "Projects"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Error",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "clear": "Clear",
+    "copy": "Copy",
+    "submit": "Submit",
+    "remove": "Remove",
+    "empty": "Nothing to show yet.",
+    "notFound": "Not found",
+    "failedToFetch": "Failed to fetch"
+  },
+  "search": {
+    "title": "Find an npm package",
+    "placeholder": "Enter an npm package name — try rxjs, @angular/material, zone.js",
+    "submit": "Check compatibility",
+    "strategy": "Detection strategy",
+    "packageNameLabel": "Package name",
+    "hint": "Live data from registry.npmjs.org, npm downloads API, and OSV.dev. Press {{ mod }}+{{ k }} for the command palette.",
+    "lookupFailed": "Lookup failed",
+    "recommendationFor": "Recommendation for Angular",
+    "exportCsv": "Export CSV",
+    "exportJson": "Export JSON",
+    "actions": "Actions",
+    "export": "Export",
+    "count": "{{ shown }} of {{ total }} versions",
+    "welcome": "Try it out",
+    "welcomeHint": "Pick one of these to get started:",
+    "welcomeSub": "The app checks peerDependencies[\"@angular/core\"] against a known set of Angular majors, and shows the best stable version for the Angular you target.",
+    "addFavorite": "Add to favorites"
+  },
+  "compare": {
+    "title": "Compare two packages",
+    "subtitle": "See which Angular majors each side supports, side by side.",
+    "pkgAPlaceholder": "Package A (e.g. ngx-toastr)",
+    "pkgBPlaceholder": "Package B (e.g. ngx-sonner)",
+    "submit": "Compare",
+    "bothSupport": "Both support:",
+    "noCommon": "No Angular major is supported by both packages simultaneously.",
+    "pkgAFallback": "Package A",
+    "pkgBFallback": "Package B"
+  },
+  "prosCons": {
+    "title": "AI-generated Pros & Cons",
+    "lede": "Compare {{ a }} and {{ b }} on bundle size, adoption, maintenance, and stability — grounded in objective data, not marketing copy.",
+    "ctaBody": "Get an AI-generated head-to-head between {{ a }} and {{ b }} backed by Bundlephobia, NPM downloads, GitHub activity, and release history.",
+    "generate": "Generate AI Pros & Cons",
+    "ctaHint": "Free via our Groq proxy. Add your own API key in Settings for unlimited generations.",
+    "loading": "Comparing the data… this usually takes 3–6 seconds.",
+    "refresh": "Regenerate",
+    "retry": "Try again",
+    "axesLabel": "Comparison axes",
+    "tie": "Tie",
+    "warnings": "Risk callouts",
+    "recommendation": "Recommendation",
+    "generatedBy": "Generated by {{ provider }} in {{ seconds }}s",
+    "axis": {
+      "bundle-size": "Bundle size",
+      "performance": "Performance",
+      "maintenance": "Maintenance",
+      "api-stability": "API stability",
+      "adoption": "Adoption",
+      "ecosystem-fit": "Ecosystem fit"
+    },
+    "time": {
+      "justNow": "just now",
+      "aMinuteAgo": "a minute ago",
+      "minutesAgo": "minutes ago",
+      "hoursAgo": "hours ago"
+    },
+    "error": {
+      "rateLimitHint": "Free proxy quota reached. Add your own Gemini API key in Settings for unlimited generations, or try again in a minute.",
+      "proxyUnavailableLead": "Two ways to make this work:",
+      "proxyOptionSsr": "Run the full SSR server with GROQ_API_KEY set:",
+      "proxyOptionByo": "Or paste your own Gemini / OpenAI / DeepSeek key in Settings — those calls go browser-direct and don't need the proxy."
+    }
+  },
+  "source": {
+    "drop": {
+      "title": "Drop .ts / .html source files (optional)",
+      "hint": "We'll filter breaking changes to only the ones your code actually touches, with file:line citations. Everything stays in your browser.",
+      "aria": "Drop TypeScript or HTML source files to run a source-aware breaking-change scan",
+      "loaded": "{{ count }} file(s) scanned",
+      "clear": "Clear"
+    }
+  },
+  "codemod": {
+    "title": "Auto-fix previews",
+    "empty": "No codemods registered for this package yet.",
+    "hits": "{{ n }} file(s)",
+    "noHits": "No changes — this codemod didn't match anything in your uploaded files.",
+    "changedLines": "~{{ n }} line(s) changed",
+    "copyPatched": "Copy patched"
+  },
+  "workspace": {
+    "title": "Workspace dependency drift",
+    "projects": "project(s)",
+    "ngDrift": "Angular versions drifting: {{ list }}",
+    "drift": "{{ n }} dep(s) with version drift across projects",
+    "noDrift": "All dependencies are aligned across projects.",
+    "dep": "Dependency",
+    "distinct": "Versions",
+    "copyAlign": "Copy align command"
+  },
+  "history": {
+    "title": "Search history & favorites",
+    "subtitle": "Recent searches are saved locally in this browser.",
+    "favorites": "Favorites",
+    "recent": "Recent searches",
+    "clear": "Clear history",
+    "noFavorites": "No favorites yet — star a package from the search page.",
+    "noHistory": "Your search history is empty.",
+    "trend": "Snapshot trend"
+  },
+  "about": {
+    "title": "About ng-package-compat",
+    "lede": "A small Angular app that answers one question for busy teams: “Does this npm package work with the Angular version I'm on?”",
+    "whatItDoes": "What it does",
+    "howItWorks": "How compatibility is determined",
+    "dataSources": "Data sources",
+    "underHood": "Under the hood",
+    "cta": "Give it a spin",
+    "allClient": "All requests happen client-side, so you only read what you ask for."
+  },
+  "upgrade": {
+    "title": "Angular upgrade & dependency health",
+    "subtitle": "Drop your package.json — optionally alongside angular.json, tsconfig.json, .browserslistrc, or your lockfile. We'll run a full compatibility audit, estimate the effort, flag breaking changes, generate install and rollback commands, and export the plan as Markdown or a CI pipeline.",
+    "searchPlaceholder": "Filter packages by name…",
+    "orPaste": "Or paste a list of packages (one per line)",
+    "analyzeList": "Analyze list",
+    "target": "Target Angular version",
+    "mode": "Input mode",
+    "modeFile": "File upload",
+    "modeList": "Paste list",
+    "analyze": "Analyze",
+    "running": "Analyzing…",
+    "empty": "Drop a package.json or paste a dependency list to begin.",
+    "healthScore": "Project Health Score",
+    "overall": "Overall",
+    "factors": "Factors",
+    "status": {
+      "safe": "Safe",
+      "warn": "Warning",
+      "conflict": "Conflict",
+      "deprecated": "Deprecated"
+    },
+    "counts": {
+      "safe": "Safe",
+      "warn": "Warnings",
+      "conflict": "Conflicts",
+      "deprecated": "Deprecated",
+      "total": "Total",
+      "safeLower": "safe",
+      "warningLower": "warning",
+      "breakingLower": "breaking",
+      "unknownLower": "unknown",
+      "deprecatedLower": "deprecated",
+      "uiAlertLower": "UI alert",
+      "licenseBlockLower": "license block",
+      "peerConflictLower": "peer conflict"
+    },
+    "chip": {
+      "dependencies": "dependencies",
+      "detectedAngular": "Detected Angular",
+      "noAngularCore": "No @angular/core detected",
+      "nxWorkspace": "Nx workspace",
+      "mfeHost": "Module-Federation host",
+      "mfeApps": "{{ count }} apps (MFE)",
+      "angularJson": "angular.json",
+      "tsconfig": "tsconfig",
+      "browserslist": "browserslist"
+    },
+    "mode": {
+      "optimize": "Optimize (current Angular)",
+      "upgrade": "Upgrade to target",
+      "analysisMode": "Analysis mode"
+    },
+    "banner": {
+      "upgradeFromTo": "Upgrade from Angular {{ from }} → {{ to }}",
+      "optimizationOn": "Optimization on Angular {{ ng }}",
+      "health": "Project Health: {{ score }}/100 ({{ label }}) · {{ summary }}",
+      "reportSettings": "Report settings",
+      "parseWarnings": "Parse warnings"
+    },
+    "grades": {
+      "A": "Excellent",
+      "B": "Good",
+      "C": "Needs attention",
+      "D": "Risky",
+      "F": "Critical"
+    },
+    "labels": {
+      "safe": "Safe",
+      "warning": "Warning",
+      "conflict": "Breaking",
+      "unknown": "Unknown"
+    },
+    "actions": {
+      "copyMarkdown": "Copy as Markdown",
+      "copyMarkdownTitle": "Copy as Jira/GitHub Markdown",
+      "githubActions": "GitHub Actions",
+      "gitlabCi": "GitLab CI"
+    },
+    "cmd": {
+      "nxMigrateTitle": "Nx migration (detected Nx workspace)",
+      "nxMigrateHint": "Run from the workspace root. Commits are created per migration.",
+      "nxMigrateCopy": "Copy nx migrate",
+      "oneShotTitle": "One-command upgrade",
+      "oneShotHint": "Run this from your project root.",
+      "oneShotCopy": "Copy ng update",
+      "installTitle": "Install the rest",
+      "installHint": "For packages without ng update schematics.",
+      "installCopy": "Copy install",
+      "rollbackTitle": "🛟 Safe rollback",
+      "rollbackHint": "Run if the upgrade breaks something — restores your original versions.",
+      "rollbackCopy": "Copy rollback",
+      "verifyTitle": "✅ Post-update verification",
+      "verifyHint": "Final sanity check: production build + headless tests.",
+      "verifyCopy": "Copy verify",
+      "verify": "Pre-flight verify",
+      "verifyOk": "Install plan looks clean ({{ n }} packages walked, no peer conflicts).",
+      "verifyBad": "Install would fail — {{ n }} peer conflict(s):"
+    },
+    "peer": {
+      "title": "🧩 Peer-dependency conflicts",
+      "expects": "expects",
+      "butResolves": "but your tree resolves"
+    },
+    "cfg": {
+      "title": "⚙️ Config-file review"
+    },
+    "lock": {
+      "title": "🔍 Lockfile X-ray ({{ kind }})",
+      "scanned": "{{ total }} transitive entries scanned.",
+      "none": "No transitive issues detected."
+    },
+    "mfeSection": {
+      "title": "🧬 Micro-frontend consistency",
+      "apps": "Apps: {{ names }}",
+      "sharedLib": "Shared library",
+      "status": "Status",
+      "versions": "Versions",
+      "consistent": "Consistent",
+      "mismatch": "Mismatch"
+    },
+    "table": {
+      "caption": "Per-package compatibility report",
+      "package": "Package",
+      "status": "Status",
+      "current": "Current",
+      "recommended": "Recommended",
+      "bundle": "Bundle",
+      "license": "License",
+      "action": "Action",
+      "notes": "Notes",
+      "ngUpdate": "ng update",
+      "standalone": "standalone",
+      "standaloneTitle": "Supports standalone APIs at the target",
+      "deprecated": "deprecated",
+      "ui": "UI",
+      "copy": "Copy",
+      "breakingCount": "{{ n }} breaking change(s)",
+      "citedCount": "{{ n }} hit(s) in your code",
+      "inYourCode": "Found in files you uploaded",
+      "docsLink": "Docs ↗",
+      "askClaude": "Ask Claude",
+      "askChatGPT": "Ask ChatGPT",
+      "askGemini": "Ask Gemini",
+      "since": "since",
+      "alternatives": "🧩 Alternatives ({{ n }})",
+      "uiAlert": "🎨 {{ framework }} alert",
+      "migrationGuide": "Migration guide ↗",
+      "licenseLabel": "⚖️ License {{ risk }}",
+      "communityNotes": "💬 {{ n }} community note(s)",
+      "upvote": "upvote",
+      "anonymous": "anonymous"
+    },
+    "breakingCallout": {
+      "strong": "Breaking changes detected.",
+      "body": "Review conflict rows — these packages have no release that supports Angular {{ ng }} yet, or the current pinned version is incompatible. Consider alternatives or fork/patch plans."
+    },
+    "addNote": {
+      "title": "💬 Contribute a gotcha",
+      "hint": "Know a bug that isn't in the official docs? Share it with the next team that hits it. Notes are stored in your browser.",
+      "intro": "Know a bug that isn't in the official docs? Share it with the next team that hits it.",
+      "storageAnon": "Saved in your browser",
+      "storageSignedIn": "Synced to your account",
+      "pkgPlaceholder": "Package (e.g. primeng)",
+      "ngPlaceholder": "Angular major",
+      "authorPlaceholder": "Your name (optional)",
+      "bodyPlaceholder": "What broke, and how you fixed it.",
+      "submit": "Add note",
+      "hintLabels": {
+        "needPkg": "Add a package name to continue.",
+        "needBody": "Note needs at least {{ min }} characters — you have {{ have }}.",
+        "bodyOk": "{{ count }} characters — looks good."
+      },
+      "toast": {
+        "saved": "Note saved.",
+        "needPkg": "Add a package name",
+        "needBody": "Note must be at least {{ min }} characters (you have {{ have }})",
+        "invalid": "Some required fields are missing."
+      }
+    },
+    "myContributions": {
+      "title": "Your contributions ({{ count }})",
+      "remove": "Remove",
+      "removed": "Note removed.",
+      "upvotes": "{{ count }} upvotes",
+      "justNow": "just now",
+      "minutesAgo": "{{ n }} min ago",
+      "hoursAgo": "{{ n }} h ago",
+      "daysAgo": "{{ n }} d ago"
+    },
+    "relocation": {
+      "title": "📦 Package has moved",
+      "movedFrom": "Moved from",
+      "newHome": "now",
+      "reason": "Reason",
+      "autoRedirect": "We redirected your search to the new location.",
+      "searchNew": "Open the new package",
+      "readMore": "Read the announcement"
+    },
+    "deadButWorking": {
+      "title": "☠️ Abandoned but usable",
+      "hint": "This package is no longer maintained, but an older version still works on your Angular major.",
+      "lastWorking": "Last working version for Angular {{ ng }}",
+      "useExact": "Pin this exact version",
+      "caveat": "No security fixes will arrive — plan to migrate to the alternative below.",
+      "alternatives": "Consider migrating to"
+    },
+    "prosCons": {
+      "title": "⚖️ Side-by-side comparison",
+      "option": "Option",
+      "pros": "Pros",
+      "cons": "Cons",
+      "verdict": "Verdict",
+      "whyMoving": "Why we suggest moving"
+    },
+    "timeline": {
+      "title": "📅 Release timeline",
+      "currentReleased": "Your version released {{ ago }}",
+      "latestReleased": "Latest released {{ ago }}",
+      "gap": "Gap between current and latest",
+      "today": "today",
+      "yesterday": "yesterday",
+      "daysAgo": "{{ n }} days ago",
+      "monthsAgo": "{{ n }} months ago",
+      "yearsAgo": "{{ n }} years ago",
+      "stale": "⚠️ Stale — consider updating",
+      "fresh": "✅ Recently maintained",
+      "neverReleased": "No release metadata"
+    }
+  },
+  "toast": {
+    "close": "Close notification",
+    "dismiss": "Dismiss",
+    "action": "View"
+  },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "tip": "Press ? anywhere to reopen this sheet.",
+    "group": {
+      "Navigation": "Navigation",
+      "Analysis": "Analysis",
+      "Export": "Export",
+      "Help": "Help"
+    }
+  },
+  "preferences": {
+    "title": "Appearance & accessibility",
+    "ariaLabel": "Open preferences",
+    "accent": "Accent color",
+    "fontScale": "Text size",
+    "density": "Layout density",
+    "densityCompact": "Compact",
+    "densityComfortable": "Comfortable",
+    "densityWide": "Wide",
+    "densityCompactHint": "Marketing-site feel — tighter reading column",
+    "densityComfortableHint": "Balanced default — dev-tool feel",
+    "densityWideHint": "Use most of the screen — IDE feel",
+    "reducedMotion": "Reduced motion",
+    "highContrast": "High contrast",
+    "colorBlind": "Color-blind friendly palette",
+    "reset": "Reset to defaults"
+  },
+  "onboarding": {
+    "title": "Getting started",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip tour",
+    "done": "Got it",
+    "steps": {
+      "welcome": {
+        "title": "Welcome to ng-package-compat",
+        "body": "Check any npm package against any Angular version, plan upgrades, and monitor dependency health — all in a few seconds."
+      },
+      "search": {
+        "title": "Search any package",
+        "body": "Start typing a package name. Autocomplete shows weekly downloads, latest version, and Angular support at a glance."
+      },
+      "analyze": {
+        "title": "Drop a package.json",
+        "body": "The Upgrade Assistant reads your real dependencies, flags breaking changes, and generates a single copyable ng update command."
+      },
+      "upgrade": {
+        "title": "One panel, every signal",
+        "body": "Compatibility, bundle size, peer conflicts, security advisories, license risk, release freshness — all in one report."
+      },
+      "preferences": {
+        "title": "Tune it to your eyes",
+        "body": "Switch accent colors, resize text, enable high contrast, or pick a color-blind-safe palette from the cog in the corner."
+      },
+      "shortcuts": {
+        "title": "Keyboard first",
+        "body": "Press ? any time to see every shortcut. Ctrl/Cmd + K opens the command palette for quick jumps and actions."
+      }
+    }
+  },
+  "notes": {
+    "title": "Notes",
+    "for": "Notes for",
+    "flag": "📌 Pin this package to the top",
+    "placeholder": "Why is this package special? e.g. pinned for legal review.",
+    "save": "Save",
+    "clear": "Clear",
+    "updated": "Updated"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "subtitle": "Live health dashboard for the packages you star. Click any row to run a fresh analysis.",
+    "dragHandle": "Drag to reorder",
+    "refresh": "Refresh",
+    "refreshing": "Refreshing…",
+    "clear": "Clear all",
+    "unstar": "Remove from favorites",
+    "emptyTitle": "No favorites yet",
+    "emptyBody": "Star packages from the search page to see them here with live version, downloads, and health.",
+    "emptyCta": "Find a package →",
+    "col": {
+      "name": "Package",
+      "version": "Latest",
+      "downloads": "Weekly",
+      "release": "Last release",
+      "health": "Freshness",
+      "actions": "Actions"
+    }
+  },
+  "celebration": {
+    "perfectHealth": "🎉 Perfect health score — {{ score }}/100!",
+    "healthUp": "Health score improved to {{ score }}"
+  },
+  "auth": {
+    "signOut": "Sign out",
+    "signIn": {
+      "title": "Sign in to scan your Angular projects",
+      "lede": "Connect a code host once — we'll discover every Angular project you can read and run a compatibility check on each one.",
+      "directTitle": "Sign in directly",
+      "directLede": "One-click sign-in. We immediately list your repos and analyze every Angular project we find.",
+      "directSub": "Sign in with {{ name }}",
+      "workspaceTitle": "Or get a centralized workspace",
+      "workspaceLede": "Sign in with LinkedIn and link multiple code hosts to a single account — like Vercel or Netlify.",
+      "workspaceSub": "Sign in with LinkedIn",
+      "gmailSub": "Sign in with Gmail (Firebase)",
+      "bullets": {
+        "0": "One workspace for all your code hosts",
+        "1": "Connect / disconnect providers anytime",
+        "2": "Tied to your LinkedIn identity"
+      },
+      "skipNote": "Don't want to sign in?",
+      "skipLink": "Continue without an account"
+    },
+    "callback": {
+      "message": "Finishing sign-in…",
+      "errorTitle": "We couldn’t sign you in",
+      "tryAgain": "Try signing in again",
+      "continueAnonymous": "Continue without signing in",
+      "details": "Technical details",
+      "errorCode": "Error code",
+      "errorDescription": "Description",
+      "errors": {
+        "unknown": "Something went wrong on the way back from the sign-in provider. Please try again.",
+        "access_denied": "You declined to share access with ng-package-compat. If that wasn’t intentional, try again and approve the requested permissions.",
+        "invalid_scope": "The sign-in provider rejected one of the requested permissions. Try again with a different provider, or contact support if this keeps happening.",
+        "invalid_request": "The sign-in request was malformed. Try again from the sign-in page.",
+        "unauthorized_client": "This app isn’t authorized to use the selected sign-in provider. Try a different provider.",
+        "unsupported_response_type": "The sign-in provider returned an unsupported response. Try again or pick a different provider.",
+        "server_error": "The sign-in provider had a server error. It’s usually temporary — please try again in a moment.",
+        "temporarily_unavailable": "The sign-in provider is temporarily unavailable. Please try again shortly.",
+        "interaction_required": "The sign-in provider needs further interaction. Try again and complete every step.",
+        "login_required": "The sign-in provider needs you to log in again. Please try once more.",
+        "consent_required": "You’ll need to approve permissions on the sign-in screen. Try again and accept when asked.",
+        "session_timeout": "Sign-in took too long to complete. This usually means the OAuth round-trip didn’t return cleanly — please try again."
+      }
+    }
+  },
+  "projects": {
+    "heading": "Your Angular projects",
+    "subtitle": "Repos discovered through {{ provider }}",
+    "title": "Repositories",
+    "scanning": "Scanning {{ done }} / {{ total }}",
+    "listing": "Listing your repositories…",
+    "found": "{{ angular }} Angular projects out of {{ total }} repos",
+    "refresh": "Re-scan",
+    "analyze": "Analyze",
+    "analyzeAnyway": "Analyze anyway",
+    "noPackageJson": "no package.json",
+    "empty": {
+      "title": "No projects yet",
+      "body": "We didn't find any repositories on this account. Try the LinkedIn workspace if you want to connect a different host."
+    },
+    "noToken": {
+      "title": "We've lost your provider token",
+      "body": "Provider tokens don't survive page reloads. Sign in again to refresh it.",
+      "cta": "Sign in again"
+    },
+    "bitbucket": {
+      "title": "Bitbucket workspaces",
+      "body": "Bitbucket Cloud now requires a workspace slug to list repos (Atlassian CHANGE-2770). Add yours below — find it in the URL of any repo: bitbucket.org/{{ '{' }}workspace{{ '}' }}/repo.",
+      "inputLabel": "Workspace slug",
+      "add": "Add workspace",
+      "remove": "Remove {{ workspace }}",
+      "listLabel": "Configured Bitbucket workspaces",
+      "hint": "Lowercase letters, numbers, and hyphens. Example: aj769-workspace."
+    }
+  },
+  "workspaceHub": {
+    "heading": "Your workspace",
+    "subtitle": "Welcome, {{ name }}",
+    "connections": {
+      "title": "Connected code hosts",
+      "lede": "Link any combination of GitHub, GitLab, BitBucket, and Azure DevOps. We'll merge their projects into one list.",
+      "linked": "Connected",
+      "notLinked": "Not connected",
+      "needPat": "no token — paste a PAT below",
+      "connect": "Connect",
+      "unlink": "Disconnect",
+      "addPat": "Add a personal access token",
+      "savePat": "Save token"
+    },
+    "empty": {
+      "title": "Connect a code host to get started",
+      "body": "Link GitHub, GitLab, BitBucket, or Azure to see your Angular projects here."
+    }
+  }
+}

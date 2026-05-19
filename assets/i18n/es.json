@@ -1,0 +1,842 @@
+{
+  "autocomplete": {
+    "searching": "Buscando en npm…",
+    "resultsCount": "{{ n }} sugerencias"
+  },
+  "install": {
+    "ariaLabel": "Instalar esta aplicación",
+    "title": "Instala ng-package-compat",
+    "subtitle": "Úsalo sin conexión, instálalo una vez, se actualiza solo.",
+    "iosHint": "En iOS: toca Compartir y luego Añadir a pantalla de inicio.",
+    "button": "Instalar",
+    "later": "Ahora no"
+  },
+  "github": {
+    "title": "Importar desde GitHub",
+    "placeholder": "https://github.com/org/repo o org/repo",
+    "button": "Obtener package.json",
+    "success": "Importado {{ path }} desde {{ owner }}/{{ repo }}@{{ ref }}",
+    "error": "No se pudo obtener package.json desde esa URL."
+  },
+  "registry": {
+    "title": "Registro privado (Artifactory / GitHub Packages / Verdaccio)",
+    "scope": "Scope",
+    "url": "URL",
+    "auth": "Auth",
+    "tokenYes": "token guardado",
+    "tokenNo": "(ninguno)",
+    "globalOverride": "(todos los paquetes)",
+    "remove": "Quitar",
+    "empty": "Sin registros privados configurados. Se usa npm público por defecto.",
+    "addTitle": "Agregar binding",
+    "token": "Bearer token",
+    "add": "Agregar binding",
+    "reset": "Limpiar",
+    "importTitle": "O pega un .npmrc",
+    "importPlaceholder": "@acme:registry=https://npm.acme.co/\n//npm.acme.co/:_authToken=ghp_xxx",
+    "import": "Importar .npmrc",
+    "clearAll": "Borrar todo"
+  },
+  "policy": {
+    "title": "Políticas y reglas",
+    "lede": "Bloquea o avisa sobre paquetes, licencias, ámbitos o versiones que no permites en tu base de código.",
+    "summary": {
+      "count": "{{ count }} regla(s) · {{ enabled }} activa(s)",
+      "empty": "Sin reglas — se aplican los valores por defecto."
+    },
+    "remove": "Eliminar",
+    "add": {
+      "title": "Añadir una regla",
+      "kind": "Tipo de regla",
+      "version": "Versión",
+      "license": "Licencia (SPDX o glob)",
+      "scopes": "Ámbitos aprobados (separados por comas)",
+      "severity": "Severidad",
+      "label": "Etiqueta (opcional)",
+      "note": "Nota (opcional)",
+      "cta": "Añadir regla"
+    },
+    "severity": {
+      "block": "Bloquear",
+      "warn": "Avisar"
+    },
+    "io": {
+      "title": "Importar / exportar reglas (JSON)",
+      "lede": "Pega un array JSON para importar; haz clic en exportar para copiar tus reglas actuales.",
+      "import": "Importar",
+      "export": "Exportar",
+      "clear": "Borrar todo"
+    },
+    "banner": {
+      "blocked": "{{ count }} infracción(es) de política bloquean esta actualización",
+      "warning": "{{ count }} aviso(s) de política para revisar",
+      "lede": "Se han activado reglas configuradas contra el informe actual. Ajusta las reglas arriba o aborda el paquete directamente."
+    }
+  },
+  "monitor": {
+    "title": "Resumen de monitoreo",
+    "lede": "Qué cambió desde la última vez que ejecutaste el análisis de compatibilidad de cada proyecto.",
+    "lastCheck": "Última verificación {{ time }}",
+    "healthDelta": "salud",
+    "stop": "Dejar de monitorear",
+    "noChanges": "Sin cambios desde la última verificación."
+  },
+  "pr": {
+    "title": "Vista previa de pull request",
+    "lede": "Parche generado y descripción del PR. Abre directamente en GitHub si has iniciado sesión.",
+    "empty": "Sin cambios de versión necesarios — nada que enviar.",
+    "changedCount": "{{ count }} línea(s) de dependencia actualizadas",
+    "diff": "Diff de package.json",
+    "body": "Cuerpo del PR (Markdown)",
+    "copyDiff": "Copiar diff",
+    "copyBody": "Copiar cuerpo",
+    "repo": "Repositorio",
+    "activeRepo": "Repositorio activo",
+    "private": "Privado",
+    "selectRepo": "Elige un repositorio…",
+    "typeManually": "Escribir otro repositorio manualmente",
+    "pickFromList": "Elegir de tus repositorios",
+    "repoFormatHint": "Usa el formato owner/repo — por ejemplo AJ69-i/Miads",
+    "baseBranch": "Rama base",
+    "loadingBranches": "Cargando ramas…",
+    "targetingBranch": "Rama de destino",
+    "openOnGitHubFor": "Crear Pull Request para {{ repo }} en GitHub",
+    "openOnGitHub": "Abrir PR en GitHub",
+    "openOnGitLab": "Crear Merge Request en GitLab",
+    "openOnGitLabFor": "Crear Merge Request para {{ repo }} en GitLab",
+    "openOnBitbucket": "Crear Pull Request en Bitbucket",
+    "openOnBitbucketFor": "Crear Pull Request para {{ repo }} en Bitbucket",
+    "openExistingPr": "Abrir Pull Request existente #{{ number }}",
+    "openExistingMr": "Abrir Merge Request existente !{{ number }}",
+    "alreadyMergedPr": "Ya fusionado en {{ branch }} — ver PR #{{ number }}",
+    "alreadyMergedMr": "Ya fusionado en {{ branch }} — ver MR !{{ number }}",
+    "branchGroup": {
+      "project": "Ramas del proyecto",
+      "previousUpdates": "Actualizaciones previas · apila aquí"
+    },
+    "opening": "Abriendo…",
+    "opened": "PR abierto:",
+    "openedMr": "MR abierto:",
+    "signInForButtonGeneric": "Inicia sesión con GitHub, GitLab o Bitbucket en la página del workspace para habilitar la creación de PR/MR con un clic.",
+    "manualGitlabOnly": {
+      "title": "La entrada manual no está soportada en GitLab",
+      "body": "GitLab necesita un id numérico de proyecto para crear un Merge Request, que no se puede escribir a mano. Elige tu proyecto en la lista escaneada — o inicia sesión con GitHub si prefieres pegar un nombre de repo.",
+      "scanGitlab": "Escanear mis proyectos de GitLab →",
+      "linkGitHub": "Iniciar sesión con GitHub"
+    }
+  },
+  "snapshotDiff": {
+    "title": "Diff de snapshots",
+    "lede": "Compara dos snapshots guardados — qué cambió, qué se añadió, qué desapareció.",
+    "notEnough": "Necesitas al menos 2 snapshots capturados para comparar. Tienes {{ count }}.",
+    "from": "De",
+    "to": "A",
+    "package": "Paquete",
+    "kind": "Cambio",
+    "added": "añadido",
+    "removed": "eliminado",
+    "changed": "cambiado"
+  },
+  "wizard": {
+    "title": "Asistente guiado",
+    "lede": "Un recorrido paso a paso — suelta tu package.json y mostraremos solo lo importante en cada etapa.",
+    "denseLink": "Cambiar a vista densa",
+    "target": "Versión Angular objetivo",
+    "next": "Continuar",
+    "back": "Atrás",
+    "startOver": "Empezar de nuevo",
+    "analyzing": "Analizando dependencias…",
+    "steps": {
+      "upload": "Subida",
+      "blockers": "Bloqueos",
+      "bumps": "Cambios",
+      "pr": "Abrir PR"
+    },
+    "upload": {
+      "title": "Suelta tu package.json",
+      "lede": "Aceptamos package.json solo, o junto con angular.json, tsconfig.json, .browserslistrc o un lockfile para un análisis más rico.",
+      "depsFound": "dependencias analizadas",
+      "waiting": "Esperando un archivo…"
+    },
+    "blockers": {
+      "title": "Lo que debería detener la actualización",
+      "lede": "Tres comprobaciones deben pasar: reglas de política, cambios incompatibles y paquetes deprecados.",
+      "policy": "Reglas de política",
+      "policyGood": "Ninguna regla bloquea esta actualización.",
+      "policyBad": "{{ count }} infracción(es) bloqueante(s) — corrígelas antes de continuar.",
+      "warns": "advertencia(s)",
+      "breaking": "Cambios incompatibles",
+      "breakingGood": "Sin conflictos detectados para este objetivo de Angular.",
+      "breakingBad": "{{ count }} paquete(s) aún no funcionan con la versión objetivo de Angular.",
+      "deprecated": "Paquetes deprecados",
+      "deprecatedGood": "Nada en tu árbol está oficialmente deprecado.",
+      "deprecatedNote": "{{ count }} paquete(s) están deprecados — revísalos antes de hacer merge.",
+      "cantContinue": "Resuelve los bloqueos de política primero."
+    },
+    "bumps": {
+      "title": "Revisa los cambios",
+      "lede": "Estos son los cambios de versión que aplicará la actualización, con el impacto en el tamaño del bundle resumido arriba.",
+      "package": "Paquete",
+      "from": "Desde",
+      "to": "A",
+      "status": "Estado",
+      "empty": "No se requieren cambios de versión para este objetivo."
+    },
+    "pr": {
+      "title": "Abre la pull request",
+      "lede": "Parche generado y descripción del PR. Ábrelo en GitHub con un clic si has iniciado sesión."
+    }
+  },
+  "bundleDelta": {
+    "title": "Impacto en el tamaño del bundle",
+    "lede": "Cambio neto en gzip al aceptar todas las recomendaciones del informe.",
+    "noData": "Los datos de bundle aún se están cargando o no están disponibles para este conjunto.",
+    "grows": "más grande tras la actualización",
+    "shrinks": "más pequeño tras la actualización",
+    "flat": "sin cambios significativos",
+    "splitAria": "Barra dividida que muestra los bytes añadidos frente a los eliminados",
+    "coverage": "Basado en {{ withData }} paquetes con datos de bundle ({{ missing }} sin datos).",
+    "growers": "Los que más crecen",
+    "shrinkers": "Los que más reducen"
+  },
+  "sync": {
+    "title": "Sincronización",
+    "signIn": "Iniciar sesión",
+    "now": "Sincronizar ahora",
+    "syncing": "Sincronizando…",
+    "banner": {
+      "aria": "Sugerencia de inicio de sesión",
+      "history": "Inicia sesión para mantener tu historial sincronizado entre dispositivos.",
+      "favorites": "Inicia sesión para mantener tus favoritos sincronizados entre dispositivos.",
+      "signIn": "Iniciar sesión",
+      "notNow": "Ahora no",
+      "dismiss": "Descartar este banner"
+    }
+  },
+  "share": {
+    "button": "Copiar enlace",
+    "copied": "¡Enlace copiado!",
+    "loaded": "Análisis compartido cargado. Puedes reejecutarlo libremente."
+  },
+  "orgScan": {
+    "title": "Escanear una org npm entera",
+    "placeholder": "@mi-org",
+    "button": "Escanear org",
+    "scanning": "Escaneando…",
+    "summary": "{{ total }} paquetes: {{ fresh }} frescos / {{ stale }} obsoletos / {{ abandoned }} abandonados / {{ deprecated }} deprecados"
+  },
+  "ai": {
+    "settingsTitle": "Clave del asistente de IA",
+    "provider": "Proveedor",
+    "apiKey": "Clave API",
+    "model": "Modelo (opcional)",
+    "save": "Guardar",
+    "verify": "Verificar",
+    "clear": "Eliminar clave",
+    "stored": "Tu clave se guarda solo en este navegador.",
+    "verified": "Clave verificada — lista para usar.",
+    "failed": "No se pudo contactar al proveedor con esa clave.",
+    "ask": "Preguntar al asistente",
+    "placeholder": "¿Cómo migro ngrx 13 a las API standalone?",
+    "send": "Enviar",
+    "thinking": "Pensando…",
+    "notConfigured": "Añade una clave en Ajustes para habilitar la IA."
+  },
+  "pdf": {
+    "button": "Exportar PDF",
+    "preparing": "Preparando PDF…"
+  },
+  "jira": {
+    "button": "Exportar CSV Jira",
+    "description": "Importar en masa cada paquete afectado en Jira."
+  },
+  "summaryBar": {
+    "title": "Salud del proyecto de un vistazo",
+    "critical": "Crítico",
+    "warning": "Advertencia",
+    "healthy": "Saludable",
+    "all": "Todos",
+    "filterAria": "Filtrar por gravedad",
+    "active": "Mostrando {{ shown }} de {{ total }} paquetes"
+  },
+  "app": {
+    "title": "ng-package-compat",
+    "tagline": "Analizador de compatibilidad de paquetes npm para Angular",
+    "skipToContent": "Saltar al contenido",
+    "announce": {
+      "routeChanged": "{{ name }} cargado"
+    },
+    "footer": {
+      "label": "Pie de página",
+      "about": "Acerca de",
+      "built": "ng-package-compat — construido con Angular 21.",
+      "palette": "Pulsa {{ mod }}+{{ k }} para abrir la paleta de comandos.",
+      "rights": "© 2026 Ahmed Jab. Todos los derechos reservados.",
+      "independence": "Esta herramienta es un proyecto independiente y no está afiliada ni respaldada por Google ni por el equipo de Angular."
+    }
+  },
+  "nav": {
+    "search": "Buscar",
+    "compare": "Comparar",
+    "upgrade": "Actualizar",
+    "history": "Historial",
+    "about": "Acerca de",
+    "toggle": "Alternar navegación",
+    "language": "Idioma",
+    "packageManager": "Gestor de paquetes",
+    "lightMode": "Modo claro",
+    "darkMode": "Modo oscuro",
+    "signIn": "Iniciar sesión",
+    "projects": "Proyectos"
+  },
+  "common": {
+    "loading": "Cargando…",
+    "error": "Error",
+    "retry": "Reintentar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "search": "Buscar",
+    "clear": "Limpiar",
+    "copy": "Copiar",
+    "submit": "Enviar",
+    "remove": "Eliminar",
+    "empty": "Nada que mostrar todavía.",
+    "notFound": "No encontrado",
+    "failedToFetch": "Error al obtener los datos"
+  },
+  "search": {
+    "title": "Encontrar un paquete npm",
+    "placeholder": "Introduce un nombre de paquete npm — prueba rxjs, @angular/material, zone.js",
+    "submit": "Comprobar compatibilidad",
+    "strategy": "Estrategia de detección",
+    "packageNameLabel": "Nombre del paquete",
+    "hint": "Datos en vivo de registry.npmjs.org, la API de descargas de npm y OSV.dev. Pulsa {{ mod }}+{{ k }} para abrir la paleta de comandos.",
+    "lookupFailed": "Búsqueda fallida",
+    "recommendationFor": "Recomendación para Angular",
+    "exportCsv": "Exportar CSV",
+    "exportJson": "Exportar JSON",
+    "actions": "Acciones",
+    "export": "Exportar",
+    "count": "{{ shown }} de {{ total }} versiones",
+    "welcome": "Pruébalo",
+    "welcomeHint": "Elige una de estas opciones para empezar:",
+    "welcomeSub": "La aplicación comprueba peerDependencies[\"@angular/core\"] contra un conjunto conocido de versiones mayores de Angular y muestra la mejor versión estable para la versión de Angular objetivo.",
+    "addFavorite": "Añadir a favoritos"
+  },
+  "compare": {
+    "title": "Comparar dos paquetes",
+    "subtitle": "Mira qué versiones mayores de Angular admite cada lado, en paralelo.",
+    "pkgAPlaceholder": "Paquete A (p. ej. ngx-toastr)",
+    "pkgBPlaceholder": "Paquete B (p. ej. ngx-sonner)",
+    "submit": "Comparar",
+    "bothSupport": "Ambos admiten:",
+    "noCommon": "Ninguna versión mayor de Angular es admitida simultáneamente por ambos paquetes.",
+    "pkgAFallback": "Paquete A",
+    "pkgBFallback": "Paquete B"
+  },
+  "prosCons": {
+    "title": "Pros y Contras generados con IA",
+    "lede": "Compara {{ a }} y {{ b }} en tamaño de bundle, adopción, mantenimiento y estabilidad — basado en datos objetivos, no en marketing.",
+    "ctaBody": "Obtén un análisis IA cara a cara entre {{ a }} y {{ b }} respaldado por Bundlephobia, descargas de NPM, actividad de GitHub e historial de versiones.",
+    "generate": "Generar Pros y Contras con IA",
+    "ctaHint": "Gratis vía nuestro proxy Groq. Añade tu propia clave API en Configuración para generaciones ilimitadas.",
+    "loading": "Comparando los datos… suele tardar 3–6 segundos.",
+    "refresh": "Regenerar",
+    "retry": "Reintentar",
+    "axesLabel": "Ejes de comparación",
+    "tie": "Empate",
+    "warnings": "Riesgos a considerar",
+    "recommendation": "Recomendación",
+    "generatedBy": "Generado por {{ provider }} en {{ seconds }}s",
+    "axis": {
+      "bundle-size": "Tamaño del bundle",
+      "performance": "Rendimiento",
+      "maintenance": "Mantenimiento",
+      "api-stability": "Estabilidad de API",
+      "adoption": "Adopción",
+      "ecosystem-fit": "Encaje en el ecosistema"
+    },
+    "time": {
+      "justNow": "ahora mismo",
+      "aMinuteAgo": "hace un minuto",
+      "minutesAgo": "minutos atrás",
+      "hoursAgo": "horas atrás"
+    },
+    "error": {
+      "rateLimitHint": "Cuota del proxy gratuito alcanzada. Añade tu propia clave Gemini en Configuración para generaciones ilimitadas, o intenta de nuevo en un minuto.",
+      "proxyUnavailableLead": "Dos formas de hacer que esto funcione:",
+      "proxyOptionSsr": "Ejecuta el servidor SSR completo con GROQ_API_KEY configurada:",
+      "proxyOptionByo": "O pega tu propia clave Gemini / OpenAI / DeepSeek en Configuración — esas llamadas van directas desde el navegador y no necesitan el proxy."
+    }
+  },
+  "source": {
+    "drop": {
+      "title": "Arrastra archivos .ts / .html (opcional)",
+      "hint": "Filtraremos los cambios incompatibles para mostrar solo los que toca tu código, con citas archivo:línea. Todo se queda en tu navegador.",
+      "aria": "Arrastra archivos TypeScript o HTML para un análisis consciente del código fuente",
+      "loaded": "{{ count }} archivo(s) escaneado(s)",
+      "clear": "Limpiar"
+    }
+  },
+  "codemod": {
+    "title": "Vista previa de auto-correcciones",
+    "empty": "Todavía no hay codemods registrados para este paquete.",
+    "hits": "{{ n }} archivo(s)",
+    "noHits": "Sin cambios — este codemod no coincidió con nada en los archivos subidos.",
+    "changedLines": "~{{ n }} línea(s) cambiada(s)",
+    "copyPatched": "Copiar parcheado"
+  },
+  "workspace": {
+    "title": "Desalineación de dependencias del workspace",
+    "projects": "proyecto(s)",
+    "ngDrift": "Versiones de Angular desalineadas: {{ list }}",
+    "drift": "{{ n }} dep(s) con versiones distintas entre proyectos",
+    "noDrift": "Todas las dependencias están alineadas entre los proyectos.",
+    "dep": "Dependencia",
+    "distinct": "Versiones",
+    "copyAlign": "Copiar comando de alineación"
+  },
+  "history": {
+    "title": "Historial de búsqueda y favoritos",
+    "subtitle": "Las búsquedas recientes se guardan localmente en este navegador.",
+    "favorites": "Favoritos",
+    "recent": "Búsquedas recientes",
+    "clear": "Borrar historial",
+    "noFavorites": "Aún no hay favoritos — marca con estrella un paquete desde la página de búsqueda.",
+    "noHistory": "Tu historial de búsqueda está vacío.",
+    "trend": "Tendencia de instantáneas"
+  },
+  "about": {
+    "title": "Acerca de ng-package-compat",
+    "lede": "Una pequeña aplicación Angular que responde a una pregunta para los equipos ocupados: «¿Funciona este paquete npm con la versión de Angular que uso?»",
+    "whatItDoes": "Qué hace",
+    "howItWorks": "Cómo se determina la compatibilidad",
+    "dataSources": "Fuentes de datos",
+    "underHood": "Bajo el capó",
+    "cta": "Pruébala",
+    "allClient": "Todas las peticiones se realizan en el cliente, por lo que solo lees lo que pides."
+  },
+  "upgrade": {
+    "title": "Actualización de Angular y salud de dependencias",
+    "subtitle": "Suelta tu package.json — opcionalmente junto a angular.json, tsconfig.json, .browserslistrc o tu lockfile. Realizaremos una auditoría completa de compatibilidad, estimaremos el esfuerzo, señalaremos cambios incompatibles, generaremos comandos de instalación y rollback, y exportaremos el plan como Markdown o pipeline de CI.",
+    "searchPlaceholder": "Filtrar paquetes por nombre…",
+    "orPaste": "O pega una lista de paquetes (uno por línea)",
+    "analyzeList": "Analizar lista",
+    "target": "Versión de Angular objetivo",
+    "mode": "Modo de entrada",
+    "modeFile": "Subir archivo",
+    "modeList": "Pegar lista",
+    "analyze": "Analizar",
+    "running": "Analizando…",
+    "empty": "Suelta un package.json o pega una lista de dependencias para empezar.",
+    "healthScore": "Puntuación de salud del proyecto",
+    "overall": "General",
+    "factors": "Factores",
+    "status": {
+      "safe": "Seguro",
+      "warn": "Advertencia",
+      "conflict": "Conflicto",
+      "deprecated": "Obsoleto"
+    },
+    "counts": {
+      "safe": "Seguro",
+      "warn": "Advertencias",
+      "conflict": "Conflictos",
+      "deprecated": "Obsoleto",
+      "total": "Total",
+      "safeLower": "seguro",
+      "warningLower": "advertencia",
+      "breakingLower": "incompatible",
+      "unknownLower": "desconocido",
+      "deprecatedLower": "obsoleto",
+      "uiAlertLower": "alerta UI",
+      "licenseBlockLower": "bloqueo licencia",
+      "peerConflictLower": "conflicto par"
+    },
+    "chip": {
+      "dependencies": "dependencias",
+      "detectedAngular": "Angular detectado",
+      "noAngularCore": "No se detectó @angular/core",
+      "nxWorkspace": "espacio Nx",
+      "mfeHost": "host Module-Federation",
+      "mfeApps": "{{ count }} apps (MFE)",
+      "angularJson": "angular.json",
+      "tsconfig": "tsconfig",
+      "browserslist": "browserslist"
+    },
+    "mode": {
+      "optimize": "Optimizar (Angular actual)",
+      "upgrade": "Actualizar al objetivo",
+      "analysisMode": "Modo de análisis"
+    },
+    "banner": {
+      "upgradeFromTo": "Actualización Angular {{ from }} → {{ to }}",
+      "optimizationOn": "Optimización en Angular {{ ng }}",
+      "health": "Salud del proyecto: {{ score }}/100 ({{ label }}) · {{ summary }}",
+      "reportSettings": "Ajustes del informe",
+      "parseWarnings": "Avisos de análisis"
+    },
+    "grades": {
+      "A": "Excelente",
+      "B": "Bueno",
+      "C": "Requiere atención",
+      "D": "Arriesgado",
+      "F": "Crítico"
+    },
+    "labels": {
+      "safe": "Seguro",
+      "warning": "Advertencia",
+      "conflict": "Incompatible",
+      "unknown": "Desconocido"
+    },
+    "actions": {
+      "copyMarkdown": "Copiar como Markdown",
+      "copyMarkdownTitle": "Copiar como Markdown Jira/GitHub",
+      "githubActions": "GitHub Actions",
+      "gitlabCi": "GitLab CI"
+    },
+    "cmd": {
+      "nxMigrateTitle": "Migración Nx (espacio Nx detectado)",
+      "nxMigrateHint": "Ejecuta desde la raíz del workspace. Se crea un commit por migración.",
+      "nxMigrateCopy": "Copiar nx migrate",
+      "oneShotTitle": "Actualización en un comando",
+      "oneShotHint": "Ejecuta esto desde la raíz del proyecto.",
+      "oneShotCopy": "Copiar ng update",
+      "installTitle": "Instala el resto",
+      "installHint": "Para paquetes sin schematics de ng update.",
+      "installCopy": "Copiar instalación",
+      "rollbackTitle": "🛟 Retroceso seguro",
+      "rollbackHint": "Ejecútalo si la actualización rompe algo — restaura tus versiones originales.",
+      "rollbackCopy": "Copiar rollback",
+      "verifyTitle": "✅ Verificación post-actualización",
+      "verifyHint": "Chequeo final: build de producción + pruebas headless.",
+      "verifyCopy": "Copiar verificación",
+      "verify": "Verificación previa",
+      "verifyOk": "El plan de instalación luce limpio ({{ n }} paquetes revisados, sin conflictos de peer).",
+      "verifyBad": "La instalación fallaría — {{ n }} conflicto(s) de peer:"
+    },
+    "peer": {
+      "title": "🧩 Conflictos de peer-dependencies",
+      "expects": "espera",
+      "butResolves": "pero tu árbol resuelve"
+    },
+    "cfg": {
+      "title": "⚙️ Revisión de archivos de configuración"
+    },
+    "lock": {
+      "title": "🔍 Radiografía del lockfile ({{ kind }})",
+      "scanned": "{{ total }} entradas transitivas analizadas.",
+      "none": "No se detectaron problemas transitivos."
+    },
+    "mfeSection": {
+      "title": "🧬 Consistencia de micro-frontends",
+      "apps": "Apps: {{ names }}",
+      "sharedLib": "Librería compartida",
+      "status": "Estado",
+      "versions": "Versiones",
+      "consistent": "Consistente",
+      "mismatch": "Inconsistencia"
+    },
+    "table": {
+      "caption": "Informe de compatibilidad por paquete",
+      "package": "Paquete",
+      "status": "Estado",
+      "current": "Actual",
+      "recommended": "Recomendado",
+      "bundle": "Bundle",
+      "license": "Licencia",
+      "action": "Acción",
+      "notes": "Notas",
+      "ngUpdate": "ng update",
+      "standalone": "standalone",
+      "standaloneTitle": "Soporta APIs standalone en el objetivo",
+      "deprecated": "obsoleto",
+      "ui": "UI",
+      "copy": "Copiar",
+      "breakingCount": "{{ n }} cambio(s) incompatible(s)",
+      "citedCount": "{{ n }} coincidencia(s) en tu código",
+      "inYourCode": "Encontrado en los archivos que subiste",
+      "docsLink": "Docs ↗",
+      "askClaude": "Preguntar a Claude",
+      "askChatGPT": "Preguntar a ChatGPT",
+      "askGemini": "Preguntar a Gemini",
+      "since": "desde",
+      "alternatives": "🧩 Alternativas ({{ n }})",
+      "uiAlert": "🎨 Alerta de {{ framework }}",
+      "migrationGuide": "Guía de migración ↗",
+      "licenseLabel": "⚖️ Licencia {{ risk }}",
+      "communityNotes": "💬 {{ n }} nota(s) de la comunidad",
+      "upvote": "votar",
+      "anonymous": "anónimo"
+    },
+    "breakingCallout": {
+      "strong": "Se detectaron cambios incompatibles.",
+      "body": "Revisa las filas en conflicto — estos paquetes aún no tienen una versión que soporte Angular {{ ng }}, o la versión fijada actual es incompatible. Considera alternativas o planes de fork/parche."
+    },
+    "addNote": {
+      "title": "💬 Contribuir un aviso",
+      "hint": "¿Conoces un bug que no está en la documentación oficial? Compártelo con el próximo equipo que lo encuentre. Las notas se guardan localmente.",
+      "intro": "¿Conoces un bug que no está en la documentación oficial? Compártelo con el próximo equipo que lo encuentre.",
+      "storageAnon": "Guardado en tu navegador",
+      "storageSignedIn": "Sincronizado con tu cuenta",
+      "pkgPlaceholder": "Paquete (ej. primeng)",
+      "ngPlaceholder": "Mayor de Angular",
+      "authorPlaceholder": "Tu nombre (opcional)",
+      "bodyPlaceholder": "Qué se rompió y cómo lo arreglaste.",
+      "submit": "Añadir nota",
+      "hintLabels": {
+        "needPkg": "Añade un nombre de paquete para continuar.",
+        "needBody": "La nota necesita al menos {{ min }} caracteres — tienes {{ have }}.",
+        "bodyOk": "{{ count }} caracteres — perfecto."
+      },
+      "toast": {
+        "saved": "Nota guardada.",
+        "needPkg": "Añade un nombre de paquete",
+        "needBody": "La nota debe tener al menos {{ min }} caracteres (tienes {{ have }})",
+        "invalid": "Faltan algunos campos obligatorios."
+      }
+    },
+    "myContributions": {
+      "title": "Tus contribuciones ({{ count }})",
+      "remove": "Eliminar",
+      "removed": "Nota eliminada.",
+      "upvotes": "{{ count }} votos positivos",
+      "justNow": "ahora mismo",
+      "minutesAgo": "hace {{ n }} min",
+      "hoursAgo": "hace {{ n }} h",
+      "daysAgo": "hace {{ n }} d"
+    },
+    "relocation": {
+      "title": "📦 El paquete se ha movido",
+      "movedFrom": "Movido de",
+      "newHome": "a",
+      "reason": "Razón",
+      "autoRedirect": "Redirigimos tu búsqueda a la nueva ubicación.",
+      "searchNew": "Abrir el nuevo paquete",
+      "readMore": "Leer el anuncio"
+    },
+    "deadButWorking": {
+      "title": "☠️ Abandonado pero usable",
+      "hint": "Este paquete ya no se mantiene, pero una versión más antigua aún funciona con tu mayor de Angular.",
+      "lastWorking": "Última versión funcional para Angular {{ ng }}",
+      "useExact": "Fijar esta versión exacta",
+      "caveat": "No llegarán parches de seguridad — planifica migrar a la alternativa siguiente.",
+      "alternatives": "Considera migrar a"
+    },
+    "prosCons": {
+      "title": "⚖️ Comparación lado a lado",
+      "option": "Opción",
+      "pros": "Pros",
+      "cons": "Contras",
+      "verdict": "Veredicto",
+      "whyMoving": "Por qué sugerimos migrar"
+    },
+    "timeline": {
+      "title": "📅 Línea de tiempo de versiones",
+      "currentReleased": "Tu versión se publicó hace {{ ago }}",
+      "latestReleased": "La última se publicó hace {{ ago }}",
+      "gap": "Brecha entre actual y última",
+      "today": "hoy",
+      "yesterday": "ayer",
+      "daysAgo": "hace {{ n }} días",
+      "monthsAgo": "hace {{ n }} meses",
+      "yearsAgo": "hace {{ n }} años",
+      "stale": "⚠️ Obsoleto — considera actualizar",
+      "fresh": "✅ Mantenido recientemente",
+      "neverReleased": "Sin metadatos de versión"
+    }
+  },
+  "toast": {
+    "close": "Cerrar notificación",
+    "dismiss": "Descartar",
+    "action": "Ver"
+  },
+  "shortcuts": {
+    "title": "Atajos de teclado",
+    "tip": "Pulsa ? en cualquier momento para reabrir esta hoja.",
+    "group": {
+      "Navigation": "Navegación",
+      "Analysis": "Análisis",
+      "Export": "Exportar",
+      "Help": "Ayuda"
+    }
+  },
+  "preferences": {
+    "title": "Apariencia y accesibilidad",
+    "ariaLabel": "Abrir preferencias",
+    "accent": "Color de acento",
+    "fontScale": "Tamaño de texto",
+    "density": "Densidad del diseño",
+    "densityCompact": "Compacto",
+    "densityComfortable": "Cómodo",
+    "densityWide": "Amplio",
+    "densityCompactHint": "Estilo de sitio de marketing — columna de lectura más estrecha",
+    "densityComfortableHint": "Predeterminado equilibrado — estilo herramienta dev",
+    "densityWideHint": "Usa la mayor parte de la pantalla — estilo IDE",
+    "reducedMotion": "Movimiento reducido",
+    "highContrast": "Alto contraste",
+    "colorBlind": "Paleta accesible al daltonismo",
+    "reset": "Restablecer"
+  },
+  "onboarding": {
+    "title": "Primeros pasos",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "skip": "Saltar",
+    "done": "Entendido",
+    "steps": {
+      "welcome": {
+        "title": "Bienvenido a ng-package-compat",
+        "body": "Comprueba cualquier paquete npm contra cualquier versión de Angular, planifica actualizaciones y monitoriza la salud de tus dependencias."
+      },
+      "search": {
+        "title": "Busca cualquier paquete",
+        "body": "Empieza a escribir un nombre de paquete. El autocompletado muestra descargas semanales, última versión y soporte de Angular."
+      },
+      "analyze": {
+        "title": "Suelta un package.json",
+        "body": "El asistente de actualización lee tus dependencias reales, marca cambios disruptivos y genera un único comando ng update."
+      },
+      "upgrade": {
+        "title": "Un panel, todas las señales",
+        "body": "Compatibilidad, tamaño de paquete, conflictos entre pares, alertas de seguridad, riesgo de licencia y frescura de versión — todo en un informe."
+      },
+      "preferences": {
+        "title": "Ajústalo a tus ojos",
+        "body": "Cambia el color de acento, el tamaño del texto, activa alto contraste o una paleta accesible al daltonismo desde el engranaje en la esquina."
+      },
+      "shortcuts": {
+        "title": "Teclado primero",
+        "body": "Pulsa ? para ver todos los atajos. Ctrl/Cmd + K abre la paleta de comandos."
+      }
+    }
+  },
+  "notes": {
+    "title": "Notas",
+    "for": "Notas para",
+    "flag": "📌 Fijar este paquete arriba",
+    "placeholder": "¿Por qué es especial este paquete? Ej.: fijado para revisión legal.",
+    "save": "Guardar",
+    "clear": "Borrar",
+    "updated": "Actualizado"
+  },
+  "favorites": {
+    "title": "Favoritos",
+    "subtitle": "Panel en vivo de los paquetes que marcaste con estrella. Haz clic para analizar de nuevo.",
+    "dragHandle": "Arrastrar para reordenar",
+    "refresh": "Actualizar",
+    "refreshing": "Actualizando…",
+    "clear": "Borrar todo",
+    "unstar": "Quitar de favoritos",
+    "emptyTitle": "Aún sin favoritos",
+    "emptyBody": "Marca paquetes con estrella desde la búsqueda para verlos aquí con versión, descargas y salud en vivo.",
+    "emptyCta": "Buscar un paquete →",
+    "col": {
+      "name": "Paquete",
+      "version": "Última",
+      "downloads": "Semanales",
+      "release": "Último lanzamiento",
+      "health": "Frescura",
+      "actions": "Acciones"
+    }
+  },
+  "celebration": {
+    "perfectHealth": "🎉 Salud perfecta — {{ score }}/100!",
+    "healthUp": "La salud subió a {{ score }}"
+  },
+  "auth": {
+    "signOut": "Cerrar sesión",
+    "signIn": {
+      "title": "Inicia sesión para escanear tus proyectos Angular",
+      "lede": "Conecta un proveedor de código una vez — descubriremos cada proyecto Angular legible y ejecutaremos un chequeo de compatibilidad.",
+      "directTitle": "Inicio directo",
+      "directLede": "Un clic. Listamos tus repos y analizamos cada proyecto Angular que encontremos.",
+      "directSub": "Iniciar con {{ name }}",
+      "workspaceTitle": "O un workspace centralizado",
+      "workspaceLede": "Inicia con LinkedIn y enlaza varios proveedores a una sola cuenta — como Vercel o Netlify.",
+      "workspaceSub": "Iniciar con LinkedIn",
+      "gmailSub": "Iniciar sesión con Gmail (Firebase)",
+      "bullets": {
+        "0": "Un workspace para todos tus hosts",
+        "1": "Conecta o desconecta proveedores cuando quieras",
+        "2": "Ligado a tu identidad de LinkedIn"
+      },
+      "skipNote": "¿No quieres iniciar sesión?",
+      "skipLink": "Continuar sin cuenta"
+    },
+    "callback": {
+      "message": "Finalizando inicio de sesión…",
+      "errorTitle": "No pudimos iniciar tu sesión",
+      "tryAgain": "Volver a intentarlo",
+      "continueAnonymous": "Continuar sin iniciar sesión",
+      "details": "Detalles técnicos",
+      "errorCode": "Código de error",
+      "errorDescription": "Descripción",
+      "errors": {
+        "unknown": "Algo salió mal al volver del proveedor de inicio de sesión. Inténtalo de nuevo.",
+        "access_denied": "Rechazaste compartir el acceso con ng-package-compat. Si no era tu intención, inténtalo de nuevo y aprueba los permisos solicitados.",
+        "invalid_scope": "El proveedor de inicio de sesión rechazó uno de los permisos solicitados. Prueba otro proveedor o contacta con soporte si vuelve a ocurrir.",
+        "invalid_request": "La solicitud de inicio de sesión no es válida. Inténtalo de nuevo desde la página de inicio de sesión.",
+        "unauthorized_client": "Esta aplicación no está autorizada a usar el proveedor seleccionado. Prueba otro proveedor.",
+        "unsupported_response_type": "El proveedor devolvió una respuesta no admitida. Inténtalo de nuevo o elige otro proveedor.",
+        "server_error": "El proveedor de inicio de sesión tuvo un error de servidor. Suele ser temporal — inténtalo en unos instantes.",
+        "temporarily_unavailable": "El proveedor de inicio de sesión no está disponible por ahora. Vuelve a intentarlo en breve.",
+        "interaction_required": "El proveedor necesita más interacción. Inténtalo de nuevo y completa todos los pasos.",
+        "login_required": "El proveedor te pide volver a iniciar sesión. Inténtalo otra vez.",
+        "consent_required": "Tendrás que aprobar los permisos en la pantalla de inicio de sesión. Inténtalo de nuevo y acepta cuando se te pida.",
+        "session_timeout": "El inicio de sesión tardó demasiado. La ida y vuelta de OAuth no se completó correctamente — vuelve a intentarlo."
+      }
+    }
+  },
+  "projects": {
+    "heading": "Tus proyectos Angular",
+    "subtitle": "Repos descubiertos vía {{ provider }}",
+    "title": "Repositorios",
+    "scanning": "Escaneando {{ done }} / {{ total }}",
+    "listing": "Listando tus repositorios…",
+    "found": "{{ angular }} proyectos Angular de {{ total }} repos",
+    "refresh": "Re-escanear",
+    "analyze": "Analizar",
+    "analyzeAnyway": "Analizar igual",
+    "noPackageJson": "sin package.json",
+    "empty": {
+      "title": "Aún no hay proyectos",
+      "body": "No encontramos repositorios en esta cuenta. Prueba el workspace de LinkedIn para conectar otro host."
+    },
+    "noToken": {
+      "title": "Perdimos tu token de proveedor",
+      "body": "Los tokens no sobreviven recargas. Inicia sesión de nuevo para refrescarlo.",
+      "cta": "Iniciar sesión otra vez"
+    },
+    "bitbucket": {
+      "title": "Espacios de trabajo de Bitbucket",
+      "body": "Bitbucket Cloud ahora requiere un slug de espacio de trabajo para listar repos (Atlassian CHANGE-2770). Añade el tuyo abajo — lo encuentras en la URL de cualquier repo: bitbucket.org/{{ '{' }}workspace{{ '}' }}/repo.",
+      "inputLabel": "Slug del espacio de trabajo",
+      "add": "Añadir espacio",
+      "remove": "Eliminar {{ workspace }}",
+      "listLabel": "Espacios de Bitbucket configurados",
+      "hint": "Letras minúsculas, números y guiones. Ejemplo: aj769-workspace."
+    }
+  },
+  "workspaceHub": {
+    "heading": "Tu workspace",
+    "subtitle": "Hola, {{ name }}",
+    "connections": {
+      "title": "Hosts conectados",
+      "lede": "Enlaza cualquier combinación de GitHub, GitLab, BitBucket y Azure DevOps. Unimos sus proyectos en una lista.",
+      "linked": "Conectado",
+      "notLinked": "No conectado",
+      "needPat": "sin token — pega un PAT abajo",
+      "connect": "Conectar",
+      "unlink": "Desconectar",
+      "addPat": "Agregar token personal",
+      "savePat": "Guardar token"
+    },
+    "empty": {
+      "title": "Conecta un host para empezar",
+      "body": "Enlaza GitHub, GitLab, BitBucket o Azure para ver tus proyectos Angular aquí."
+    }
+  }
+}

@@ -1,0 +1,842 @@
+{
+  "autocomplete": {
+    "searching": "جارٍ البحث في npm…",
+    "resultsCount": "{{ n }} اقتراحات"
+  },
+  "install": {
+    "ariaLabel": "تثبيت هذا التطبيق",
+    "title": "ثبِّت ng-package-compat",
+    "subtitle": "استخدمه بدون اتصال، ثبّته مرة واحدة، يتحدث تلقائيًا.",
+    "iosHint": "على iOS: اضغط مشاركة ثم أضف إلى الشاشة الرئيسية.",
+    "button": "تثبيت",
+    "later": "لاحقًا"
+  },
+  "github": {
+    "title": "استيراد من GitHub",
+    "placeholder": "https://github.com/org/repo أو org/repo",
+    "button": "جلب package.json",
+    "success": "تم استيراد {{ path }} من {{ owner }}/{{ repo }}@{{ ref }}",
+    "error": "تعذّر جلب package.json من هذا الرابط."
+  },
+  "registry": {
+    "title": "سجل خاص (Artifactory / GitHub Packages / Verdaccio)",
+    "scope": "النطاق",
+    "url": "الرابط",
+    "auth": "المصادقة",
+    "tokenYes": "تم حفظ الرمز",
+    "tokenNo": "(لا يوجد)",
+    "globalOverride": "(جميع الحزم)",
+    "remove": "إزالة",
+    "empty": "لا توجد سجلات خاصة. يُستخدم npm العام افتراضيًا.",
+    "addTitle": "إضافة ربط",
+    "token": "Bearer token",
+    "add": "إضافة",
+    "reset": "إعادة ضبط",
+    "importTitle": "أو الصق ملف .npmrc",
+    "importPlaceholder": "@acme:registry=https://npm.acme.co/\n//npm.acme.co/:_authToken=ghp_xxx",
+    "import": "استيراد .npmrc",
+    "clearAll": "مسح الكل"
+  },
+  "policy": {
+    "title": "السياسات والقواعد",
+    "lede": "احظر أو نبّه على الحزم أو التراخيص أو النطاقات أو الإصدارات التي لا تسمح بها في قاعدة الكود.",
+    "summary": {
+      "count": "{{ count }} قاعدة · {{ enabled }} مفعّلة",
+      "empty": "لا توجد قواعد — يتم تطبيق الافتراضيات."
+    },
+    "remove": "إزالة",
+    "add": {
+      "title": "إضافة قاعدة",
+      "kind": "نوع القاعدة",
+      "version": "الإصدار",
+      "license": "الترخيص (SPDX أو نمط)",
+      "scopes": "النطاقات المعتمدة (مفصولة بفواصل)",
+      "severity": "الشدّة",
+      "label": "تسمية (اختياري)",
+      "note": "ملاحظة (اختياري)",
+      "cta": "أضف القاعدة"
+    },
+    "severity": {
+      "block": "حظر",
+      "warn": "تحذير"
+    },
+    "io": {
+      "title": "استيراد / تصدير القواعد (JSON)",
+      "lede": "الصق مصفوفة JSON للاستيراد؛ انقر على التصدير لنسخ قواعدك الحالية.",
+      "import": "استيراد",
+      "export": "تصدير",
+      "clear": "مسح الكل"
+    },
+    "banner": {
+      "blocked": "{{ count }} انتهاك(ات) للسياسة تحظر هذا التحديث",
+      "warning": "{{ count }} تحذير(ات) سياسة للمراجعة",
+      "lede": "أُطلقت قواعد مُعدّة على التقرير الحالي. عدّل القواعد أعلاه أو عالج الحزمة مباشرةً."
+    }
+  },
+  "monitor": {
+    "title": "ملخّص المراقبة",
+    "lede": "ما الذي تغيّر منذ آخر تحليل توافق لكل مشروع.",
+    "lastCheck": "آخر فحص {{ time }}",
+    "healthDelta": "الصحة",
+    "stop": "إيقاف المراقبة",
+    "noChanges": "لا تغييرات منذ آخر فحص."
+  },
+  "pr": {
+    "title": "معاينة Pull Request",
+    "lede": "تصحيح مولَّد ووصف الـ PR. افتحه مباشرةً على GitHub إذا كنت قد سجّلت الدخول.",
+    "empty": "لا توجد ترقيات إصدار مطلوبة — لا شيء لإنشاء PR له.",
+    "changedCount": "تم تحديث {{ count }} سطر(أسطر) تبعية",
+    "diff": "الفرق في package.json",
+    "body": "نص الـ PR (Markdown)",
+    "copyDiff": "نسخ الفرق",
+    "copyBody": "نسخ النص",
+    "repo": "المستودع",
+    "activeRepo": "المستودع النشط",
+    "private": "خاص",
+    "selectRepo": "اختر مستودعاً…",
+    "typeManually": "اكتب اسم مستودع آخر يدوياً",
+    "pickFromList": "اختر من مستودعاتك",
+    "repoFormatHint": "استخدم الصيغة owner/repo — مثل AJ69-i/Miads",
+    "baseBranch": "الفرع الأساسي",
+    "loadingBranches": "جارٍ تحميل الفروع…",
+    "targetingBranch": "استهداف الفرع",
+    "openOnGitHubFor": "إنشاء Pull Request للمستودع {{ repo }} على GitHub",
+    "openOnGitHub": "افتح PR على GitHub",
+    "openOnGitLab": "إنشاء Merge Request على GitLab",
+    "openOnGitLabFor": "إنشاء Merge Request للمستودع {{ repo }} على GitLab",
+    "openOnBitbucket": "إنشاء Pull Request على Bitbucket",
+    "openOnBitbucketFor": "إنشاء Pull Request للمستودع {{ repo }} على Bitbucket",
+    "openExistingPr": "فتح طلب السحب الحالي #{{ number }}",
+    "openExistingMr": "فتح طلب الدمج الحالي !{{ number }}",
+    "alreadyMergedPr": "تم الدمج بالفعل في {{ branch }} — اعرض PR #{{ number }}",
+    "alreadyMergedMr": "تم الدمج بالفعل في {{ branch }} — اعرض MR !{{ number }}",
+    "branchGroup": {
+      "project": "فروع المشروع",
+      "previousUpdates": "تحديثات سابقة من الأداة · أضف فوقها"
+    },
+    "opening": "جارٍ الفتح…",
+    "opened": "تم فتح الـ PR:",
+    "openedMr": "تم فتح الـ MR:",
+    "signInForButtonGeneric": "سجّل الدخول عبر GitHub أو GitLab أو Bitbucket من صفحة مساحة العمل لتمكين إنشاء PR/MR بنقرة واحدة.",
+    "manualGitlabOnly": {
+      "title": "إدخال اسم المستودع يدويًا غير مدعوم على GitLab",
+      "body": "يحتاج GitLab إلى معرّف رقمي للمشروع لإنشاء طلب الدمج، ولا يمكن كتابته يدويًا. اختر مشروعك من القائمة الممسوحة — أو سجّل الدخول عبر GitHub إن أردت لصق اسم المستودع.",
+      "scanGitlab": "← فحص مشاريعي على GitLab",
+      "linkGitHub": "سجّل الدخول عبر GitHub"
+    }
+  },
+  "snapshotDiff": {
+    "title": "مقارنة اللقطات",
+    "lede": "قارن أي لقطتين محفوظتين — ما الذي تغيّر، أُضيف، أو اختفى.",
+    "notEnough": "تحتاج إلى لقطتين محفوظتين على الأقل للمقارنة. لديك حاليًا {{ count }}.",
+    "from": "من",
+    "to": "إلى",
+    "package": "الحزمة",
+    "kind": "التغيير",
+    "added": "مُضاف",
+    "removed": "محذوف",
+    "changed": "متغيّر"
+  },
+  "wizard": {
+    "title": "ترقية موجَّهة",
+    "lede": "جولة خطوة بخطوة — أسقط ملف package.json وسنعرض ما يهم في كل مرحلة فقط.",
+    "denseLink": "التبديل إلى العرض المكثف",
+    "target": "إصدار Angular المستهدف",
+    "next": "متابعة",
+    "back": "رجوع",
+    "startOver": "ابدأ من جديد",
+    "analyzing": "جارٍ تحليل التبعيات…",
+    "steps": {
+      "upload": "الرفع",
+      "blockers": "العوائق",
+      "bumps": "التحديثات",
+      "pr": "افتح الـ PR"
+    },
+    "upload": {
+      "title": "أسقط ملف package.json",
+      "lede": "نقبل ملف package.json وحده، أو مع angular.json أو tsconfig.json أو .browserslistrc أو ملف القفل لتحليل أعمق.",
+      "depsFound": "تبعية مُحلَّلة",
+      "waiting": "في انتظار ملف…"
+    },
+    "blockers": {
+      "title": "ما الذي يجب أن يوقف الترقية",
+      "lede": "ثلاثة فحوص يجب أن تنجح: قواعد السياسة، التغييرات الكاسرة، الحزم المهجورة.",
+      "policy": "قواعد السياسة",
+      "policyGood": "لا توجد قاعدة تحظر هذه الترقية.",
+      "policyBad": "{{ count }} انتهاك(ات) حاظرة — أصلحها قبل المتابعة.",
+      "warns": "تحذير(ات)",
+      "breaking": "التغييرات الكاسرة",
+      "breakingGood": "لم يتم رصد أي تعارض لهدف Angular هذا.",
+      "breakingBad": "{{ count }} حزمة لا تعمل على إصدار Angular المستهدف بعد.",
+      "deprecated": "الحزم المُهملة",
+      "deprecatedGood": "لا شيء في شجرتك مُهمل رسميًا.",
+      "deprecatedNote": "{{ count }} حزمة مُهملة — راجِعها قبل الدمج.",
+      "cantContinue": "حلّ عوائق السياسة أولًا."
+    },
+    "bumps": {
+      "title": "راجع الترقيات",
+      "lede": "هذه هي تغييرات الإصدار التي ستُطبَّق بالترقية، مع ملخّص أثر حجم الحزمة في الأعلى.",
+      "package": "الحزمة",
+      "from": "من",
+      "to": "إلى",
+      "status": "الحالة",
+      "empty": "لا توجد ترقيات إصدار مطلوبة لهذا الهدف."
+    },
+    "pr": {
+      "title": "افتح طلب السحب",
+      "lede": "تصحيح مولَّد ووصف للـ PR. افتحه على GitHub بنقرة واحدة إذا كنت قد سجّلت الدخول."
+    }
+  },
+  "bundleDelta": {
+    "title": "تأثير حجم الحزمة",
+    "lede": "صافي التغيير في gzip عند قبول كل توصيات هذا التقرير.",
+    "noData": "بيانات الحزمة لا تزال قيد التحميل أو غير متوفرة لهذه المجموعة.",
+    "grows": "أكبر بعد الترقية",
+    "shrinks": "أصغر بعد الترقية",
+    "flat": "بلا تغيير ملحوظ",
+    "splitAria": "شريط مقسم يعرض البايتات المضافة مقابل المُزالة",
+    "coverage": "بناءً على {{ withData }} حزم لديها بيانات حجم ({{ missing }} بدون بيانات).",
+    "growers": "الأكثر تضخمًا",
+    "shrinkers": "الأكثر تقلصًا"
+  },
+  "sync": {
+    "title": "المزامنة",
+    "signIn": "تسجيل الدخول",
+    "now": "زامن الآن",
+    "syncing": "جارٍ المزامنة…",
+    "banner": {
+      "aria": "اقتراح تسجيل الدخول",
+      "history": "سجّل الدخول للحفاظ على سجل بحثك متزامنًا عبر الأجهزة.",
+      "favorites": "سجّل الدخول للحفاظ على المفضلات متزامنة عبر الأجهزة.",
+      "signIn": "تسجيل الدخول",
+      "notNow": "ليس الآن",
+      "dismiss": "إخفاء هذه اللافتة"
+    }
+  },
+  "share": {
+    "button": "نسخ رابط المشاركة",
+    "copied": "تم نسخ الرابط!",
+    "loaded": "تم تحميل تحليل مُشارَك. يمكنك إعادة تشغيله بحرية."
+  },
+  "orgScan": {
+    "title": "فحص مؤسسة npm كاملة",
+    "placeholder": "@my-org",
+    "button": "افحص المؤسسة",
+    "scanning": "جارٍ الفحص…",
+    "summary": "{{ total }} حزمة: {{ fresh }} حديثة / {{ stale }} راكدة / {{ abandoned }} مهجورة / {{ deprecated }} ملغاة"
+  },
+  "ai": {
+    "settingsTitle": "مفتاح مساعد الذكاء الاصطناعي",
+    "provider": "المزود",
+    "apiKey": "مفتاح API",
+    "model": "النموذج (اختياري)",
+    "save": "حفظ",
+    "verify": "تحقق",
+    "clear": "إزالة المفتاح",
+    "stored": "يُحفظ مفتاحك في هذا المتصفح فقط.",
+    "verified": "تم التحقق — جاهز للاستخدام.",
+    "failed": "تعذّر الاتصال بالمزود بهذا المفتاح.",
+    "ask": "اسأل مساعد الذكاء الاصطناعي",
+    "placeholder": "كيف أرحّل ngrx 13 إلى واجهات standalone؟",
+    "send": "إرسال",
+    "thinking": "يفكّر…",
+    "notConfigured": "أضف مفتاح مزوّد من الإعدادات لتفعيل الذكاء الاصطناعي."
+  },
+  "pdf": {
+    "button": "تصدير PDF",
+    "preparing": "جارٍ تجهيز PDF…"
+  },
+  "jira": {
+    "button": "تصدير CSV لجيرا",
+    "description": "استيراد كل الحزم المتأثرة إلى Jira دفعةً واحدة."
+  },
+  "summaryBar": {
+    "title": "نظرة عامة على صحة المشروع",
+    "critical": "حرجة",
+    "warning": "تحذير",
+    "healthy": "سليمة",
+    "all": "الكل",
+    "filterAria": "تصفية حسب الخطورة",
+    "active": "يتم عرض {{ shown }} من {{ total }} حزمة"
+  },
+  "app": {
+    "title": "ng-package-compat",
+    "tagline": "محلل توافق حزم npm لـ Angular",
+    "skipToContent": "تخطَّ إلى المحتوى",
+    "announce": {
+      "routeChanged": "تم تحميل {{ name }}"
+    },
+    "footer": {
+      "label": "تذييل الموقع",
+      "about": "حول",
+      "built": "ng-package-compat — مبني على Angular 21.",
+      "palette": "اضغط {{ mod }}+{{ k }} لفتح لوحة الأوامر.",
+      "rights": "© 2026 أحمد جب. جميع الحقوق محفوظة.",
+      "independence": "هذه الأداة مشروع مستقل وغير مرتبطة بشركة Google أو فريق Angular ولا معتمدة منهما."
+    }
+  },
+  "nav": {
+    "search": "بحث",
+    "compare": "مقارنة",
+    "upgrade": "ترقية",
+    "history": "السجل",
+    "about": "حول",
+    "toggle": "تبديل التنقل",
+    "language": "اللغة",
+    "packageManager": "مدير الحزم",
+    "lightMode": "الوضع الفاتح",
+    "darkMode": "الوضع الداكن",
+    "signIn": "تسجيل الدخول",
+    "projects": "المشاريع"
+  },
+  "common": {
+    "loading": "جارٍ التحميل…",
+    "error": "خطأ",
+    "retry": "إعادة المحاولة",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "clear": "مسح",
+    "copy": "نسخ",
+    "submit": "إرسال",
+    "remove": "إزالة",
+    "empty": "لا يوجد شيء لعرضه حتى الآن.",
+    "notFound": "غير موجود",
+    "failedToFetch": "فشل في الجلب"
+  },
+  "search": {
+    "title": "ابحث عن حزمة npm",
+    "placeholder": "أدخل اسم حزمة npm — جرّب rxjs أو @angular/material أو zone.js",
+    "submit": "تحقّق من التوافق",
+    "strategy": "استراتيجية الاكتشاف",
+    "packageNameLabel": "اسم الحزمة",
+    "hint": "بيانات مباشرة من registry.npmjs.org وواجهة تنزيلات npm و OSV.dev. اضغط {{ mod }}+{{ k }} لفتح لوحة الأوامر.",
+    "lookupFailed": "فشل البحث",
+    "recommendationFor": "التوصية لإصدار Angular",
+    "exportCsv": "تصدير CSV",
+    "exportJson": "تصدير JSON",
+    "actions": "الإجراءات",
+    "export": "تصدير",
+    "count": "{{ shown }} من {{ total }} إصدار",
+    "welcome": "جرّبها",
+    "welcomeHint": "اختر واحدة للبدء:",
+    "welcomeSub": "يفحص التطبيق peerDependencies[\"@angular/core\"] مقابل مجموعة معروفة من إصدارات Angular ويعرض أفضل إصدار مستقر لإصدار Angular المستهدف.",
+    "addFavorite": "أضف إلى المفضلات"
+  },
+  "compare": {
+    "title": "قارن بين حزمتين",
+    "subtitle": "شاهد إصدارات Angular التي يدعمها كل طرف جنبًا إلى جنب.",
+    "pkgAPlaceholder": "الحزمة أ (مثال: ngx-toastr)",
+    "pkgBPlaceholder": "الحزمة ب (مثال: ngx-sonner)",
+    "submit": "قارن",
+    "bothSupport": "كلاهما يدعم:",
+    "noCommon": "لا يوجد إصدار Angular تدعمه الحزمتان في الوقت نفسه.",
+    "pkgAFallback": "الحزمة أ",
+    "pkgBFallback": "الحزمة ب"
+  },
+  "prosCons": {
+    "title": "مقارنة المزايا والعيوب بالذكاء الاصطناعي",
+    "lede": "قارن بين {{ a }} و{{ b }} من حيث حجم الحزمة والاعتماد والصيانة والاستقرار — بناءً على بيانات موضوعية، لا على نصوص تسويقية.",
+    "ctaBody": "احصل على مقارنة مباشرة مدعومة بالذكاء الاصطناعي بين {{ a }} و{{ b }} تستند إلى Bundlephobia وتنزيلات NPM ونشاط GitHub وسجل الإصدارات.",
+    "generate": "إنشاء المقارنة بالذكاء الاصطناعي",
+    "ctaHint": "مجاني عبر وكيل Groq لدينا. أضف مفتاح API الخاص بك في الإعدادات لإنشاءات غير محدودة.",
+    "loading": "جارٍ مقارنة البيانات… يستغرق عادةً 3–6 ثوانٍ.",
+    "refresh": "إعادة الإنشاء",
+    "retry": "حاول مجدداً",
+    "axesLabel": "محاور المقارنة",
+    "tie": "تعادل",
+    "warnings": "تنبيهات المخاطر",
+    "recommendation": "التوصية",
+    "generatedBy": "أُنشئ بواسطة {{ provider }} خلال {{ seconds }} ثانية",
+    "axis": {
+      "bundle-size": "حجم الحزمة",
+      "performance": "الأداء",
+      "maintenance": "الصيانة",
+      "api-stability": "استقرار الـ API",
+      "adoption": "مستوى الاعتماد",
+      "ecosystem-fit": "التوافق مع النظام البيئي"
+    },
+    "time": {
+      "justNow": "الآن",
+      "aMinuteAgo": "قبل دقيقة",
+      "minutesAgo": "قبل بضع دقائق",
+      "hoursAgo": "قبل بضع ساعات"
+    },
+    "error": {
+      "rateLimitHint": "تم استنفاد الحصة المجانية للوكيل. أضف مفتاح Gemini الخاص بك في الإعدادات للحصول على عدد غير محدود من الإنشاءات، أو حاول مجدداً بعد دقيقة.",
+      "proxyUnavailableLead": "خياران لإنجاح هذا:",
+      "proxyOptionSsr": "شغّل خادم SSR الكامل مع تعيين GROQ_API_KEY:",
+      "proxyOptionByo": "أو ألصق مفتاحك الخاص بـ Gemini أو OpenAI أو DeepSeek في الإعدادات — هذه الطلبات تذهب مباشرة من المتصفح ولا تحتاج إلى الوكيل."
+    }
+  },
+  "source": {
+    "drop": {
+      "title": "أفلت ملفات .ts / .html (اختياري)",
+      "hint": "سنصفّي التغييرات الكاسرة لنعرض فقط ما يلمسه كودك فعليًا، مع اقتباسات ملف:سطر. يبقى كل شيء في متصفحك.",
+      "aria": "أفلت ملفات TypeScript أو HTML لفحص كاسر مدرك للشيفرة المصدرية",
+      "loaded": "{{ count }} ملف(ات) تم فحصها",
+      "clear": "مسح"
+    }
+  },
+  "codemod": {
+    "title": "معاينات الإصلاح التلقائي",
+    "empty": "لا توجد codemods مسجّلة لهذه الحزمة بعد.",
+    "hits": "{{ n }} ملف(ات)",
+    "noHits": "لا تغييرات — لم يطابق هذا الـcodemod شيئًا في الملفات المرفوعة.",
+    "changedLines": "~{{ n }} سطر(أسطر) تم تغييرها",
+    "copyPatched": "نسخ بعد الإصلاح"
+  },
+  "workspace": {
+    "title": "انحراف تبعيات مساحة العمل",
+    "projects": "مشروع(مشاريع)",
+    "ngDrift": "إصدارات Angular متعارضة: {{ list }}",
+    "drift": "{{ n }} تبعية(تبعيات) بإصدارات متباينة بين المشاريع",
+    "noDrift": "جميع التبعيات متوافقة بين المشاريع.",
+    "dep": "تبعية",
+    "distinct": "إصدارات",
+    "copyAlign": "نسخ أمر المحاذاة"
+  },
+  "history": {
+    "title": "سجل البحث والمفضلات",
+    "subtitle": "تُحفظ عمليات البحث الأخيرة محليًا في هذا المتصفح.",
+    "favorites": "المفضلات",
+    "recent": "عمليات البحث الأخيرة",
+    "clear": "مسح السجل",
+    "noFavorites": "لا توجد مفضلات بعد — ضع نجمة على حزمة من صفحة البحث.",
+    "noHistory": "سجل البحث فارغ.",
+    "trend": "اتجاه اللقطات"
+  },
+  "about": {
+    "title": "حول ng-package-compat",
+    "lede": "تطبيق Angular صغير يجيب على سؤال واحد للفرق المشغولة: ”هل تعمل حزمة npm هذه مع إصدار Angular الذي أستخدمه؟“",
+    "whatItDoes": "ما الذي يقوم به",
+    "howItWorks": "كيف يُحدَّد التوافق",
+    "dataSources": "مصادر البيانات",
+    "underHood": "تحت الغطاء",
+    "cta": "جرّبه",
+    "allClient": "تُنفَّذ جميع الطلبات من جانب العميل، فلا تقرأ إلا ما تطلبه."
+  },
+  "upgrade": {
+    "title": "ترقية Angular وصحة التبعيات",
+    "subtitle": "اسحب ملف package.json — واختياريًا مع angular.json أو tsconfig.json أو .browserslistrc أو ملف القفل. سنُجري تدقيقًا شاملًا للتوافق، ونقدّر الجهد، ونشير إلى التغييرات الجذرية، ونُولِّد أوامر التثبيت والتراجع، ونُصدِّر الخطة بصيغة Markdown أو كخط CI.",
+    "searchPlaceholder": "فلتر الحزم بالاسم…",
+    "orPaste": "أو الصق قائمة حزم (واحدة في كل سطر)",
+    "analyzeList": "حلّل القائمة",
+    "target": "إصدار Angular المستهدف",
+    "mode": "وضع الإدخال",
+    "modeFile": "رفع ملف",
+    "modeList": "لصق قائمة",
+    "analyze": "تحليل",
+    "running": "جارٍ التحليل…",
+    "empty": "أسقط ملف package.json أو الصق قائمة تبعيات للبدء.",
+    "healthScore": "درجة صحة المشروع",
+    "overall": "إجمالي",
+    "factors": "العوامل",
+    "status": {
+      "safe": "آمن",
+      "warn": "تحذير",
+      "conflict": "تعارض",
+      "deprecated": "مُهمل"
+    },
+    "counts": {
+      "safe": "آمن",
+      "warn": "تحذيرات",
+      "conflict": "تعارضات",
+      "deprecated": "مُهمل",
+      "total": "الإجمالي",
+      "safeLower": "آمن",
+      "warningLower": "تحذير",
+      "breakingLower": "تعارض",
+      "unknownLower": "غير معروف",
+      "deprecatedLower": "مُهمل",
+      "uiAlertLower": "تنبيه واجهة",
+      "licenseBlockLower": "حظر ترخيص",
+      "peerConflictLower": "تعارض اعتماد"
+    },
+    "chip": {
+      "dependencies": "تبعيات",
+      "detectedAngular": "تم اكتشاف Angular",
+      "noAngularCore": "لم يتم اكتشاف @angular/core",
+      "nxWorkspace": "مساحة عمل Nx",
+      "mfeHost": "مضيف Module-Federation",
+      "mfeApps": "{{ count }} تطبيقات (MFE)",
+      "angularJson": "angular.json",
+      "tsconfig": "tsconfig",
+      "browserslist": "browserslist"
+    },
+    "mode": {
+      "optimize": "تحسين (Angular الحالي)",
+      "upgrade": "الترقية إلى الهدف",
+      "analysisMode": "وضع التحليل"
+    },
+    "banner": {
+      "upgradeFromTo": "الترقية من Angular {{ from }} ← {{ to }}",
+      "optimizationOn": "تحسين على Angular {{ ng }}",
+      "health": "صحة المشروع: {{ score }}/100 ({{ label }}) · {{ summary }}",
+      "reportSettings": "إعدادات التقرير",
+      "parseWarnings": "تحذيرات التحليل"
+    },
+    "grades": {
+      "A": "ممتاز",
+      "B": "جيد",
+      "C": "يحتاج انتباهًا",
+      "D": "محفوف بالمخاطر",
+      "F": "حرج"
+    },
+    "labels": {
+      "safe": "آمن",
+      "warning": "تحذير",
+      "conflict": "كسر",
+      "unknown": "غير معروف"
+    },
+    "actions": {
+      "copyMarkdown": "نسخ كـ Markdown",
+      "copyMarkdownTitle": "نسخ كـ Markdown لـ Jira/GitHub",
+      "githubActions": "GitHub Actions",
+      "gitlabCi": "GitLab CI"
+    },
+    "cmd": {
+      "nxMigrateTitle": "ترحيل Nx (تم اكتشاف مساحة عمل Nx)",
+      "nxMigrateHint": "نفّذ من جذر مساحة العمل. يتم إنشاء التزامات لكل ترحيل.",
+      "nxMigrateCopy": "نسخ nx migrate",
+      "oneShotTitle": "ترقية بأمر واحد",
+      "oneShotHint": "نفّذ هذا من جذر مشروعك.",
+      "oneShotCopy": "نسخ ng update",
+      "installTitle": "ثبّت البقية",
+      "installHint": "للحزم التي لا تدعم ng update.",
+      "installCopy": "نسخ التثبيت",
+      "rollbackTitle": "🛟 تراجع آمن",
+      "rollbackHint": "نفّذ إذا كسرت الترقية شيئًا — سيستعيد إصداراتك الأصلية.",
+      "rollbackCopy": "نسخ التراجع",
+      "verifyTitle": "✅ تحقّق بعد الترقية",
+      "verifyHint": "فحص نهائي: بناء الإنتاج + اختبارات headless.",
+      "verifyCopy": "نسخ التحقق",
+      "verify": "تحقّق مسبق",
+      "verifyOk": "خطة التثبيت تبدو نظيفة ({{ n }} حزم تم فحصها، لا تعارضات في الأقران).",
+      "verifyBad": "سيفشل التثبيت — {{ n }} تعارض(ات) في الأقران:"
+    },
+    "peer": {
+      "title": "🧩 تعارضات تبعيات الأقران",
+      "expects": "يتوقع",
+      "butResolves": "لكن شجرتك تحل إلى"
+    },
+    "cfg": {
+      "title": "⚙️ مراجعة ملفات التهيئة"
+    },
+    "lock": {
+      "title": "🔍 فحص ملف القفل ({{ kind }})",
+      "scanned": "تم فحص {{ total }} إدخال عابر.",
+      "none": "لا توجد مشاكل عابرة."
+    },
+    "mfeSection": {
+      "title": "🧬 اتساق الواجهات الدقيقة",
+      "apps": "التطبيقات: {{ names }}",
+      "sharedLib": "المكتبة المشتركة",
+      "status": "الحالة",
+      "versions": "الإصدارات",
+      "consistent": "متسق",
+      "mismatch": "غير متطابق"
+    },
+    "table": {
+      "caption": "تقرير التوافق لكل حزمة",
+      "package": "الحزمة",
+      "status": "الحالة",
+      "current": "الحالي",
+      "recommended": "الموصى به",
+      "bundle": "الحجم",
+      "license": "الترخيص",
+      "action": "الإجراء",
+      "notes": "ملاحظات",
+      "ngUpdate": "ng update",
+      "standalone": "مستقل",
+      "standaloneTitle": "يدعم واجهات standalone عند الهدف",
+      "deprecated": "مُهمل",
+      "ui": "واجهة",
+      "copy": "نسخ",
+      "breakingCount": "{{ n }} تغيير(ات) كاسر(ة)",
+      "citedCount": "{{ n }} نتيجة(نتائج) في الكود",
+      "inYourCode": "تم العثور عليه في الملفات التي رفعتها",
+      "docsLink": "الوثائق ↗",
+      "askClaude": "اسأل Claude",
+      "askChatGPT": "اسأل ChatGPT",
+      "askGemini": "اسأل Gemini",
+      "since": "منذ",
+      "alternatives": "🧩 البدائل ({{ n }})",
+      "uiAlert": "🎨 تنبيه {{ framework }}",
+      "migrationGuide": "دليل الترحيل ↗",
+      "licenseLabel": "⚖️ ترخيص {{ risk }}",
+      "communityNotes": "💬 {{ n }} ملاحظة(ات) مجتمعية",
+      "upvote": "تأييد",
+      "anonymous": "مجهول"
+    },
+    "breakingCallout": {
+      "strong": "تم اكتشاف تغييرات كاسرة.",
+      "body": "راجع صفوف التعارض — لا يوجد إصدار لهذه الحزم يدعم Angular {{ ng }} بعد، أو أن الإصدار المثبت الحالي غير متوافق. فكّر في البدائل أو خطط التعديل."
+    },
+    "addNote": {
+      "title": "💬 أضف ملاحظة",
+      "hint": "هل تعرف خطأً ليس في الوثائق الرسمية؟ شاركه مع الفريق التالي الذي سيواجهه. تُحفظ الملاحظات محليًا.",
+      "intro": "هل تعرف خطأً ليس في الوثائق الرسمية؟ شاركه مع الفريق التالي الذي سيواجهه.",
+      "storageAnon": "محفوظة في متصفحك",
+      "storageSignedIn": "متزامنة مع حسابك",
+      "pkgPlaceholder": "الحزمة (مثال: primeng)",
+      "ngPlaceholder": "إصدار Angular",
+      "authorPlaceholder": "اسمك (اختياري)",
+      "bodyPlaceholder": "ما الذي تعطل، وكيف أصلحته.",
+      "submit": "أضف ملاحظة",
+      "hintLabels": {
+        "needPkg": "أضف اسم حزمة للمتابعة.",
+        "needBody": "تحتاج الملاحظة إلى {{ min }} حرفاً على الأقل — لديك {{ have }}.",
+        "bodyOk": "{{ count }} حرفاً — تبدو جيدة."
+      },
+      "toast": {
+        "saved": "تم حفظ الملاحظة.",
+        "needPkg": "أضف اسم الحزمة",
+        "needBody": "يجب أن تحتوي الملاحظة على {{ min }} حرفاً على الأقل (لديك {{ have }})",
+        "invalid": "بعض الحقول المطلوبة مفقودة."
+      }
+    },
+    "myContributions": {
+      "title": "مساهماتك ({{ count }})",
+      "remove": "حذف",
+      "removed": "تم حذف الملاحظة.",
+      "upvotes": "{{ count }} تصويتاً إيجابياً",
+      "justNow": "الآن",
+      "minutesAgo": "قبل {{ n }} دقيقة",
+      "hoursAgo": "قبل {{ n }} ساعة",
+      "daysAgo": "قبل {{ n }} يوم"
+    },
+    "relocation": {
+      "title": "📦 انتقلت الحزمة",
+      "movedFrom": "منقولة من",
+      "newHome": "إلى",
+      "reason": "السبب",
+      "autoRedirect": "أعدنا توجيه بحثك إلى المكان الجديد.",
+      "searchNew": "افتح الحزمة الجديدة",
+      "readMore": "اقرأ الإعلان"
+    },
+    "deadButWorking": {
+      "title": "☠️ مهجورة لكن قابلة للاستخدام",
+      "hint": "لم تعد هذه الحزمة مُدارة، لكن إصدارًا أقدم لا يزال يعمل مع إصدار Angular لديك.",
+      "lastWorking": "آخر إصدار يعمل لـ Angular {{ ng }}",
+      "useExact": "ثبّت هذا الإصدار بالضبط",
+      "caveat": "لن تصل إصلاحات أمنية — خطّط للانتقال إلى البديل أدناه.",
+      "alternatives": "فكّر في الانتقال إلى"
+    },
+    "prosCons": {
+      "title": "⚖️ مقارنة جنبًا إلى جنب",
+      "option": "الخيار",
+      "pros": "الإيجابيات",
+      "cons": "السلبيات",
+      "verdict": "الحكم",
+      "whyMoving": "لماذا نقترح الانتقال"
+    },
+    "timeline": {
+      "title": "📅 الجدول الزمني للإصدارات",
+      "currentReleased": "صدر إصدارك قبل {{ ago }}",
+      "latestReleased": "صدر الأحدث قبل {{ ago }}",
+      "gap": "الفجوة بين الحالي والأحدث",
+      "today": "اليوم",
+      "yesterday": "أمس",
+      "daysAgo": "{{ n }} أيام",
+      "monthsAgo": "{{ n }} أشهر",
+      "yearsAgo": "{{ n }} سنوات",
+      "stale": "⚠️ قديم — فكّر في التحديث",
+      "fresh": "✅ محدّث حديثًا",
+      "neverReleased": "لا توجد بيانات إصدار"
+    }
+  },
+  "toast": {
+    "close": "إغلاق الإشعار",
+    "dismiss": "إخفاء",
+    "action": "عرض"
+  },
+  "shortcuts": {
+    "title": "اختصارات لوحة المفاتيح",
+    "tip": "اضغط ? في أي وقت لإعادة فتح هذه الورقة.",
+    "group": {
+      "Navigation": "التنقّل",
+      "Analysis": "التحليل",
+      "Export": "التصدير",
+      "Help": "المساعدة"
+    }
+  },
+  "preferences": {
+    "title": "المظهر وإمكانية الوصول",
+    "ariaLabel": "فتح التفضيلات",
+    "accent": "اللون الرئيسي",
+    "fontScale": "حجم النص",
+    "density": "كثافة التخطيط",
+    "densityCompact": "مدمج",
+    "densityComfortable": "مريح",
+    "densityWide": "واسع",
+    "densityCompactHint": "إحساس موقع تسويقي — عمود قراءة أضيق",
+    "densityComfortableHint": "الافتراضي المتوازن — إحساس أداة المطورين",
+    "densityWideHint": "استخدم معظم الشاشة — إحساس IDE",
+    "reducedMotion": "تقليل الحركة",
+    "highContrast": "تباين عالٍ",
+    "colorBlind": "لوحة ألوان مناسبة لعمى الألوان",
+    "reset": "إعادة الافتراضات"
+  },
+  "onboarding": {
+    "title": "البدء",
+    "next": "التالي",
+    "back": "السابق",
+    "skip": "تخطّي الجولة",
+    "done": "حسناً",
+    "steps": {
+      "welcome": {
+        "title": "مرحباً بك في ng-package-compat",
+        "body": "تحقّق من توافق أي حزمة npm مع أي إصدار Angular، وخطّط للترقيات، وراقب صحّة التبعيات — كلّ ذلك في ثوانٍ."
+      },
+      "search": {
+        "title": "ابحث عن أي حزمة",
+        "body": "ابدأ بكتابة اسم الحزمة. يعرض الإكمال التلقائي التنزيلات الأسبوعية وأحدث إصدار ودعم Angular."
+      },
+      "analyze": {
+        "title": "أسقط ملف package.json",
+        "body": "يقرأ مساعد الترقية تبعياتك الحقيقية، ويرصد التغييرات الكاسرة، وينتج أمر ng update واحد قابل للنسخ."
+      },
+      "upgrade": {
+        "title": "لوحة واحدة، كلّ المؤشّرات",
+        "body": "التوافق، حجم الحزمة، تضارب التبعيات، التنبيهات الأمنية، مخاطر الترخيص، وحداثة الإصدار — في تقرير واحد."
+      },
+      "preferences": {
+        "title": "اضبطها لعينيك",
+        "body": "بدّل الألوان الرئيسية، غيّر حجم النص، فعّل التباين العالي، أو اختر لوحة مناسبة لعمى الألوان من ترس الزاوية."
+      },
+      "shortcuts": {
+        "title": "اختصارات أولاً",
+        "body": "اضغط ? في أي وقت لعرض جميع الاختصارات. Ctrl/Cmd + K تفتح لوحة الأوامر."
+      }
+    }
+  },
+  "notes": {
+    "title": "ملاحظات",
+    "for": "ملاحظات حول",
+    "flag": "📌 تثبيت هذه الحزمة في الأعلى",
+    "placeholder": "لماذا هذه الحزمة مميّزة؟ مثال: مثبّتة للمراجعة القانونية.",
+    "save": "حفظ",
+    "clear": "مسح",
+    "updated": "تم التحديث"
+  },
+  "favorites": {
+    "title": "المفضّلة",
+    "subtitle": "لوحة حيّة لصحّة الحزم التي تعلّمها. انقر أي صفّ لإجراء تحليل جديد.",
+    "dragHandle": "اسحب لإعادة الترتيب",
+    "refresh": "تحديث",
+    "refreshing": "جارٍ التحديث…",
+    "clear": "مسح الكل",
+    "unstar": "إزالة من المفضّلة",
+    "emptyTitle": "لا مفضّلة بعد",
+    "emptyBody": "علّم الحزم من صفحة البحث لرؤيتها هنا مع الإصدار والتنزيلات والصحّة الحيّة.",
+    "emptyCta": "ابحث عن حزمة →",
+    "col": {
+      "name": "الحزمة",
+      "version": "الأحدث",
+      "downloads": "أسبوعياً",
+      "release": "آخر إصدار",
+      "health": "الحداثة",
+      "actions": "الإجراءات"
+    }
+  },
+  "celebration": {
+    "perfectHealth": "🎉 صحّة مثالية — {{ score }}/100!",
+    "healthUp": "تحسّنت الصحّة إلى {{ score }}"
+  },
+  "auth": {
+    "signOut": "تسجيل الخروج",
+    "signIn": {
+      "title": "سجّل الدخول لمسح مشاريع Angular الخاصة بك",
+      "lede": "اربط مزوّد كود مرة واحدة — سنكتشف كل مشروع Angular يمكنك قراءته ونجري فحص توافق.",
+      "directTitle": "تسجيل دخول مباشر",
+      "directLede": "نقرة واحدة. نسرد المستودعات ونحلّل كل مشروع Angular نجده.",
+      "directSub": "الدخول عبر {{ name }}",
+      "workspaceTitle": "أو مساحة عمل موحّدة",
+      "workspaceLede": "ادخل عبر LinkedIn واربط عدة مزوّدين بحساب واحد — مثل Vercel أو Netlify.",
+      "workspaceSub": "الدخول عبر LinkedIn",
+      "gmailSub": "تسجيل الدخول عبر Gmail (Firebase)",
+      "bullets": {
+        "0": "مساحة واحدة لكل مزوّدي الكود",
+        "1": "اربط/افصل في أي وقت",
+        "2": "مرتبط بهوية LinkedIn"
+      },
+      "skipNote": "لا ترغب بتسجيل الدخول؟",
+      "skipLink": "المتابعة بدون حساب"
+    },
+    "callback": {
+      "message": "إنهاء تسجيل الدخول…",
+      "errorTitle": "تعذَّر تسجيل دخولك",
+      "tryAgain": "حاول تسجيل الدخول مرة أخرى",
+      "continueAnonymous": "المتابعة بدون تسجيل الدخول",
+      "details": "تفاصيل تقنية",
+      "errorCode": "رمز الخطأ",
+      "errorDescription": "الوصف",
+      "errors": {
+        "unknown": "حدث خطأ ما أثناء العودة من مزوّد تسجيل الدخول. يُرجى المحاولة مرة أخرى.",
+        "access_denied": "لقد رفضت منح ng-package-compat الإذن. إذا لم يكن ذلك مقصوداً، حاول مرة أخرى ووافق على الأذونات المطلوبة.",
+        "invalid_scope": "رفض مزوّد تسجيل الدخول إحدى الأذونات المطلوبة. جرّب مزوّداً آخر أو تواصل مع الدعم إذا تكرّر الأمر.",
+        "invalid_request": "طلب تسجيل الدخول غير صالح. حاول مجدداً من صفحة تسجيل الدخول.",
+        "unauthorized_client": "هذا التطبيق غير مصرَّح له باستخدام مزوّد تسجيل الدخول المُختار. جرّب مزوّداً مختلفاً.",
+        "unsupported_response_type": "أعاد مزوّد تسجيل الدخول استجابة غير مدعومة. حاول مجدداً أو اختر مزوّداً آخر.",
+        "server_error": "حدث خطأ في خادم مزوّد تسجيل الدخول. الأمر مؤقت عادةً — يُرجى المحاولة بعد لحظات.",
+        "temporarily_unavailable": "مزوّد تسجيل الدخول غير متاح مؤقتاً. يُرجى المحاولة قريباً.",
+        "interaction_required": "يحتاج مزوّد تسجيل الدخول إلى تفاعل إضافي. حاول مجدداً وأكمل كل الخطوات.",
+        "login_required": "يحتاج مزوّد تسجيل الدخول إلى تسجيل دخولك مرة أخرى. يُرجى المحاولة مجدداً.",
+        "consent_required": "ستحتاج إلى الموافقة على الأذونات في شاشة تسجيل الدخول. حاول مجدداً ووافق عند الطلب.",
+        "session_timeout": "استغرق تسجيل الدخول وقتاً طويلاً. لم تكتمل عملية OAuth بشكل سليم — يُرجى المحاولة مجدداً."
+      }
+    }
+  },
+  "projects": {
+    "heading": "مشاريع Angular الخاصة بك",
+    "subtitle": "المستودعات المكتشفة عبر {{ provider }}",
+    "title": "المستودعات",
+    "scanning": "جاري المسح {{ done }} / {{ total }}",
+    "listing": "جاري سرد المستودعات…",
+    "found": "{{ angular }} مشاريع Angular من أصل {{ total }} مستودع",
+    "refresh": "إعادة المسح",
+    "analyze": "تحليل",
+    "analyzeAnyway": "تحليل على أي حال",
+    "noPackageJson": "بدون package.json",
+    "empty": {
+      "title": "لا مشاريع بعد",
+      "body": "لم نجد مستودعات على هذا الحساب. جرّب مساحة LinkedIn لربط مزوّد آخر."
+    },
+    "noToken": {
+      "title": "فقدنا رمز المزوّد",
+      "body": "رموز المزوّد لا تستمر بعد إعادة التحميل. سجّل الدخول مجددًا.",
+      "cta": "إعادة تسجيل الدخول"
+    },
+    "bitbucket": {
+      "title": "مساحات عمل Bitbucket",
+      "body": "أصبح Bitbucket Cloud يتطلب slug مساحة العمل لعرض المستودعات (Atlassian CHANGE-2770). أضف مساحتك أدناه — تجدها في رابط أي مستودع: bitbucket.org/{{ '{' }}workspace{{ '}' }}/repo.",
+      "inputLabel": "Slug مساحة العمل",
+      "add": "إضافة مساحة العمل",
+      "remove": "إزالة {{ workspace }}",
+      "listLabel": "مساحات Bitbucket المُهيّأة",
+      "hint": "أحرف صغيرة وأرقام وشرطات. مثال: aj769-workspace."
+    }
+  },
+  "workspaceHub": {
+    "heading": "مساحة العمل",
+    "subtitle": "مرحبًا، {{ name }}",
+    "connections": {
+      "title": "المزوّدون المتصلون",
+      "lede": "اربط أي مزيج من GitHub و GitLab و BitBucket و Azure DevOps. سندمج مشاريعهم في قائمة واحدة.",
+      "linked": "متصل",
+      "notLinked": "غير متصل",
+      "needPat": "لا يوجد رمز — الصق PAT أدناه",
+      "connect": "اتصال",
+      "unlink": "فصل",
+      "addPat": "إضافة رمز شخصي",
+      "savePat": "حفظ الرمز"
+    },
+    "empty": {
+      "title": "اربط مزوّد كود للبدء",
+      "body": "اربط GitHub أو GitLab أو BitBucket أو Azure لرؤية مشاريع Angular هنا."
+    }
+  }
+}
