@@ -1,0 +1,61 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": ["/favicon.ico", "/index.html", "/manifest.webmanifest", "/*.css", "/*.js"]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": ["/assets/**", "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "npm-registry",
+      "urls": ["https://registry.npmjs.org/**"],
+      "cacheConfig": {
+        "maxSize": 60,
+        "maxAge": "1d",
+        "timeout": "5s",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "npm-downloads",
+      "urls": ["https://api.npmjs.org/**"],
+      "cacheConfig": {
+        "maxSize": 60,
+        "maxAge": "6h",
+        "timeout": "5s",
+        "strategy": "performance"
+      }
+    },
+    {
+      "name": "bundlephobia",
+      "urls": ["https://bundlephobia.com/api/**"],
+      "cacheConfig": {
+        "maxSize": 60,
+        "maxAge": "7d",
+        "strategy": "performance"
+      }
+    },
+    {
+      "name": "osv",
+      "urls": ["https://api.osv.dev/**"],
+      "cacheConfig": {
+        "maxSize": 60,
+        "maxAge": "1d",
+        "strategy": "freshness"
+      }
+    }
+  ]
+}

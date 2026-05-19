@@ -1,0 +1,661 @@
+/* =========================================================
+   ng-package-compat — global styles
+   Dark by default, light on [data-theme='light'],
+   responsive across mobile / tablet / desktop / large displays.
+   ========================================================= */
+
+:root,
+[data-theme='dark'] {
+  /* ---------- Colors ---------- */
+  --bg: linear-gradient(135deg, #0b1120 0%, #1e293b 100%);
+  --surface-1: #0b1220;
+  --surface-2: rgba(15, 23, 42, 0.6);
+  /* New: a clearly-elevated surface for cards / popovers / modals so the
+     hierarchy reads top→bottom: page bg < surface-1 < surface-2 < surface-3. */
+  --surface-3: rgba(30, 41, 59, 0.85);
+  --border: #334155;
+  /* Subtle border tone for nested separators (table rows, inner dividers). */
+  --border-subtle: rgba(51, 65, 85, 0.55);
+  --fg: #e2e8f0;
+  --fg-dim: #94a3b8;
+  /* Slightly brighter dim text for fine print where AAA contrast matters. */
+  --fg-dim-2: #b6c0cf;
+  --accent: #a5b4fc;
+  --accent-bg: rgba(99, 102, 241, 0.18);
+  --accent-ring: rgba(99, 102, 241, 0.30);
+  /* The brand gradient was duplicated in three components. Defining it
+     once here means the "primary" look stays in sync everywhere. */
+  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --accent-gradient-soft: linear-gradient(135deg, rgba(99,102,241,0.10), rgba(139,92,246,0.10));
+  --latest-bg: rgba(34, 197, 94, 0.08);
+  --ok: #22c55e;
+  --warn: #f59e0b;
+  --bad: #ef4444;
+
+  /* ---------- Typography scale (fluid) ---------- */
+  --step--1: clamp(0.78rem, 0.75rem + 0.1vw, 0.82rem);
+  --step-0:  clamp(0.9rem,  0.85rem + 0.2vw, 1rem);
+  --step-1:  clamp(1rem,    0.95rem + 0.3vw, 1.1rem);
+  --step-2:  clamp(1.15rem, 1rem    + 0.5vw, 1.3rem);
+  --step-3:  clamp(1.3rem,  1.1rem  + 0.8vw, 1.6rem);
+  --step-4:  clamp(1.6rem,  1.2rem  + 1.5vw, 2.1rem);
+  --line-tight: 1.25;
+  --line-snug: 1.4;
+  --line-base: 1.55;
+
+  /* Track-by font features. Tabular numerals make right-aligned numbers
+     in tables and counters line up; SS01 enables the "alternate one"
+     stylistic set in Inter so version strings (1.2.3) read more clearly. */
+  --num: tabular-nums;
+  --code-font: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* ---------- Spacing tokens ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  /* ---------- Radius / shadow ---------- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.10);
+  --shadow-2: 0 6px 16px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.10);
+  --shadow-3: 0 14px 32px rgba(0,0,0,0.28), 0 6px 14px rgba(0,0,0,0.16);
+  --shadow-glow: 0 8px 24px rgba(99,102,241,0.32);
+
+  /* ---------- Motion ---------- */
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-theme='light'] {
+  --bg: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  --surface-1: #ffffff;
+  --surface-2: rgba(255, 255, 255, 0.78);
+  --surface-3: #ffffff;
+  --border: #d1d8e0;
+  --border-subtle: rgba(203, 213, 225, 0.7);
+  --fg: #0f172a;
+  --fg-dim: #475569;
+  --fg-dim-2: #334155;
+  --accent: #4f46e5;
+  --accent-bg: rgba(79, 70, 229, 0.10);
+  --accent-ring: rgba(79, 70, 229, 0.28);
+  --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --accent-gradient-soft: linear-gradient(135deg, rgba(79,70,229,0.08), rgba(124,58,237,0.08));
+  --latest-bg: rgba(34, 197, 94, 0.12);
+  --shadow-1: 0 1px 2px rgba(15,23,42,0.06), 0 2px 6px rgba(15,23,42,0.04);
+  --shadow-2: 0 6px 16px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.04);
+  --shadow-3: 0 14px 32px rgba(15,23,42,0.12), 0 6px 14px rgba(15,23,42,0.06);
+  --shadow-glow: 0 8px 24px rgba(79,70,229,0.20);
+}
+
+/* Respect prefers-color-scheme when [data-theme] not set manually
+   (ThemeService still drives the attribute — this is purely the "no JS" default). */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --bg: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    --surface-1: #ffffff;
+    --surface-2: rgba(255, 255, 255, 0.78);
+    --surface-3: #ffffff;
+    --border: #d1d8e0;
+    --border-subtle: rgba(203, 213, 225, 0.7);
+    --fg: #0f172a;
+    --fg-dim: #475569;
+    --fg-dim-2: #334155;
+    --accent: #4f46e5;
+    --accent-bg: rgba(79, 70, 229, 0.10);
+    --accent-ring: rgba(79, 70, 229, 0.28);
+    --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    --accent-gradient-soft: linear-gradient(135deg, rgba(79,70,229,0.08), rgba(124,58,237,0.08));
+    --latest-bg: rgba(34, 197, 94, 0.12);
+    --shadow-1: 0 1px 2px rgba(15,23,42,0.06), 0 2px 6px rgba(15,23,42,0.04);
+    --shadow-2: 0 6px 16px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.04);
+    --shadow-3: 0 14px 32px rgba(15,23,42,0.12), 0 6px 14px rgba(15,23,42,0.06);
+    --shadow-glow: 0 8px 24px rgba(79,70,229,0.20);
+  }
+}
+
+/* Reset ------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote {
+  margin: 0; padding: 0;
+}
+ul, ol { list-style: none; }
+img, svg, video { max-width: 100%; height: auto; display: block; }
+
+html {
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+/* Respect motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html, body {
+  min-height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  background-attachment: fixed;
+  color: var(--fg);
+  font-size: var(--step-0);
+  line-height: var(--line-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* SS01 = "alternate one" stylistic set in Inter; cv11 disambiguates 0
+     and the letter O in monospace contexts. Both safe to leave on. */
+  font-feature-settings: 'cv11', 'ss01';
+  text-rendering: optimizeLegibility;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease);
+}
+
+body { overflow-x: hidden; }
+
+/* Heading rhythm — calmer line-heights and tightened tracking for display
+   sizes. Keeps the type system in one place rather than each page setting
+   its own h1/h2 defaults. */
+h1, h2, h3, h4, h5, h6 {
+  line-height: var(--line-tight);
+  color: var(--fg);
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+h1 { font-size: var(--step-4); letter-spacing: -0.02em; }
+h2 { font-size: var(--step-3); }
+h3 { font-size: var(--step-2); }
+h4 { font-size: var(--step-1); line-height: var(--line-snug); }
+p { line-height: var(--line-base); }
+
+/* Tabular numerals everywhere a number is likely to appear in a column —
+   tables, package counts, version pills, dates. Pure CSS opt-in via the
+   data-num attribute keeps this surgical. */
+table, .tabular,
+.count, .meta, .chip, .badge, .pill,
+[data-num], time, code, kbd, samp, pre {
+  font-variant-numeric: var(--num);
+}
+
+/* Code, kbd, pre — share font + tone */
+code, kbd, samp, pre {
+  font-family: var(--code-font);
+  font-size: 0.92em;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button { cursor: pointer; }
+button[disabled], button[aria-disabled='true'] { cursor: not-allowed; }
+
+a { color: var(--accent); }
+a:hover { text-decoration: underline; }
+a:not([class]):focus-visible { text-decoration: underline; }
+
+/* Selection + placeholder polish */
+::selection { background: var(--accent-bg); color: var(--fg); }
+::placeholder { color: var(--fg-dim); opacity: 1; }
+
+/* Universal focus ring ---------------------------------------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 4px var(--accent-ring);
+}
+
+/* Forced-colors (Windows high-contrast mode + similar) ---------
+   The browser overrides our colours with system colours; we just
+   need to make sure focus is visible and bordered elements stay
+   recognisable as buttons / links. */
+@media (forced-colors: active) {
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 3px solid CanvasText;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+  /* Decorative chips / buttons need a border in HC mode otherwise they
+     vanish into the canvas background. */
+  button,
+  [role='button'],
+  .card,
+  .pill,
+  .chip,
+  .badge {
+    border: 1px solid ButtonText !important;
+  }
+}
+
+/* Higher-contrast preference (e.g. macOS "Increase contrast") ---
+   Bumps the dim foreground and border colours slightly so secondary
+   text and dividers are easier to perceive. */
+@media (prefers-contrast: more) {
+  :root, [data-theme='dark'], [data-theme='light'] {
+    --fg-dim: var(--fg);
+    --border: currentColor;
+  }
+}
+
+/* Active nav link — in addition to the visual `.active` class we get
+   `aria-current="page"` for screen readers. Mirror it as a stronger
+   visual cue so sighted users see a thicker indicator too. */
+[aria-current='page'] {
+  font-weight: 600;
+}
+
+/* Scrollbars -------------------------------------------------- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius-pill);
+  /* 2px transparent border + background-clip creates an inset thumb so it
+     looks more refined and doesn't visually extend to the edge. */
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--fg-dim); background-clip: padding-box; }
+@supports (scrollbar-color: auto) {
+  * { scrollbar-color: var(--border) transparent; scrollbar-width: thin; }
+}
+
+/* ============================================================
+   Reusable primitives — opt-in baseline classes. Components
+   that already have full custom styles keep working; new code
+   (and refactored pages later) can lean on these so the design
+   system stays consistent without a full rewrite.
+   ============================================================ */
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0 1rem;
+  border-radius: var(--radius-md);
+  font-size: var(--step-0);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  color: var(--fg);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition:
+    background-color 160ms var(--ease),
+    border-color 160ms var(--ease),
+    color 160ms var(--ease),
+    transform 120ms var(--ease),
+    box-shadow 160ms var(--ease);
+}
+.btn:hover:not(:disabled):not([aria-disabled='true']) {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.btn:active:not(:disabled) { transform: translateY(0); }
+.btn:disabled, .btn[aria-disabled='true'] {
+  opacity: 0.55; cursor: not-allowed; transform: none;
+}
+
+.btn-primary {
+  background: var(--accent-gradient);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: var(--shadow-1);
+}
+.btn-primary:hover:not(:disabled):not([aria-disabled='true']) {
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--fg-dim);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--fg);
+  border-color: var(--border);
+}
+
+.btn-sm { min-height: 32px; padding: 0 0.75rem; font-size: var(--step--1); }
+.btn-lg { min-height: 48px; padding: 0 1.5rem; font-size: var(--step-1); }
+
+/* Card — used as the default panel container. */
+.card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  box-shadow: var(--shadow-1);
+}
+.card-elevated {
+  background: var(--surface-3);
+  box-shadow: var(--shadow-2);
+}
+
+/* Chip — small inline label, used for metadata, tags, status. */
+.chip,
+.pill,
+.badge {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  color: var(--fg-dim);
+  font-size: var(--step--1);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.chip-accent { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 50%, var(--border)); background: var(--accent-bg); }
+.chip-ok     { color: var(--ok);     border-color: color-mix(in srgb, var(--ok) 50%, var(--border)); }
+.chip-warn   { color: var(--warn);   border-color: color-mix(in srgb, var(--warn) 50%, var(--border)); }
+.chip-bad    { color: var(--bad);    border-color: color-mix(in srgb, var(--bad) 50%, var(--border)); }
+
+/* Input — shared text-input baseline. */
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  color: var(--fg);
+  font-size: var(--step-0);
+  outline: none;
+  transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease);
+}
+.input:focus,
+.input:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+/* Section spacing rhythm — direct children of <main> get a consistent
+   gap so pages don't all hand-tune top margins. Components that already
+   set their own `margin-top` continue to win. */
+main.shell > * + * { margin-top: clamp(1rem, 2.5vw, 1.5rem); }
+
+/* Skip link (reused by AppComponent) — use `top` to hide, not `left`,
+   so RTL doesn't accidentally reveal it when `left` is overridden. */
+.skip-link, .skip {
+  position: absolute;
+  top: -200px;
+  inset-inline-start: 8px;
+  padding: 8px 12px;
+  background: var(--accent); color: #fff; border-radius: 6px;
+  text-decoration: none; z-index: 200;
+  transition: top 140ms var(--ease);
+}
+.skip-link:focus, .skip:focus { top: 8px; }
+
+/* Touch targets — WCAG 2.2 AA (24x24 min, 44x44 recommended) */
+button, [role='button'], a.button, input[type='submit'], input[type='button'] {
+  min-height: 32px;
+}
+
+/* Helper classes ---------------------------------------------- */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* RTL tweaks (Arabic locale) ---------------------------------- */
+[dir='rtl'] body { font-family: 'Cairo', 'Tajawal', 'Inter', sans-serif; }
+/* Skip link already uses logical `inset-inline-start`; no override needed. */
+
+/* Container / breakpoint utilities ---------------------------- */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin-inline: auto;
+  padding-inline: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+/* Print styles ------------------------------------------------ */
+@media print {
+  :root, [data-theme='dark'], [data-theme='light'] {
+    --bg: #fff;
+    --surface-1: #fff;
+    --surface-2: #fff;
+    --fg: #000;
+    --fg-dim: #444;
+    --border: #bbb;
+    --accent: #0033aa;
+  }
+
+  /* Hard reset backgrounds so print is ink-friendly */
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+    line-height: 1.45;
+  }
+
+  /* Hide chrome that doesn't belong in a printed report */
+  app-navbar,
+  app-command-palette,
+  app-shortcuts-help,
+  app-theme-customizer,
+  app-toast-host,
+  app-onboarding-tour,
+  app-install-prompt,
+  app-health-celebration,
+  .footer, .skip, .copy,
+  button.primary,
+  [data-no-print="true"],
+  [data-tour="preferences"] { display: none !important; }
+
+  /* Make every link obvious and annotate its destination */
+  a { color: #0033aa; text-decoration: underline; }
+  a[href^="http"]::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.8em;
+    color: #666;
+    word-break: break-all;
+  }
+  a[href^="#"]::after, a[href^="/"]::after { content: ''; }
+
+  /* Tables: avoid splitting rows across pages but allow tables themselves to flow */
+  .versions, .grid, table { page-break-inside: auto; width: 100% !important; }
+  tr, li { page-break-inside: avoid; }
+  thead { display: table-header-group; }
+  tfoot { display: table-footer-group; }
+
+  /* Headings shouldn't get orphaned at the bottom of a page */
+  h1, h2, h3, h4 { page-break-after: avoid; break-after: avoid-page; }
+
+  /* Force a page break between major report sections */
+  .print-break, [data-print-break="true"] { page-break-before: always; break-before: page; }
+
+  /* Borders & cards: flatten shadows (don't print) */
+  .card, .panel, .report, .pill, .chip, .tag, .badge {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Status colors — print uses monochrome glyphs for ink safety */
+  .status-conflict::before { content: '✕ '; color: #000; font-weight: 700; }
+  .status-warning::before  { content: '! '; color: #000; font-weight: 700; }
+  .status-safe::before     { content: '✓ '; color: #000; font-weight: 700; }
+
+  /* Summary bar: convert to a stacked list for clarity */
+  app-sticky-summary-bar { position: static !important; border: none !important; }
+
+  /* Main container takes full page */
+  main.shell { max-width: 100%; padding: 0; margin: 0; }
+
+  /* Fix page margins + header/footer via @page */
+  @page { margin: 18mm 14mm; size: A4; }
+  @page :first { margin-top: 24mm; }
+}
+
+/* Large displays / high-density ------------------------------- */
+@media (min-width: 1400px) {
+  main.shell { max-width: 1280px; }
+}
+
+/* Mobile specific - enforce touch-friendly targets */
+@media (max-width: 520px) {
+  button, [role='button'], a.button { min-height: 44px; }
+  input, select, textarea { min-height: 44px; }
+}
+
+/* =========================================================
+   Global animations — subtle, fast (150–250ms)
+   Applied broadly via low-specificity selectors; components
+   may override. All respect prefers-reduced-motion above.
+   ========================================================= */
+
+/* Reusable keyframes */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fade-slide-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-slide-down {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+/* Route-level transition — works with withViewTransitions() too */
+main.shell > * {
+  animation: fade-slide-up 220ms var(--ease) both;
+}
+
+/* Default transitions for interactive elements */
+button, [role='button'], a.button,
+input, select, textarea {
+  transition:
+    background-color 180ms var(--ease),
+    border-color 180ms var(--ease),
+    color 180ms var(--ease),
+    transform 180ms var(--ease),
+    box-shadow 180ms var(--ease),
+    opacity 180ms var(--ease);
+}
+
+button:not([disabled]):hover,
+[role='button']:not([aria-disabled='true']):hover,
+a.button:hover {
+  transform: translateY(-1px);
+}
+button:not([disabled]):active,
+[role='button']:not([aria-disabled='true']):active,
+a.button:active {
+  transform: translateY(0);
+}
+
+/* Cards, pills, chips */
+.card, .panel, .pill, .chip, .tag, .badge, .status {
+  transition:
+    background-color 180ms var(--ease),
+    border-color 180ms var(--ease),
+    transform 180ms var(--ease),
+    box-shadow 180ms var(--ease);
+  animation: fade-in 200ms var(--ease) both;
+}
+.card:hover, .panel:hover { transform: translateY(-1px); }
+
+/* Lists — subtle stagger for direct children */
+ul.stagger > li, ol.stagger > li,
+.list-stagger > * {
+  animation: fade-slide-up 220ms var(--ease) both;
+}
+ul.stagger > li:nth-child(1), .list-stagger > *:nth-child(1) { animation-delay: 20ms; }
+ul.stagger > li:nth-child(2), .list-stagger > *:nth-child(2) { animation-delay: 60ms; }
+ul.stagger > li:nth-child(3), .list-stagger > *:nth-child(3) { animation-delay: 100ms; }
+ul.stagger > li:nth-child(4), .list-stagger > *:nth-child(4) { animation-delay: 140ms; }
+ul.stagger > li:nth-child(5), .list-stagger > *:nth-child(5) { animation-delay: 180ms; }
+ul.stagger > li:nth-child(6), .list-stagger > *:nth-child(6) { animation-delay: 220ms; }
+ul.stagger > li:nth-child(n+7), .list-stagger > *:nth-child(n+7) { animation-delay: 240ms; }
+
+/* Table rows */
+table tbody tr { transition: background-color 150ms var(--ease); }
+
+/* Focus ring — smoother appearance */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  transition: outline-offset 140ms var(--ease), outline-color 140ms var(--ease);
+}
+
+/* Modal / popover fade-in */
+dialog, .modal, .popover, .dropdown, .tooltip {
+  animation: pop-in 180ms var(--ease) both;
+}
+
+/* Skeleton loaders (if they add .shimmer class) */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--surface-1) 0%,
+    color-mix(in srgb, var(--surface-2) 90%, transparent) 50%,
+    var(--surface-1) 100%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+
+/* Angular router view transitions (withViewTransitions) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+  animation-timing-function: cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+::view-transition-old(root) {
+  animation-name: fade-out-up;
+}
+::view-transition-new(root) {
+  animation-name: fade-slide-up;
+}
+@keyframes fade-out-up {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-6px); }
+}

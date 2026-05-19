@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!--
+    Public, indexable pages only. Every <url> declares its alternate language
+    versions via xhtml:link rel="alternate" hreflang so search engines route
+    users to the right locale. Personal pages (history, favorites, sign-in,
+    auth callback, projects, snapshot-diff) are intentionally absent and
+    blocked in robots.txt.
+  -->
+
+  <url>
+    <loc>https://ng-package-compat.app/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ng-package-compat.app/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ng-package-compat.app/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ng-package-compat.app/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ng-package-compat.app/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ng-package-compat.app/"/>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://ng-package-compat.app/upgrade</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ng-package-compat.app/upgrade?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ng-package-compat.app/upgrade?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ng-package-compat.app/upgrade?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ng-package-compat.app/upgrade?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ng-package-compat.app/upgrade"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://ng-package-compat.app/upgrade/wizard</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ng-package-compat.app/upgrade/wizard"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://ng-package-compat.app/compare</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ng-package-compat.app/compare?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ng-package-compat.app/compare?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ng-package-compat.app/compare?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ng-package-compat.app/compare?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ng-package-compat.app/compare"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://ng-package-compat.app/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ng-package-compat.app/about?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://ng-package-compat.app/about?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://ng-package-compat.app/about?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://ng-package-compat.app/about?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://ng-package-compat.app/about"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>

@@ -1,0 +1,20 @@
+# ng-package-compat — robots.txt
+User-agent: *
+Allow: /
+
+# Personal / signed-in / OAuth-only pages have no SEO value and may
+# leak personal data into search results. Keep them out of the index.
+Disallow: /history
+Disallow: /favorites
+Disallow: /projects
+Disallow: /workspace
+Disallow: /sign-in
+Disallow: /auth/
+Disallow: /snapshot-diff
+
+# Don't waste crawl budget on tracking-link variants.
+Disallow: /*?utm_*
+Disallow: /*?fbclid=*
+Disallow: /*?gclid=*
+
+Sitemap: https://ng-package-compat.app/sitemap.xml

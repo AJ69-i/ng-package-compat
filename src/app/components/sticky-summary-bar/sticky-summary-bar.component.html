@@ -1,0 +1,69 @@
+<div class="ssb-wrap" role="region" [attr.aria-label]="'summaryBar.title' | transloco">
+  <div class="ssb-inner">
+    <div class="ssb-title">
+      <span class="ssb-icon" aria-hidden="true">&#128202;</span>
+      <span>{{ 'summaryBar.title' | transloco }}</span>
+      <span class="ssb-health" [class.ok]="healthRatio() >= 80" [class.warn]="healthRatio() >= 50 && healthRatio() < 80" [class.bad]="healthRatio() < 50">
+        {{ healthRatio() }}%
+      </span>
+    </div>
+
+    <div class="ssb-pills" role="group" [attr.aria-label]="'summaryBar.filterAria' | transloco">
+      <button
+        type="button"
+        class="pill all"
+        [class.active]="active === 'all'"
+        (click)="setFilter('all')"
+        [attr.aria-pressed]="active === 'all'"
+      >
+        <span class="count">{{ counts.total }}</span>
+        <span class="label">{{ 'summaryBar.all' | transloco }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="pill critical"
+        [class.active]="active === 'critical'"
+        (click)="setFilter('critical')"
+        [attr.aria-pressed]="active === 'critical'"
+        [disabled]="counts.critical === 0"
+      >
+        <span class="dot" aria-hidden="true"></span>
+        <span class="count">{{ counts.critical }}</span>
+        <span class="label">{{ 'summaryBar.critical' | transloco }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="pill warning"
+        [class.active]="active === 'warning'"
+        (click)="setFilter('warning')"
+        [attr.aria-pressed]="active === 'warning'"
+        [disabled]="counts.warning === 0"
+      >
+        <span class="dot" aria-hidden="true"></span>
+        <span class="count">{{ counts.warning }}</span>
+        <span class="label">{{ 'summaryBar.warning' | transloco }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="pill healthy"
+        [class.active]="active === 'healthy'"
+        (click)="setFilter('healthy')"
+        [attr.aria-pressed]="active === 'healthy'"
+        [disabled]="counts.healthy === 0"
+      >
+        <span class="dot" aria-hidden="true"></span>
+        <span class="count">{{ counts.healthy }}</span>
+        <span class="label">{{ 'summaryBar.healthy' | transloco }}</span>
+      </button>
+    </div>
+
+    @if (shown !== null && active !== 'all') {
+      <div class="ssb-active">
+        {{ 'summaryBar.active' | transloco: { shown: shown, total: counts.total } }}
+      </div>
+    }
+  </div>
+</div>

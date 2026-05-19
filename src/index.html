@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <title>ng-package-compat — Angular compatibility for any npm package</title>
+  <meta name="description"
+        content="Free open-source tool to check npm packages against any Angular version. Find compatible releases, analyze peer dependencies, and generate a single `ng update` command for your whole project." />
+  <meta name="keywords"
+        content="angular, npm, package compatibility, ng update, angular upgrade, peer dependency, semver, typescript, angular 21" />
+  <meta name="author" content="ng-package-compat" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="application-name" content="ng-package-compat" />
+  <meta name="apple-mobile-web-app-title" content="ng-package-compat" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- Canonical (router updates this per-route) -->
+  <link rel="canonical" href="https://ng-package-compat.app/" />
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="ng-package-compat" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ng-package-compat — Angular compatibility for any npm package" />
+  <meta property="og:description"
+        content="Check npm packages against any Angular version. Generate a single `ng update` command for your whole project." />
+  <meta property="og:url" content="https://ng-package-compat.app/" />
+  <meta property="og:image" content="https://ng-package-compat.app/assets/og-card.png" />
+  <meta property="og:image:alt" content="ng-package-compat — Angular compatibility checker" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ng-package-compat — Angular compatibility for any npm package" />
+  <meta name="twitter:description"
+        content="Check npm packages against any Angular version. Generate a single `ng update` command for your whole project." />
+  <meta name="twitter:image" content="https://ng-package-compat.app/assets/og-card.png" />
+
+  <!-- PWA / icons -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="alternate icon" type="image/png" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+
+  <!-- Performance hints -->
+  <link rel="preconnect" href="https://registry.npmjs.org" crossorigin />
+  <link rel="preconnect" href="https://api.npmjs.org" crossorigin />
+  <link rel="dns-prefetch" href="https://api.osv.dev" />
+  <link rel="dns-prefetch" href="https://bundlephobia.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    media="print"
+    onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  </noscript>
+
+  <!--
+    Site-wide JSON-LD. These IDs match SeoService.setStructuredData() so the
+    Angular runtime updates these nodes in place instead of appending
+    duplicates. They're rendered statically too so non-JS crawlers
+    (e.g. some social card scrapers) get them on first paint.
+  -->
+  <script id="ld-app" type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "@id": "https://ng-package-compat.app/#app",
+    "name": "ng-package-compat",
+    "url": "https://ng-package-compat.app",
+    "description": "Check npm packages against any Angular version. Generate a single `ng update` command for your whole project.",
+    "applicationCategory": "DeveloperApplication",
+    "applicationSubCategory": "Angular tooling",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Package search with Angular peer-dep detection",
+      "Side-by-side package comparison",
+      "Version diff",
+      "Bundle size analysis",
+      "Security advisories",
+      "Upgrade assistant with one-command `ng update`"
+    ]
+  }
+  </script>
+  <script id="ld-website" type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://ng-package-compat.app/#website",
+    "url": "https://ng-package-compat.app",
+    "name": "ng-package-compat",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": { "@type": "EntryPoint", "urlTemplate": "https://ng-package-compat.app/?q={search_term_string}" },
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <script id="ld-organization" type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://ng-package-compat.app/#organization",
+    "name": "ng-package-compat",
+    "url": "https://ng-package-compat.app",
+    "logo": { "@type": "ImageObject", "url": "https://ng-package-compat.app/assets/icons/icon-512.png", "width": 512, "height": 512 }
+  }
+  </script>
+</head>
+<body>
+  <!--
+    The real skip-link lives inside <app-root> (see app.component.ts) so it
+    can be translated and focus the actual <main> element. We do NOT render a
+    visible duplicate here — it would confuse screen readers and flash an
+    unstyled link during hydration.
+  -->
+  <app-root></app-root>
+  <noscript>
+    <p role="alert" style="padding:1rem;color:#cbd5e1;text-align:center;line-height:1.5;">
+      ng-package-compat needs JavaScript to query the npm registry.
+      Please enable scripts for this site.
+    </p>
+  </noscript>
+</body>
+</html>

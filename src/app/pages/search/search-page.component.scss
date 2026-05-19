@@ -1,0 +1,275 @@
+:host { display: block; }
+
+/* Hero panel — the first impression. Uses the global gradient/shadow
+   tokens so theme tweaks flow through without touching this file.
+   No `overflow: hidden` here on purpose: backgrounds are already clipped
+   to the rounded corners by `background-clip: border-box` (the default),
+   so the radial gradient stays inside the card naturally. Adding
+   `overflow: hidden` would also clip the autocomplete dropdown when it
+   extends past the bottom of the panel — bad UX, hides suggestions. */
+.search-panel {
+  background:
+    radial-gradient(120% 120% at 0% 0%, var(--accent-bg) 0%, transparent 55%),
+    var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  box-shadow: var(--shadow-2);
+  position: relative;
+}
+
+.search-form {
+  display: flex; gap: 0.75rem; align-items: stretch; flex-wrap: wrap;
+}
+.input-wrap {
+  position: relative; flex: 1 1 280px; display: flex; align-items: center; min-width: 0;
+}
+.input-wrap .icon { position: absolute; left: 14px; font-size: 1rem; opacity: 0.7; }
+.input-wrap input {
+  width: 100%; padding: 0.9rem 1rem 0.9rem 2.5rem;
+  border-radius: var(--radius-md); border: 1px solid var(--border);
+  background: var(--surface-1); color: var(--fg); font-size: 1rem;
+  outline: none;
+  transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease), background-color 160ms var(--ease);
+  min-height: 48px;
+}
+.input-wrap input:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
+.input-wrap input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-ring);
+}
+
+/* Primary CTA — re-uses the global gradient + glow tokens. */
+button.primary {
+  padding: 0 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background: var(--accent-gradient);
+  color: white;
+  font-weight: 600; font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: var(--shadow-1);
+  transition: transform 120ms var(--ease), box-shadow 200ms var(--ease), filter 160ms var(--ease);
+  min-height: 48px; min-width: 140px;
+}
+button.primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow);
+  filter: brightness(1.04);
+}
+button.primary:active:not(:disabled) { transform: translateY(0); filter: brightness(0.98); }
+button.primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.strategy-row {
+  margin-top: 1rem;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem;
+}
+.strategy-label {
+  color: var(--fg-dim);
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+.strategy-switch {
+  display: inline-flex; background: var(--surface-1);
+  border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden;
+  flex-wrap: wrap;
+}
+.strategy-switch button {
+  padding: 0.5rem 0.95rem; background: transparent; color: var(--fg-dim);
+  border: none; font-size: 0.82rem; border-right: 1px solid var(--border);
+  cursor: pointer; min-height: 36px;
+  transition: background-color 160ms var(--ease), color 160ms var(--ease);
+}
+.strategy-switch button:last-child { border-right: none; }
+.strategy-switch button.active {
+  background: var(--accent-gradient); color: #fff;
+}
+.strategy-switch button:not(.active):hover,
+.strategy-switch button:focus-visible {
+  background: var(--surface-2); color: var(--fg); outline: none;
+}
+
+.hint { margin-top: 0.75rem; color: var(--fg-dim); font-size: 0.85rem; }
+.hint a { color: var(--accent); text-decoration: none; }
+.hint kbd {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1px 6px; font-size: 0.75rem;
+}
+
+.skeletons { margin-top: 1rem; display: grid; gap: 0.5rem; }
+.reco-row {
+  margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+  color: var(--fg-dim); font-size: 0.85rem;
+}
+.reco-row select {
+  padding: 0.4rem 0.6rem; background: var(--surface-2); color: var(--fg);
+  border: 1px solid var(--border); border-radius: 8px; min-height: 36px;
+}
+
+.toolbar {
+  margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.75rem;
+  align-items: center; justify-content: space-between;
+}
+.toolbar .count { color: var(--fg-dim); font-size: 0.85rem; }
+.export {
+  display: inline-flex; background: var(--surface-1);
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+.export button {
+  padding: 0.5rem 0.9rem; background: transparent; color: var(--fg-dim);
+  border: none; font-size: 0.85rem; border-right: 1px solid var(--border);
+  cursor: pointer; min-height: 36px;
+}
+.export button:last-child { border-right: none; }
+.export button:hover, .export button:focus-visible {
+  background: var(--surface-2); color: var(--fg); outline: none;
+}
+
+.timeline-placeholder { height: 92px; margin-top: 1rem; }
+.reco-placeholder    { min-height: 1px; }
+.filters-placeholder { min-height: 1px; }
+
+.relocation-banner {
+  margin-top: 1rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--accent-gradient-soft), var(--surface-2);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+  border-radius: var(--radius-lg);
+  color: var(--fg);
+  display: grid;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-1);
+}
+.relocation-head {
+  display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+}
+.relocation-head h3 { margin: 0; font-size: 1rem; }
+.relocation-icon { font-size: 1.1rem; }
+.relocation-kind {
+  margin-inline-start: auto;
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em;
+  background: var(--surface-1); border: 1px solid var(--border);
+  padding: 2px 8px; border-radius: 999px; color: var(--fg-dim);
+}
+.relocation-move {
+  margin: 0; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+.relocation-move code {
+  background: var(--surface-1); border: 1px solid var(--border);
+  padding: 2px 8px; border-radius: 6px; font-size: 0.85rem;
+}
+.relocation-move code.old { text-decoration: line-through; opacity: 0.7; }
+.relocation-move code.new { color: var(--accent); font-weight: 600; }
+.relocation-move .arrow { color: var(--fg-dim); font-size: 1.05rem; }
+.relocation-label { color: var(--fg-dim); font-size: 0.85rem; }
+.relocation-reason { margin: 0; font-size: 0.88rem; color: var(--fg-dim); }
+.relocation-reason strong { color: var(--fg); }
+.relocation-date { font-style: italic; }
+.relocation-actions {
+  display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.25rem;
+}
+.relocation-actions .primary {
+  min-height: 36px; padding: 0 1rem; font-size: 0.88rem; min-width: auto;
+}
+.relocation-actions .secondary {
+  display: inline-flex; align-items: center;
+  padding: 0 1rem; min-height: 36px; border-radius: 10px;
+  background: var(--surface-1); border: 1px solid var(--border);
+  color: var(--fg); text-decoration: none; font-size: 0.88rem;
+}
+.relocation-actions .secondary:hover { background: var(--surface-2); }
+
+.welcome {
+  margin-top: 1.5rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  background: var(--surface-2);
+  border: 1px dashed color-mix(in srgb, var(--accent) 35%, var(--border));
+  border-radius: var(--radius-lg);
+  color: var(--fg-dim);
+}
+.welcome h3 {
+  margin: 0 0 0.5rem;
+  color: var(--fg);
+  font-size: var(--step-2);
+}
+.welcome .sub { margin-top: 0.75rem; font-size: var(--step--1); }
+.welcome code {
+  background: var(--surface-1); padding: 2px 6px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); font-size: 0.8rem;
+}
+button.example {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  padding: 0.18rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 160ms var(--ease), border-color 160ms var(--ease), color 160ms var(--ease);
+}
+button.example:hover,
+button.example:focus-visible {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--fg);
+  outline: none;
+}
+
+@media (max-width: 560px) {
+  .search-form { flex-direction: column; }
+  button.primary { width: 100%; }
+}
+
+/* ----- Typosquat "Did you mean ___?" banner -----
+   Page-level affordance for the search context. Lives ABOVE the
+   error-boundary and result panel so it's visible regardless of
+   whether the package resolved — the suggestion is still useful
+   when npm 404'd on the typo. All colors derive from theme tokens
+   so the banner stays readable when ThemeService flips to light
+   mode — amber on a tinted surface in dark, amber on a tinted
+   white surface in light. */
+.typo-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.85rem;
+  background: color-mix(in srgb, var(--warn) 8%, var(--surface-1));
+  border: 1px solid color-mix(in srgb, var(--warn) 40%, var(--border));
+  border-left: 4px solid var(--warn);
+  border-radius: var(--radius-md, 10px);
+  color: var(--fg);
+
+  .typo-icon {
+    font-size: 1.15rem;
+    color: var(--warn);
+    flex: 0 0 auto;
+  }
+  .typo-body { flex: 1 1 auto; min-width: 0; }
+  .typo-body strong { color: var(--fg); display: block; margin-bottom: 0.2rem; }
+  .typo-body p { margin: 0; color: var(--fg-dim); font-size: 0.88rem; line-height: 1.45; }
+  .typo-cta {
+    background: var(--accent-gradient, var(--accent));
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md, 10px);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    flex: 0 0 auto;
+    transition: filter 140ms ease, transform 120ms ease;
+  }
+  .typo-cta:hover { filter: brightness(1.05); transform: translateY(-1px); }
+}
+@media (max-width: 640px) {
+  .typo-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .typo-banner .typo-cta { width: 100%; text-align: center; }
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" target-language="ar" datatype="plaintext" original="ng.template">
+    <body>
+      <trans-unit id="app.title" datatype="html">
+        <source>Angular package compatibility checker</source>
+        <target>أداة التحقق من توافق حزم Angular</target>
+      </trans-unit>
+      <trans-unit id="search.placeholder" datatype="html">
+        <source>Enter an npm package name</source>
+        <target>أدخل اسم حزمة npm</target>
+      </trans-unit>
+      <trans-unit id="search.check" datatype="html">
+        <source>Check compatibility</source>
+        <target>تحقق من التوافق</target>
+      </trans-unit>
+      <trans-unit id="nav.search" datatype="html">
+        <source>Search</source>
+        <target>بحث</target>
+      </trans-unit>
+      <trans-unit id="nav.compare" datatype="html">
+        <source>Compare</source>
+        <target>مقارنة</target>
+      </trans-unit>
+      <trans-unit id="nav.history" datatype="html">
+        <source>History</source>
+        <target>السجل</target>
+      </trans-unit>
+      <trans-unit id="nav.upgrade" datatype="html">
+        <source>Upgrade</source>
+        <target>ترقية</target>
+      </trans-unit>
+      <trans-unit id="nav.about" datatype="html">
+        <source>About</source>
+        <target>حول</target>
+      </trans-unit>
+      <trans-unit id="table.version" datatype="html">
+        <source>Version</source>
+        <target>الإصدار</target>
+      </trans-unit>
+      <trans-unit id="table.published" datatype="html">
+        <source>Published</source>
+        <target>تاريخ النشر</target>
+      </trans-unit>
+      <trans-unit id="table.angular" datatype="html">
+        <source>Angular support</source>
+        <target>دعم Angular</target>
+      </trans-unit>
+      <trans-unit id="common.latest" datatype="html">
+        <source>latest</source>
+        <target>الأحدث</target>
+      </trans-unit>
+      <trans-unit id="common.deprecated" datatype="html">
+        <source>deprecated</source>
+        <target>متقادم</target>
+      </trans-unit>
+      <trans-unit id="common.loading" datatype="html">
+        <source>Loading…</source>
+        <target>جارٍ التحميل…</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

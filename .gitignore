@@ -1,0 +1,19 @@
+# compiled output
+/dist
+/tmp
+/out-tsc
+
+# dependencies
+/node_modules
+
+# IDEs
+/.idea
+/.vscode
+*.swp
+
+# misc
+/.angular/cache
+.env
+.DS_Store
+npm-debug.log
+yarn-error.log

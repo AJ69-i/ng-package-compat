@@ -1,0 +1,86 @@
+<div class="ac-wrap" [class.is-open]="open()">
+  <div class="ac-input-wrap">
+    <span class="ac-icon" aria-hidden="true">&#128269;</span>
+    <input
+      #input
+      type="text"
+      [id]="inputId"
+      class="ac-input"
+      autocomplete="off"
+      spellcheck="false"
+      role="combobox"
+      [attr.aria-label]="ariaLabel"
+      [attr.aria-expanded]="open()"
+      [attr.aria-controls]="inputId + '-listbox'"
+      [attr.aria-activedescendant]="highlighted() >= 0 ? inputId + '-opt-' + highlighted() : null"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [value]="value"
+      (input)="onInput($any($event.target).value)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+      (keydown)="onKeyDown($event)"
+    />
+    @if (loading()) {
+      <span class="ac-spinner" aria-hidden="true"></span>
+    }
+  </div>
+
+  @if (open() && suggestions().length) {
+    <ul
+      class="ac-list"
+      role="listbox"
+      [id]="inputId + '-listbox'"
+    >
+      @for (s of suggestions(); track trackByName($index, s); let i = $index) {
+        <li
+          role="option"
+          [id]="inputId + '-opt-' + i"
+          class="ac-item"
+          [class.highlighted]="highlighted() === i"
+          [attr.aria-selected]="highlighted() === i"
+          (mouseenter)="highlighted.set(i)"
+          (mousedown)="pick(s)"
+        >
+          <div class="ac-item-head">
+            <span class="ac-name">{{ s.name }}</span>
+            <span class="ac-version">{{ s.version }}</span>
+            <button
+              type="button"
+              class="ac-fav"
+              [class.active]="favorites.has(s.name)"
+              [attr.aria-pressed]="favorites.has(s.name)"
+              [attr.aria-label]="favorites.has(s.name) ? ('common.remove' | transloco) : ('search.addFavorite' | transloco)"
+              [title]="favorites.has(s.name) ? ('common.remove' | transloco) : ('search.addFavorite' | transloco)"
+              (mousedown)="toggleFavorite($event, s.name)"
+            >{{ favorites.has(s.name) ? '★' : '☆' }}</button>
+          </div>
+          @if (s.description | stripHtml; as desc) {
+            <div class="ac-desc">{{ desc }}</div>
+          }
+          @if (s.publisher) {
+            <div class="ac-meta">
+              <span class="ac-pub">{{ s.publisher }}</span>
+              @if (s.keywords?.length) {
+                <span class="ac-kw">
+                  @for (k of s.keywords!.slice(0, 3); track k) {
+                    <span class="ac-chip">{{ k }}</span>
+                  }
+                </span>
+              }
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  }
+
+  <!-- Polite live region for screen readers -->
+  <span class="sr-only" aria-live="polite">
+    @if (loading()) {
+      {{ 'autocomplete.searching' | transloco }}
+    } @else if (suggestions().length) {
+      {{ 'autocomplete.resultsCount' | transloco: { n: suggestions().length } }}
+    }
+  </span>
+</div>

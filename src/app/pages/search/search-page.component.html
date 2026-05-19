@@ -1,0 +1,194 @@
+<section class="search-panel" data-tour="search">
+  <!-- No submit button — the form auto-loads reactively. Picking a
+       suggestion fires (picked), and pressing Enter in the raw input
+       fires (submitted) on the autocomplete; both converge on
+       this.search(). The explicit button was a redundant click that
+       did the same thing the input was already doing, and also caused
+       a minor double-fire of search() when Enter was pressed (both
+       form-submit and autocomplete-submitted handlers ran). Form
+       (submit) handler stays to swallow native submit and prevent
+       page reload. role="search" stays for the a11y landmark. -->
+  <form class="search-form" (submit)="onSubmit($event)" role="search">
+    <app-autocomplete-input
+      inputId="package-input"
+      [value]="query()"
+      [placeholder]="'search.placeholder' | transloco"
+      [ariaLabel]="'search.packageNameLabel' | transloco"
+      (valueChange)="query.set($event)"
+      (picked)="onPicked($event)"
+      (submitted)="onAutocompleteSubmit($event)"
+    />
+  </form>
+
+  <div class="strategy-row">
+    <span class="strategy-label">{{ 'search.strategy' | transloco }}</span>
+    <div class="strategy-switch" role="group" [attr.aria-label]="'search.strategy' | transloco">
+      @for (opt of strategyOptions; track opt.id) {
+        <button
+          type="button"
+          [class.active]="strategy() === opt.id"
+          [attr.title]="opt.hint"
+          [attr.aria-pressed]="strategy() === opt.id"
+          (click)="setStrategy(opt.id)"
+        >{{ opt.label }}</button>
+      }
+    </div>
+  </div>
+
+  <p class="hint">
+    {{ 'search.hint' | transloco: { mod: 'Cmd', k: 'K' } }}
+  </p>
+</section>
+
+<!-- Typosquat "Did you mean ___?" banner. Lives at the search-page
+     level (not inside package-meta) for two reasons:
+       1. Semantically the suggestion is about the SEARCH QUERY, not
+          about whichever package eventually resolves — including
+          when nothing resolves at all (npm 404).
+       2. Placement-wise we want this visible in EVERY result state:
+          successful load, lookup error, even the initial-loading
+          skeleton. Rendering above the error boundary covers all
+          three cases at the same template depth. -->
+@if (typosquat(); as squat) {
+  <aside class="typo-banner" role="alert">
+    <span class="typo-icon" aria-hidden="true">⚠</span>
+    <div class="typo-body">
+      <strong>{{ 'packageMeta.typosquat.heading' | transloco }}</strong>
+      <p>{{ 'packageMeta.typosquat.body' | transloco: { searched: squat.searched, suggestion: squat.suggestion } }}</p>
+    </div>
+    <button type="button" class="typo-cta" (click)="acceptTyposquatSuggestion(squat.suggestion)">
+      {{ 'packageMeta.typosquat.cta' | transloco: { suggestion: squat.suggestion } }}
+    </button>
+  </aside>
+}
+
+<app-error-boundary [error]="error()" (retry)="retry()" [title]="'search.lookupFailed' | transloco" />
+
+@if (relocation(); as r) {
+  <section class="relocation-banner" role="status" [attr.aria-label]="'upgrade.relocation.title' | transloco">
+    <div class="relocation-head">
+      <span class="relocation-icon" aria-hidden="true">&#128681;</span>
+      <h3>{{ 'upgrade.relocation.title' | transloco }}</h3>
+      <span class="relocation-kind">{{ r.kind }}</span>
+    </div>
+    <p class="relocation-move">
+      <span class="relocation-label">{{ 'upgrade.relocation.movedFrom' | transloco }}</span>
+      <code class="old">{{ r.from }}</code>
+      <span class="arrow" aria-hidden="true">&rarr;</span>
+      <span class="relocation-label">{{ 'upgrade.relocation.newHome' | transloco }}</span>
+      <code class="new">{{ r.to }}</code>
+    </p>
+    <p class="relocation-reason">
+      <strong>{{ 'upgrade.relocation.reason' | transloco }}:</strong>
+      {{ r.reason }}
+      @if (r.movedAt) {
+        <span class="relocation-date"> &middot; {{ r.movedAt }}</span>
+      }
+    </p>
+    <div class="relocation-actions">
+      <button type="button" class="primary" (click)="searchNewName(r)">
+        {{ 'upgrade.relocation.searchNew' | transloco }}
+      </button>
+      @if (r.link) {
+        <a class="secondary" [href]="r.link" target="_blank" rel="noopener noreferrer">
+          {{ 'upgrade.relocation.readMore' | transloco }}
+        </a>
+      }
+    </div>
+  </section>
+}
+
+@if (loading()) {
+  <section class="skeletons" [attr.aria-label]="'common.loading' | transloco">
+    <app-skeleton [height]="140" />
+    <app-skeleton [height]="36" />
+    <app-skeleton [height]="240" />
+  </section>
+}
+
+@if (pkg(); as p) {
+  <app-package-meta
+    [pkg]="p"
+    [latest]="latestVersion()"
+    [downloads]="downloadsSeries()"
+    [advisories]="advisoriesList()"
+    [lastPublish]="lastPublish()"
+    [authorName]="authorName()"
+    [maintainerCount]="maintainerCount()"
+    [vitality]="vitality()"
+    [provenance]="provenance()"
+    [installScripts]="installScripts()"
+    [scorecard]="scorecard()"
+  />
+
+  <div class="reco-row">
+    <label for="reco-major">{{ 'search.recommendationFor' | transloco }}</label>
+    <select
+      id="reco-major"
+      [ngModel]="recoMajor() ?? ''"
+      (ngModelChange)="recoMajor.set($event === '' ? null : +$event)"
+    >
+      <option value="">—</option>
+      @for (m of availableMajors(); track m) {
+        <option [ngValue]="m">{{ m }}</option>
+      }
+    </select>
+  </div>
+
+  <!--
+    Recommendation card + filters bar are interactive widgets that appear
+    after the user has searched; they're not in the prerendered first paint
+    so deferring them avoids ~10 kB of eager JS without harming SEO.
+  -->
+  @defer (on viewport; prefetch on idle) {
+    <app-recommendation-card
+      data-tour="upgrade-panel"
+      [rec]="recommendation()"
+      [pkgName]="p.name"
+      (copy)="handleCopy($event)"
+    />
+  } @placeholder { <div class="reco-placeholder" aria-hidden="true"></div> }
+
+  @defer (on viewport; prefetch on idle) {
+    <app-filters-bar [rows]="rows()" [availableMajors]="availableMajors()" />
+  } @placeholder { <div class="filters-placeholder" aria-hidden="true"></div> }
+
+  <section class="toolbar" [attr.aria-label]="'search.actions' | transloco">
+    <div class="export" role="group" [attr.aria-label]="'search.export' | transloco">
+      <button type="button" (click)="exportCsv()">{{ 'search.exportCsv' | transloco }}</button>
+      <button type="button" (click)="exportJson()">{{ 'search.exportJson' | transloco }}</button>
+    </div>
+    <div class="count">
+      {{ 'search.count' | transloco: { shown: filteredRows().length, total: rows().length } }}
+    </div>
+  </section>
+
+  @defer (on viewport) {
+    <app-timeline [rows]="rows()" />
+  } @placeholder {
+    <div class="timeline-placeholder"></div>
+  }
+
+  <app-versions-table
+    [rows]="filteredRows()"
+    [copiedVersion]="copiedVersion()"
+    [pkgName]="p.name"
+    (copy)="handleCopy($event)"
+  />
+}
+
+@if (!pkg() && !loading() && !error()) {
+  <section class="welcome">
+    <h3>{{ 'search.welcome' | transloco }}</h3>
+    <p>
+      {{ 'search.welcomeHint' | transloco }}
+      <button class="example" (click)="query.set('ng-zorro-antd'); search()">ng-zorro-antd</button>,
+      <button class="example" (click)="query.set('@angular/material'); search()">&#64;angular/material</button>,
+      <button class="example" (click)="query.set('ngx-bootstrap'); search()">ngx-bootstrap</button>,
+      <button class="example" (click)="query.set('rxjs'); search()">rxjs</button>.
+    </p>
+    <p class="sub">
+      {{ 'search.welcomeSub' | transloco }}
+    </p>
+  </section>
+}
