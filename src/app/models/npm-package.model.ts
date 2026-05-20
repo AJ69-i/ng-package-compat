@@ -50,8 +50,26 @@ export interface NpmVersionMetadata {
   schematics?: string;
   /** Package-level keywords. `ng-add` / `schematics` here also signals ng-add support. */
   keywords?: string[];
+  /**
+   * Funding info — increasingly declared by maintainers. May be a
+   * single object (`{ type, url }`), a URL string, or an array of
+   * either. We normalize the shape in PackageTrustService.funding().
+   */
+  funding?: NpmFunding | NpmFunding[] | string;
   dist?: NpmDist;
   _npmUser?: { name: string; email?: string };
+}
+
+/**
+ * One funding declaration from `package.json`. The npm spec accepts
+ * a single object, a single URL string, or an array of either; this
+ * is the canonical object form we normalize to.
+ */
+export interface NpmFunding {
+  /** "github", "patreon", "opencollective", "individual", "tidelift", etc. */
+  type?: string;
+  /** URL to the sponsorship page. */
+  url: string;
 }
 
 /**

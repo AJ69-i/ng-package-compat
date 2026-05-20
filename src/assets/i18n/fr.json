@@ -321,6 +321,9 @@
     "actions": "Actions",
     "export": "Exporter",
     "count": "{{ shown }} sur {{ total }} versions",
+    "announce": {
+      "loaded": "{{ pkg }} chargé avec {{ advisories }} alertes de sécurité connues."
+    },
     "welcome": "Essayez-le",
     "welcomeHint": "Choisissez l'une de ces options pour commencer :",
     "welcomeSub": "L'application vérifie peerDependencies[\"@angular/core\"] par rapport à un ensemble connu de versions majeures d'Angular et affiche la meilleure version stable pour la version d'Angular ciblée.",
@@ -1032,6 +1035,22 @@
     }
   },
   "packageMeta": {
+    "deprecated": {
+      "heading": "Ce paquet a été déprécié",
+      "bodyGeneric": "Le mainteneur a marqué la dernière version publiée comme dépréciée. Envisagez une alternative avant de l'adopter."
+    },
+    "funding": {
+      "sponsor": "Soutenir",
+      "ariaLabel": "Soutenir ce paquet via sa page de financement (s'ouvre dans un nouvel onglet)"
+    },
+    "readiness": {
+      "heading": "Angular moderne",
+      "ariaLabel": "Indicateurs de compatibilité avec Angular moderne",
+      "standalone": "Standalone",
+      "zoneless": "Sans Zone",
+      "ssr": "Compatible SSR",
+      "signals": "Signals"
+    },
     "license": {
       "rowLabel": "Licence",
       "tier": {

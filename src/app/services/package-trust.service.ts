@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NpmRegistryResponse, NpmVersionMetadata } from '../models/npm-package.model';
+import { NpmFunding, NpmRegistryResponse, NpmVersionMetadata } from '../models/npm-package.model';
 
 /**
  * Hook names npm executes during `npm install`. Any of these running
@@ -32,6 +32,29 @@ export interface InstallScriptSignal {
   present: boolean;
   /** Which hooks were declared, e.g. ['postinstall']. Empty when none. */
   hooks: string[];
+}
+
+export interface EngineSignal {
+  /** semver-style range for Node, e.g. ">=20.0.0", or null when unspecified. */
+  node: string | null;
+  /** semver-style range for TypeScript (from peerDependencies), or null. */
+  typescript: string | null;
+}
+
+export interface FundingSignal {
+  /** True when at least one funding URL is declared. */
+  present: boolean;
+  /** Normalized list of funding URLs (empty when not present). */
+  entries: NpmFunding[];
+  /** First/primary URL, surfaced as the chip's href. */
+  primaryUrl: string | null;
+}
+
+export interface DeprecatedSignal {
+  /** True when the latest version is officially deprecated on npm. */
+  isDeprecated: boolean;
+  /** Maintainer's deprecation message, often pointing to a replacement. */
+  message: string | null;
 }
 
 /**
@@ -125,6 +148,71 @@ export class PackageTrustService {
     const kw = meta.keywords;
     if (kw && kw.some((k) => NG_ADD_KEYWORDS.has(k.toLowerCase()))) return true;
     return false;
+  }
+
+  /**
+   * Engine ranges declared by the package. Node lives in `engines.node`,
+   * TypeScript lives in `peerDependencies.typescript` (the convention
+   * for libraries; some packages put it in `engines.typescript` but
+   * that's non-standard).
+   */
+  engines(pkg: NpmRegistryResponse | null | undefined): EngineSignal {
+    const meta = this.latestMeta(pkg);
+    if (!meta) return { node: null, typescript: null };
+    return {
+      node: meta.engines?.['node'] ?? null,
+      typescript:
+        meta.peerDependencies?.['typescript'] ??
+        meta.engines?.['typescript'] ??
+        null
+    };
+  }
+
+  /**
+   * Funding declarations. npm accepts three shapes for the field:
+   *
+   *   - Single string URL:          "funding": "https://..."
+   *   - Single object:              "funding": { "type": "github", "url": "..." }
+   *   - Array of either:            "funding": [{ ... }, "https://..."]
+   *
+   * We normalize to a flat `NpmFunding[]` so the UI doesn't have to
+   * branch on shape. Returns `present: false` with empty arrays when
+   * the field is absent or malformed.
+   */
+  funding(pkg: NpmRegistryResponse | null | undefined): FundingSignal {
+    const meta = this.latestMeta(pkg);
+    const raw = meta?.funding;
+    if (!raw) return { present: false, entries: [], primaryUrl: null };
+    const list = Array.isArray(raw) ? raw : [raw];
+    const entries: NpmFunding[] = [];
+    for (const item of list) {
+      if (typeof item === 'string') {
+        if (item.trim()) entries.push({ url: item.trim() });
+      } else if (item && typeof item === 'object' && typeof item.url === 'string' && item.url.trim()) {
+        entries.push({ type: item.type, url: item.url.trim() });
+      }
+    }
+    return {
+      present: entries.length > 0,
+      entries,
+      primaryUrl: entries[0]?.url ?? null
+    };
+  }
+
+  /**
+   * Deprecation status of the latest version. npm publishes the
+   * `deprecated` field directly on the version metadata when a
+   * maintainer has marked a release as deprecated — it's a string
+   * (the maintainer's message), often something like "use package-X
+   * instead" or "no longer maintained, see Y."
+   */
+  deprecated(pkg: NpmRegistryResponse | null | undefined): DeprecatedSignal {
+    const meta = this.latestMeta(pkg);
+    const dep = meta?.deprecated;
+    if (typeof dep !== 'string' || !dep.trim()) {
+      return { isDeprecated: false, message: null };
+    }
+    return { isDeprecated: true, message: dep.trim() };
   }
 
   /** Locate the version metadata block for the `latest` dist-tag, or null. */

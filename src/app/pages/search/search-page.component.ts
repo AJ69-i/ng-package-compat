@@ -27,9 +27,11 @@ import { RecommendationService } from '../../services/recommendation.service';
 import { PackageRelocationService, PackageRelocation } from '../../services/package-relocation.service';
 import { ReleaseDateService } from '../../services/release-date.service';
 import { MaintainerVitalityService, MaintainerVitality } from '../../services/maintainer-vitality.service';
-import { PackageTrustService, ProvenanceSignal, InstallScriptSignal } from '../../services/package-trust.service';
+import { PackageTrustService, ProvenanceSignal, InstallScriptSignal, EngineSignal, FundingSignal, DeprecatedSignal } from '../../services/package-trust.service';
 import { ScorecardService, ScorecardResult } from '../../services/scorecard.service';
 import { TyposquatService, TyposquatSuggestion } from '../../services/typosquat.service';
+import { AngularReadinessService, AngularReadiness } from '../../services/angular-readiness.service';
+import { AnnouncerService } from '../../services/announcer.service';
 
 import {
   Advisory,
@@ -95,6 +97,8 @@ export class SearchPageComponent {
   private readonly trustSvc = inject(PackageTrustService);
   private readonly scorecardSvc = inject(ScorecardService);
   private readonly typosquatSvc = inject(TyposquatService);
+  private readonly readinessSvc = inject(AngularReadinessService);
+  private readonly announcer = inject(AnnouncerService);
 
   readonly strategyOptions = STRATEGY_OPTIONS;
 
@@ -204,6 +208,10 @@ export class SearchPageComponent {
   readonly provenance = computed<ProvenanceSignal>(() => this.trustSvc.provenance(this.pkg()));
   readonly installScripts = computed<InstallScriptSignal>(() => this.trustSvc.installScripts(this.pkg()));
   readonly supportsNgAdd = computed<boolean>(() => this.trustSvc.supportsNgAdd(this.pkg()));
+  readonly engines = computed<EngineSignal>(() => this.trustSvc.engines(this.pkg()));
+  readonly funding = computed<FundingSignal>(() => this.trustSvc.funding(this.pkg()));
+  readonly deprecated = computed<DeprecatedSignal>(() => this.trustSvc.deprecated(this.pkg()));
+  readonly readiness = computed<AngularReadiness>(() => this.readinessSvc.detect(this.pkg()));
 
   /**
    * Typosquat check runs against the query string (the user's typed
@@ -255,6 +263,21 @@ export class SearchPageComponent {
         this.storage.recordSearch(res.name);
         this.releaseDates.hydrate(res.name, res);
         this.loading.set(false);
+        // A11Y #105 — screen-reader announcement on successful load.
+        // Without this, a screen-reader user pressing Enter on the
+        // search box hears the input clear and nothing else (the new
+        // chips and tables render outside any live region). The
+        // polite announcement names the package + advisory count
+        // so the user knows the page changed and what the headline
+        // result is.
+        const advCount = this.advisoriesList()?.length ?? 0;
+        this.announcer.say(
+          this.transloco.translate('search.announce.loaded', {
+            pkg: res.name,
+            advisories: advCount
+          }),
+          'polite'
+        );
         // Vitality is fetched on its own track — it goes to GitHub
         // (not npm) and there's no point in blocking the main
         // package render on a third-party API that's rate-limited to

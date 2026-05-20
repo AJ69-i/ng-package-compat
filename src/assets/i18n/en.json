@@ -321,6 +321,9 @@
     "actions": "Actions",
     "export": "Export",
     "count": "{{ shown }} of {{ total }} versions",
+    "announce": {
+      "loaded": "Loaded {{ pkg }} with {{ advisories }} known security advisories."
+    },
     "welcome": "Try it out",
     "welcomeHint": "Pick one of these to get started:",
     "welcomeSub": "The app checks peerDependencies[\"@angular/core\"] against a known set of Angular majors, and shows the best stable version for the Angular you target.",
@@ -1032,6 +1035,22 @@
     }
   },
   "packageMeta": {
+    "deprecated": {
+      "heading": "This package has been deprecated",
+      "bodyGeneric": "The maintainer has marked the latest published version as deprecated. Consider switching to an alternative before adopting."
+    },
+    "funding": {
+      "sponsor": "Sponsor",
+      "ariaLabel": "Sponsor this package on its funding page (opens in a new tab)"
+    },
+    "readiness": {
+      "heading": "Modern Angular",
+      "ariaLabel": "Modern-Angular readiness signals",
+      "standalone": "Standalone-ready",
+      "zoneless": "Zoneless",
+      "ssr": "SSR-safe",
+      "signals": "Signals"
+    },
     "license": {
       "rowLabel": "License",
       "tier": {

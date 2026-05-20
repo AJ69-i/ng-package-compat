@@ -321,6 +321,9 @@
     "actions": "الإجراءات",
     "export": "تصدير",
     "count": "{{ shown }} من {{ total }} إصدار",
+    "announce": {
+      "loaded": "تم تحميل {{ pkg }} مع {{ advisories }} تنبيه أمني معروف."
+    },
     "welcome": "جرّبها",
     "welcomeHint": "اختر واحدة للبدء:",
     "welcomeSub": "يفحص التطبيق peerDependencies[\"@angular/core\"] مقابل مجموعة معروفة من إصدارات Angular ويعرض أفضل إصدار مستقر لإصدار Angular المستهدف.",
@@ -1032,6 +1035,22 @@
     }
   },
   "packageMeta": {
+    "deprecated": {
+      "heading": "هذه الحزمة أصبحت مهجورة",
+      "bodyGeneric": "وسم المشرف آخر إصدار منشور بأنه مهجور. فكّر في بديل قبل الاعتماد عليها."
+    },
+    "funding": {
+      "sponsor": "ادعم",
+      "ariaLabel": "ادعم هذه الحزمة عبر صفحة التمويل الخاصة بها (تُفتح في علامة تبويب جديدة)"
+    },
+    "readiness": {
+      "heading": "Angular الحديث",
+      "ariaLabel": "إشارات الجاهزية لـ Angular الحديث",
+      "standalone": "Standalone",
+      "zoneless": "بدون Zone",
+      "ssr": "آمن مع SSR",
+      "signals": "Signals"
+    },
     "license": {
       "rowLabel": "الترخيص",
       "tier": {

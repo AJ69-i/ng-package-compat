@@ -7,8 +7,9 @@ import { LicenseService } from '../../services/license.service';
 import { Advisory, NpmRegistryResponse } from '../../models/npm-package.model';
 import { MaintainerVitality } from '../../services/maintainer-vitality.service';
 import { StripHtmlPipe } from '../../pipes/strip-html.pipe';
-import { ProvenanceSignal, InstallScriptSignal } from '../../services/package-trust.service';
+import { ProvenanceSignal, InstallScriptSignal, EngineSignal, FundingSignal, DeprecatedSignal } from '../../services/package-trust.service';
 import { ScorecardResult } from '../../services/scorecard.service';
+import { AngularReadiness } from '../../services/angular-readiness.service';
 
 @Component({
   selector: 'app-package-meta',
@@ -18,6 +19,27 @@ import { ScorecardResult } from '../../services/scorecard.service';
   template: `
     @let p = pkg();
     @if (p) {
+      <!-- Deprecated-latest banner. Rendered at the very top of the
+           result panel because it's the single most important thing
+           the user needs to know — the package they're evaluating
+           has been officially deprecated by its own maintainer. Uses
+           the same --bad treatment as advisories. The role="alert"
+           ensures screen-reader users get the announcement
+           immediately when the result loads. -->
+      @if (deprecated()?.isDeprecated) {
+        <aside class="deprecated-banner" role="alert">
+          <span class="dep-icon" aria-hidden="true">⛔</span>
+          <div class="dep-body">
+            <strong>{{ 'packageMeta.deprecated.heading' | transloco }}</strong>
+            @if (deprecated()?.message; as msg) {
+              <p class="dep-message">{{ msg }}</p>
+            } @else {
+              <p class="dep-message">{{ 'packageMeta.deprecated.bodyGeneric' | transloco }}</p>
+            }
+          </div>
+        </aside>
+      }
+
       <section class="package-header">
         <div class="header-top">
           <div>
@@ -163,9 +185,83 @@ import { ScorecardResult } from '../../services/scorecard.service';
             </a>
           }
 
+          <!-- Engine ranges from package.json — TS via peerDeps,
+               Node via engines. Compact chips with a leading glyph
+               so they read as version requirements at a glance. -->
+          @let eng = engines();
+          @if (eng && eng.typescript) {
+            <span class="chip chip-engine">
+              <span class="eng-label" aria-hidden="true">TS</span>
+              {{ eng.typescript }}
+            </span>
+          }
+          @if (eng && eng.node) {
+            <span class="chip chip-engine">
+              <span class="eng-label" aria-hidden="true">Node</span>
+              {{ eng.node }}
+            </span>
+          }
+
+          <!-- Sponsor / funding chip — when present, opens the
+               maintainer's funding page in a new tab. The heart
+               glyph is the universal sponsorship cue (GitHub Sponsors,
+               OpenCollective, Buy Me a Coffee all use the same icon). -->
+          @if (funding(); as fund) {
+            @if (fund.present && fund.primaryUrl) {
+              <a
+                class="chip chip-funding link"
+                [href]="fund.primaryUrl"
+                target="_blank"
+                rel="noopener"
+                [attr.aria-label]="'packageMeta.funding.ariaLabel' | transloco"
+              >
+                <span aria-hidden="true">💖</span>
+                {{ 'packageMeta.funding.sponsor' | transloco }}
+              </a>
+            }
+          }
+
           @if (p.homepage) { <a [href]="p.homepage" target="_blank" rel="noopener" class="chip link">Homepage</a> }
           @if (p.repository?.url) { <a [href]="p.repository?.url" target="_blank" rel="noopener" class="chip link">Repository</a> }
         </div>
+
+        <!-- Modern-Angular readiness strip — four chips inferred
+             heuristically from the README and package.json. Each
+             chip renders only when the corresponding signal fires
+             true; libraries that don't trip any of the four
+             heuristics show no strip at all rather than a row of
+             "✗" chips, which would read as ACCUSATIONS rather than
+             positive signals. -->
+        @let ready = readiness();
+        @if (ready && (ready.standalone || ready.zoneless || ready.ssrSafe || ready.signals)) {
+          <div class="readiness-strip" role="list" [attr.aria-label]="'packageMeta.readiness.ariaLabel' | transloco">
+            <span class="readiness-label">{{ 'packageMeta.readiness.heading' | transloco }}:</span>
+            @if (ready.standalone) {
+              <span class="readiness-chip" role="listitem">
+                <span aria-hidden="true">✓</span>
+                {{ 'packageMeta.readiness.standalone' | transloco }}
+              </span>
+            }
+            @if (ready.zoneless) {
+              <span class="readiness-chip" role="listitem">
+                <span aria-hidden="true">✓</span>
+                {{ 'packageMeta.readiness.zoneless' | transloco }}
+              </span>
+            }
+            @if (ready.ssrSafe) {
+              <span class="readiness-chip" role="listitem">
+                <span aria-hidden="true">✓</span>
+                {{ 'packageMeta.readiness.ssr' | transloco }}
+              </span>
+            }
+            @if (ready.signals) {
+              <span class="readiness-chip" role="listitem">
+                <span aria-hidden="true">✓</span>
+                {{ 'packageMeta.readiness.signals' | transloco }}
+              </span>
+            }
+          </div>
+        }
 
         <!-- Signal notes — always-visible inline explanations under
              the meta chips. NOT tooltips, NOT click-to-toggle: every
@@ -411,10 +507,16 @@ import { ScorecardResult } from '../../services/scorecard.service';
       display: inline-flex; align-items: center; gap: 0.4rem;
     }
     .chip.link { text-decoration: none; color: var(--accent); }
+    /* Theme-aware tier chips. The background+border use color-mix with
+       transparent (tints the underlying surface, so they work on both
+       dark and light theme backgrounds). The TEXT color is the
+       semantic token (--ok / --warn / --bad / --accent) which keeps
+       readable contrast on either theme — the old hardcoded light
+       hex values (#86efac etc.) were invisible on white. */
     .chip-latest {
-      background: color-mix(in srgb, #22c55e 12%, transparent);
-      border-color: color-mix(in srgb, #22c55e 40%, transparent);
-      color: #86efac;
+      background: color-mix(in srgb, var(--ok) 12%, transparent);
+      border-color: color-mix(in srgb, var(--ok) 40%, transparent);
+      color: var(--ok);
     }
 
     /* ----- License tier chips -----
@@ -432,24 +534,26 @@ import { ScorecardResult } from '../../services/scorecard.service';
       letter-spacing: 0.02em;
     }
     .chip-license-safe {
-      background: color-mix(in srgb, #22c55e 10%, transparent);
-      border-color: color-mix(in srgb, #22c55e 35%, transparent);
-      color: #86efac;
+      background: color-mix(in srgb, var(--ok) 10%, transparent);
+      border-color: color-mix(in srgb, var(--ok) 35%, transparent);
+      color: var(--ok);
     }
     .chip-license-weak {
-      background: color-mix(in srgb, #eab308 10%, transparent);
-      border-color: color-mix(in srgb, #eab308 35%, transparent);
-      color: #fde68a;
+      background: color-mix(in srgb, var(--warn) 10%, transparent);
+      border-color: color-mix(in srgb, var(--warn) 35%, transparent);
+      color: var(--warn);
     }
     .chip-license-strong {
-      background: color-mix(in srgb, #ef4444 10%, transparent);
-      border-color: color-mix(in srgb, #ef4444 40%, transparent);
-      color: #fca5a5;
+      background: color-mix(in srgb, var(--bad) 10%, transparent);
+      border-color: color-mix(in srgb, var(--bad) 40%, transparent);
+      color: var(--bad);
     }
     .chip-license-proprietary {
+      /* Proprietary uses a stable mid-tone purple — works on both
+         themes without needing a semantic token. */
       background: color-mix(in srgb, #a855f7 10%, transparent);
       border-color: color-mix(in srgb, #a855f7 40%, transparent);
-      color: #d8b4fe;
+      color: #a855f7;
     }
     .chip-license-unknown { /* falls through to default chip styling */ }
 
@@ -463,31 +567,33 @@ import { ScorecardResult } from '../../services/scorecard.service';
       background: currentColor; opacity: 0.85;
     }
     .chip-vitality-active {
-      background: color-mix(in srgb, #22c55e 12%, transparent);
-      border-color: color-mix(in srgb, #22c55e 40%, transparent);
-      color: #86efac;
+      background: color-mix(in srgb, var(--ok) 12%, transparent);
+      border-color: color-mix(in srgb, var(--ok) 40%, transparent);
+      color: var(--ok);
     }
     .chip-vitality-active .vit-dot {
       animation: vit-pulse 1.8s ease-in-out infinite;
     }
     .chip-vitality-maintained {
-      background: color-mix(in srgb, #38bdf8 10%, transparent);
-      border-color: color-mix(in srgb, #38bdf8 35%, transparent);
-      color: #bae6fd;
+      /* Sky-blue maps to --accent in this project — which flips
+         indigo-light on dark, indigo on light. Both readable. */
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+      color: var(--accent);
     }
     .chip-vitality-slow {
-      background: color-mix(in srgb, #eab308 10%, transparent);
-      border-color: color-mix(in srgb, #eab308 35%, transparent);
-      color: #fde68a;
+      background: color-mix(in srgb, var(--warn) 10%, transparent);
+      border-color: color-mix(in srgb, var(--warn) 35%, transparent);
+      color: var(--warn);
     }
     .chip-vitality-inactive {
-      background: color-mix(in srgb, #ef4444 10%, transparent);
-      border-color: color-mix(in srgb, #ef4444 40%, transparent);
-      color: #fca5a5;
+      background: color-mix(in srgb, var(--bad) 10%, transparent);
+      border-color: color-mix(in srgb, var(--bad) 40%, transparent);
+      color: var(--bad);
     }
     .chip-vitality-archived {
-      background: color-mix(in srgb, #6b7280 18%, transparent);
-      border-color: color-mix(in srgb, #6b7280 45%, transparent);
+      background: color-mix(in srgb, var(--fg-dim) 18%, transparent);
+      border-color: color-mix(in srgb, var(--fg-dim) 45%, transparent);
       color: var(--fg-dim);
       text-decoration: line-through;
     }
@@ -559,6 +665,91 @@ import { ScorecardResult } from '../../services/scorecard.service';
     }
     a.chip-scorecard:hover { filter: brightness(1.08); }
 
+    /* ----- Deprecated banner -----
+       Top-of-panel red banner for the case the user MOST needs to
+       know about: this package is officially deprecated. --bad
+       semantic token + thick left border + explicit icon. The
+       message is the maintainer's own deprecation notice, which
+       often points to a replacement. */
+    .deprecated-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+      background: color-mix(in srgb, var(--bad) 10%, var(--surface-1));
+      border: 1px solid color-mix(in srgb, var(--bad) 45%, var(--border));
+      border-left: 4px solid var(--bad);
+      border-radius: var(--radius-md, 10px);
+      color: var(--fg);
+    }
+    .dep-icon { font-size: 1.3rem; color: var(--bad); flex: 0 0 auto; line-height: 1.1; }
+    .dep-body { flex: 1 1 auto; min-width: 0; }
+    .dep-body strong { color: var(--bad); display: block; margin-bottom: 0.25rem; font-size: 0.95rem; }
+    .dep-message { margin: 0; color: var(--fg); font-size: 0.9rem; line-height: 1.5; }
+
+    /* ----- Engine + funding + readiness chips ----- */
+    .chip-engine {
+      color: var(--fg-dim);
+      font-variant-numeric: tabular-nums;
+    }
+    .chip-engine .eng-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--fg-dim) 18%, transparent);
+      color: var(--fg);
+    }
+
+    .chip-funding {
+      color: var(--accent);
+      font-weight: 500;
+      text-decoration: none;
+      background: color-mix(in srgb, var(--accent) 8%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+    }
+    .chip-funding:hover {
+      filter: brightness(1.05);
+      border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+    }
+
+    /* ----- Modern-Angular readiness strip -----
+       Renders as a labeled row of green check chips. Lives below
+       the chip strip in its own row so the readiness story doesn't
+       get lost in the longer meta chip strip — it's a compact
+       summary of "is this library keeping up with modern Angular?"
+       worth its own visual real estate. */
+    .readiness-strip {
+      margin-top: 0.7rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .readiness-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+      margin-right: 0.2rem;
+    }
+    .readiness-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      background: color-mix(in srgb, var(--ok) 10%, transparent);
+      border: 1px solid color-mix(in srgb, var(--ok) 35%, var(--border));
+      color: var(--ok);
+    }
+
     /* ----- Install-scripts warning -----
        Amber styling matches the typosquat banner — both are "risk,
        not confirmed danger." Visually distinct from .advisories
@@ -591,22 +782,29 @@ import { ScorecardResult } from '../../services/scorecard.service';
     .downloads { text-align: right; min-width: 160px; }
     .dl-total { font-size: 1.2rem; font-weight: 600; color: var(--fg); }
     .dl-total span { display: block; font-size: 0.75rem; color: var(--fg-dim); font-weight: 400; }
+    /* Advisories block — all reds now go through --bad so the block
+       inverts correctly on light theme. Body text uses --fg for the
+       primary content with --bad-tinted accents on titles, severity
+       pills, and links. */
     .advisories {
       margin-top: 0.9rem; padding: 0.75rem 1rem;
-      background: color-mix(in srgb, #ef4444 8%, transparent);
-      border: 1px solid color-mix(in srgb, #ef4444 35%, transparent);
-      border-radius: 10px; color: #fca5a5;
+      background: color-mix(in srgb, var(--bad) 8%, var(--surface-1));
+      border: 1px solid color-mix(in srgb, var(--bad) 35%, var(--border));
+      border-left: 3px solid var(--bad);
+      border-radius: 10px; color: var(--fg);
     }
-    .adv-title { font-weight: 600; }
+    .adv-title { font-weight: 600; color: var(--bad); }
     .advisories ul { list-style: none; padding: 0; margin: 0.4rem 0 0; font-size: 0.85rem; }
-    .advisories li { padding: 0.3rem 0; border-top: 1px solid color-mix(in srgb, #ef4444 15%, transparent); }
+    .advisories li { padding: 0.3rem 0; border-top: 1px solid color-mix(in srgb, var(--bad) 15%, var(--border)); color: var(--fg-dim); }
     .advisories li:first-child { border-top: none; }
+    .advisories li strong { color: var(--fg); }
     .advisories .sev {
       margin-left: 0.25rem; font-size: 0.7rem; padding: 1px 6px;
-      border-radius: 4px; background: color-mix(in srgb, #ef4444 25%, transparent);
+      border-radius: 4px; background: color-mix(in srgb, var(--bad) 25%, transparent);
+      color: var(--bad);
     }
-    .advisories .muted { color: #fca5a5; opacity: 0.7; margin-left: 0.35rem; }
-    .advisories a { color: #fecaca; margin-left: 0.35rem; }
+    .advisories .muted { color: var(--fg-dim); margin-left: 0.35rem; }
+    .advisories a { color: var(--bad); margin-left: 0.35rem; }
 
     @media (max-width: 640px) {
       .package-header { padding: 1rem; }
@@ -634,6 +832,14 @@ export class PackageMetaComponent {
   readonly installScripts = input<InstallScriptSignal | null>(null);
   /** OpenSSF Scorecard result — fetched async by the host page, null until resolved. */
   readonly scorecard = input<ScorecardResult | null>(null);
+  /** Engine ranges (TS via peerDeps, Node via engines). Computed synchronously. */
+  readonly engines = input<EngineSignal | null>(null);
+  /** Funding declarations from package.json (normalized). Computed synchronously. */
+  readonly funding = input<FundingSignal | null>(null);
+  /** Deprecation status of the latest version. Computed synchronously. */
+  readonly deprecated = input<DeprecatedSignal | null>(null);
+  /** Heuristic Modern-Angular readiness flags. Computed synchronously. */
+  readonly readiness = input<AngularReadiness | null>(null);
 
   /**
    * Format star/issue counts the way GitHub does — 12.5k instead of
