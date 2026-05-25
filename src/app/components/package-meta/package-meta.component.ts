@@ -7,9 +7,14 @@ import { LicenseService } from '../../services/license.service';
 import { Advisory, NpmRegistryResponse } from '../../models/npm-package.model';
 import { MaintainerVitality } from '../../services/maintainer-vitality.service';
 import { StripHtmlPipe } from '../../pipes/strip-html.pipe';
-import { ProvenanceSignal, InstallScriptSignal, EngineSignal, FundingSignal, DeprecatedSignal } from '../../services/package-trust.service';
+import {
+  ProvenanceSignal, InstallScriptSignal, EngineSignal, FundingSignal,
+  DeprecatedSignal, TreeShakeableSignal, ModuleTypeSignal, MaturitySignal
+} from '../../services/package-trust.service';
 import { ScorecardResult } from '../../services/scorecard.service';
 import { AngularReadiness } from '../../services/angular-readiness.service';
+import { BundleSize } from '../../models/npm-package.model';
+import { dependentsTier, formatDependents, DependentsTier } from '../../services/dependents.service';
 
 @Component({
   selector: 'app-package-meta',
@@ -136,6 +141,26 @@ import { AngularReadiness } from '../../services/angular-readiness.service';
             </span>
           }
 
+          <!-- Used-by / dependents — the most resistant-to-gaming
+               ecosystem signal we have. Tiered color: dim for "few"
+               (no shame, just neutral), accent for "many", and full
+               accent-gradient for "huge" (>100k dependents — the
+               ~0.01% of npm). Always-visible compact count with a
+               long-form aria-label for screen readers. -->
+          @if (dependentsValue() !== null && dependentsValue()! > 0) {
+            <span
+              class="chip chip-deps"
+              [class.chip-deps-few]="dependentsChipTier() === 'few'"
+              [class.chip-deps-some]="dependentsChipTier() === 'some'"
+              [class.chip-deps-many]="dependentsChipTier() === 'many'"
+              [class.chip-deps-huge]="dependentsChipTier() === 'huge'"
+              [attr.aria-label]="('packageMeta.dependents.aria' | transloco: { n: dependentsValue() })"
+            >
+              <span class="dep-ico" aria-hidden="true">⇆</span>
+              {{ dependentsCompact() }} {{ 'packageMeta.dependents.label' | transloco }}
+            </span>
+          }
+
           <!-- Provenance verified — only renders when the latest
                version carries Sigstore attestation. Sky-blue accent
                distinguishes it from the green "safe" semantics
@@ -199,6 +224,74 @@ import { AngularReadiness } from '../../services/angular-readiness.service';
             <span class="chip chip-engine">
               <span class="eng-label" aria-hidden="true">Node</span>
               {{ eng.node }}
+            </span>
+          }
+
+          <!-- "Will it fit?" chips: bundle size, tree-shakeable,
+               module type, maturity. Grouped logically with engines
+               above and funding below — these all answer technical
+               "what am I installing?" questions, distinct from the
+               trust signals (license, vitality) above. -->
+          @if (bundleSize(); as bundle) {
+            @if (bundle.gzip > 0) {
+              <span
+                class="chip chip-bundle"
+                [class.bundle-small]="bundle.gzip < 10240"
+                [class.bundle-moderate]="bundle.gzip >= 10240 && bundle.gzip < 40960"
+                [class.bundle-heavy]="bundle.gzip >= 40960 && bundle.gzip < 102400"
+                [class.bundle-very-heavy]="bundle.gzip >= 102400"
+                [attr.aria-label]="'packageMeta.bundle.ariaLabel' | transloco: { size: formatBytes(bundle.gzip) }"
+              >
+                <span aria-hidden="true">📦</span>
+                {{ formatBytes(bundle.gzip) }}
+                <span class="bundle-suffix">{{ 'packageMeta.bundle.gzippedShort' | transloco }}</span>
+              </span>
+            }
+          }
+
+          <!-- Tree-shakeable chip. Only renders when we have a
+               positive signal — "unknown" is the silent default
+               (showing a "tree-shakeable: unknown" chip would just
+               be noise on most legacy packages). -->
+          @if (treeShakeable()?.state === 'yes' || treeShakeable()?.state === 'partial') {
+            <span
+              class="chip chip-treeshake"
+              [class.treeshake-yes]="treeShakeable()?.state === 'yes'"
+              [class.treeshake-partial]="treeShakeable()?.state === 'partial'"
+              [attr.aria-label]="(treeShakeable()?.state === 'yes' ? 'packageMeta.treeShakeable.yes' : 'packageMeta.treeShakeable.partial') | transloco"
+            >
+              <span aria-hidden="true">🌳</span>
+              {{ (treeShakeable()?.state === 'yes' ? 'packageMeta.treeShakeable.labelYes' : 'packageMeta.treeShakeable.labelPartial') | transloco }}
+            </span>
+          }
+
+          <!-- Module type chip (ESM / CJS / Dual). Unknown collapses
+               to a silent default for the same reason — most packages
+               that don't declare anything are legacy CJS, and showing
+               that as a chip on every page would dilute the signal
+               for the ones that actually advertise ESM. -->
+          @if (moduleType()?.state === 'esm' || moduleType()?.state === 'dual' || moduleType()?.state === 'cjs') {
+            <span
+              class="chip chip-modtype"
+              [class.modtype-esm]="moduleType()?.state === 'esm'"
+              [class.modtype-dual]="moduleType()?.state === 'dual'"
+              [class.modtype-cjs]="moduleType()?.state === 'cjs'"
+              [attr.aria-label]="('packageMeta.moduleType.aria.' + moduleType()!.state) | transloco"
+            >
+              {{ ('packageMeta.moduleType.label.' + moduleType()!.state) | transloco }}
+            </span>
+          }
+
+          <!-- Maturity chip. "Published since Mar 2019" — a year-month
+               first-publish stamp. Different signal from "Updated 3
+               months ago" (recency) — this one is project longevity. -->
+          @if (maturity()?.publishedLabel; as published) {
+            <span
+              class="chip chip-maturity"
+              [attr.aria-label]="'packageMeta.maturity.ariaLabel' | transloco: { date: published }"
+            >
+              <span aria-hidden="true">📅</span>
+              {{ 'packageMeta.maturity.label' | transloco: { date: published } }}
             </span>
           }
 
@@ -356,6 +449,18 @@ import { AngularReadiness } from '../../services/angular-readiness.service';
     }
   `,
   styles: [`
+    /* Host owns the rhythm so the component is always spaced 1.5rem
+       below whatever sibling sits above it on the page (search panel,
+       error boundary, relocation banner, typosquat banner). Without
+       this rule, the deprecated banner — which is the FIRST child of
+       this host when shown — would sit flush against the search
+       panel because no inner element handled the gap. Putting the
+       margin on the host instead of on the first child means the
+       rhythm is consistent regardless of which child renders first
+       (banner vs. header). The inner .package-header keeps its own
+       margin-top: 1.5rem; CSS margin-collapsing means the two
+       collapse to a single 1.5rem when no banner is shown. */
+    :host { display: block; margin-top: 1.5rem; }
     .package-header {
       margin-top: 1.5rem; padding: 1.25rem 1.5rem;
       background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px;
@@ -614,6 +719,43 @@ import { AngularReadiness } from '../../services/angular-readiness.service';
     .chip-stars span[aria-hidden] { font-size: 0.9rem; line-height: 1; }
     .chip-issues span[aria-hidden] { color: var(--warn); }
 
+    /* ----- Dependents (used-by) chip -----
+       Tiered styling so a 12-dependent micro-library doesn't look the
+       same as react. The "huge" tier (>100k dependents — top 0.01%)
+       gets the full accent gradient; "many" gets a tinted accent;
+       "some" and "few" stay neutral so we don't over-celebrate a
+       package that's only used by a handful of repos.
+       All colors derive from semantic tokens — light/dark switching
+       happens automatically via [data-theme] on <html>. */
+    .chip-deps {
+      gap: 0.3rem;
+    }
+    .chip-deps .dep-ico {
+      font-size: 0.92rem;
+      line-height: 1;
+      color: var(--fg-dim);
+    }
+    .chip-deps-few {
+      color: var(--fg-dim);
+    }
+    .chip-deps-some {
+      color: var(--fg);
+    }
+    .chip-deps-many {
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+      color: var(--fg);
+      font-weight: 600;
+    }
+    .chip-deps-many .dep-ico { color: var(--accent); }
+    .chip-deps-huge {
+      background: var(--accent-gradient, var(--accent));
+      border-color: transparent;
+      color: #fff;
+      font-weight: 700;
+    }
+    .chip-deps-huge .dep-ico { color: #fff; }
+
     /* ----- Provenance chip -----
        Sky-blue sits between green (safe) and indigo (accent) — the
        chip color shouldn't conflate provenance ("we know who shipped
@@ -714,6 +856,108 @@ import { AngularReadiness } from '../../services/angular-readiness.service';
     .chip-funding:hover {
       filter: brightness(1.05);
       border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+    }
+
+    /* ----- "Will it fit?" chips -----
+       Four chips that together answer the question "will this fit in
+       my app?". All theme-aware via semantic tokens — no hardcoded
+       hex text colors that would break on light theme. The bundle
+       chip is the loudest because bundle weight is the loudest signal;
+       the others are neutral informational tags. */
+
+    /* Bundle size — tiered coloring by gzipped weight. Small is
+       green (safe drop-in), moderate is neutral, heavy is amber,
+       very-heavy is red — symmetric with the severity scale used
+       elsewhere in the project. */
+    .chip-bundle {
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+    .chip-bundle .bundle-suffix {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--fg-dim);
+      margin-left: 0.15rem;
+    }
+    .bundle-small {
+      background: color-mix(in srgb, var(--ok) 10%, transparent);
+      border-color: color-mix(in srgb, var(--ok) 40%, var(--border));
+      color: var(--ok);
+    }
+    .bundle-moderate {
+      background: var(--surface-1);
+      border-color: var(--border);
+      color: var(--fg);
+    }
+    .bundle-heavy {
+      background: color-mix(in srgb, var(--warn) 10%, transparent);
+      border-color: color-mix(in srgb, var(--warn) 40%, var(--border));
+      color: var(--warn);
+    }
+    .bundle-very-heavy {
+      background: color-mix(in srgb, var(--bad) 10%, transparent);
+      border-color: color-mix(in srgb, var(--bad) 40%, var(--border));
+      color: var(--bad);
+    }
+    /* Bundle suffix color follows the parent tier so dark theme uses
+       a brighter dim and light theme uses a darker dim — same token,
+       different rendered tone per theme. */
+    .bundle-heavy .bundle-suffix,
+    .bundle-very-heavy .bundle-suffix {
+      color: currentColor;
+      opacity: 0.7;
+    }
+
+    /* Tree-shakeable — green when fully shakeable, amber when partial
+       (some files have side effects, requires caution at import time). */
+    .chip-treeshake {
+      font-weight: 500;
+    }
+    .treeshake-yes {
+      background: color-mix(in srgb, var(--ok) 10%, transparent);
+      border-color: color-mix(in srgb, var(--ok) 40%, var(--border));
+      color: var(--ok);
+    }
+    .treeshake-partial {
+      background: color-mix(in srgb, var(--warn) 10%, transparent);
+      border-color: color-mix(in srgb, var(--warn) 40%, var(--border));
+      color: var(--warn);
+    }
+
+    /* Module type — neutral chip with a small accent tint. The
+       distinction between ESM / CJS / Dual is informational, not a
+       quality judgment, so it doesn't inherit the green/red scale. */
+    .chip-modtype {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+    }
+    .modtype-esm {
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+      color: var(--accent);
+    }
+    .modtype-dual {
+      background: color-mix(in srgb, var(--accent) 8%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+      color: var(--accent);
+    }
+    .modtype-cjs {
+      background: var(--surface-1);
+      border-color: var(--border);
+      color: var(--fg-dim);
+    }
+
+    /* Maturity — neutral chip, just informational. Project longevity
+       is rarely a red flag (long-lived = battle-tested), but isn't
+       universally a good signal either (could be ossified). Stay
+       neutral and let the user read the date. */
+    .chip-maturity {
+      color: var(--fg-dim);
+      font-variant-numeric: tabular-nums;
     }
 
     /* ----- Modern-Angular readiness strip -----
@@ -840,6 +1084,48 @@ export class PackageMetaComponent {
   readonly deprecated = input<DeprecatedSignal | null>(null);
   /** Heuristic Modern-Angular readiness flags. Computed synchronously. */
   readonly readiness = input<AngularReadiness | null>(null);
+
+  /** Bundle size (gzipped + deps) from Bundlephobia. Async — null while loading or unavailable. */
+  readonly bundleSize = input<BundleSize | null>(null);
+  /** Tree-shakeable signal from sideEffects packument field. Computed synchronously. */
+  readonly treeShakeable = input<TreeShakeableSignal | null>(null);
+  /** Module format (ESM / CJS / Dual) from type + exports packument fields. Computed synchronously. */
+  readonly moduleType = input<ModuleTypeSignal | null>(null);
+  /** Maturity signal from pkg.time.created. Computed synchronously. */
+  readonly maturity = input<MaturitySignal | null>(null);
+
+  /**
+   * Used-by / dependents count from `npm /-/v1/search?text=depends:<name>`.
+   * `null` = not yet fetched / fetch failed (the chip hides). `0` = no
+   * dependents (also hidden — not a useful signal). Anything > 0
+   * renders a tier-colored chip.
+   */
+  readonly dependents = input<number | null>(null);
+
+  /** Pre-computed tier for the chip's color class. */
+  readonly dependentsChipTier = computed<DependentsTier>(() => {
+    const v = this.dependents();
+    return v === null ? 'none' : dependentsTier(v);
+  });
+  /** Compact display form ("847k") for the chip body. */
+  readonly dependentsCompact = computed<string>(() => {
+    const v = this.dependents();
+    return v === null ? '' : formatDependents(v);
+  });
+  /** Raw count exposed to the template for the chip's aria-label. */
+  readonly dependentsValue = computed<number | null>(() => this.dependents());
+
+  /**
+   * Format gzipped bytes as a chip-friendly string. Uses kB for
+   * everything < 1 MB (which is almost everything) and MB for the
+   * monsters. Two decimals on MB so 1.23 MB doesn't round to 1 MB
+   * (which would hide a meaningful 23% size delta between versions).
+   */
+  formatBytes(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1_000_000) return `${(bytes / 1024).toFixed(bytes < 10_240 ? 1 : 0)} kB`;
+    return `${(bytes / 1_000_000).toFixed(2)} MB`;
+  }
 
   /**
    * Format star/issue counts the way GitHub does — 12.5k instead of

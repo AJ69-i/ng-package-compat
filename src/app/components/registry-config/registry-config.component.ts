@@ -40,6 +40,11 @@ import { ToastService } from '../../services/toast.service';
       </summary>
 
       @if (bindings().length) {
+        <!-- .scroll-table for sticky thead consistency with the rest
+             of the app. Most users have 1-5 registries so the cap
+             rarely engages, but the sticky thead still looks tidy
+             if it does. -->
+        <div class="scroll-table scroll-table-short">
         <table>
           <thead>
             <tr>
@@ -64,6 +69,7 @@ import { ToastService } from '../../services/toast.service';
             }
           </tbody>
         </table>
+        </div>
       } @else {
         <p class="muted">{{ 'registry.empty' | transloco }}</p>
       }

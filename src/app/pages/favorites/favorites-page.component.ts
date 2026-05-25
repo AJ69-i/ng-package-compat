@@ -82,6 +82,12 @@ interface FavoriteRow {
           }
         </div>
       } @else {
+        <!-- .scroll-table caps the favorites table at min(600px, 70vh)
+             so power users with dozens of starred packages don't get a
+             page-length wall of rows. Sticky thead stays put while they
+             scroll. Drag-and-drop still works inside the scroll container
+             because HTML5 drag uses screen coords, not scroll context. -->
+        <div class="scroll-table">
         <table class="grid" role="table">
           <thead>
             <tr>
@@ -153,6 +159,7 @@ interface FavoriteRow {
             }
           </tbody>
         </table>
+        </div>
       }
     </section>
   `,

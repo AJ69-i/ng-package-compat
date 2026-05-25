@@ -99,7 +99,14 @@ export class DiffPageComponent {
 
   readonly crumbs = computed<Crumb[]>(() => [
     { label: 'Search', link: '/' },
-    { label: this.pkgName() || '—', link: ['/'] },
+    // Package-name crumb carries `?q=<pkg>` so the search page
+    // re-hydrates that package instead of landing on the empty
+    // welcome state. Same pattern as /dependencies.
+    {
+      label: this.pkgName() || '—',
+      link: '/',
+      queryParams: this.pkgName() ? { q: this.pkgName() } : undefined
+    },
     { label: 'Diff' }
   ]);
 

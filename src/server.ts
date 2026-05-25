@@ -8,6 +8,7 @@ import { registerReleaseWebhook } from './server/release-webhook.js';
 import { registerEmailNotify } from './server/email-notify.js';
 import { registerCodemodRunner } from './server/codemod-runner.js';
 import { registerAiProxy } from './server/ai-proxy.js';
+import { registerApiDiff } from './server/api-diff/route.js';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -42,6 +43,14 @@ registerCodemodRunner(app);
 // validation + per-IP rate limiting prevent this from becoming a free
 // LLM tunnel for the open internet.
 registerAiProxy(app);
+
+// V2 — server-side API diff. Takes (pkg, from, to), fetches both .d.ts
+// bundles from unpkg/jsdelivr, parses them with the TypeScript Compiler
+// API, and returns the structural surface diff. Heavy lifting lives
+// server-side so every user benefits from the shared two-layer cache
+// (memory + disk) and the AI step downstream gets the same canonical
+// input regardless of provider.
+registerApiDiff(app);
 
 app.use(
   express.static(browserDistFolder, {

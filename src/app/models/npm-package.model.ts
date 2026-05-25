@@ -9,7 +9,14 @@ export interface NpmRegistryResponse {
   // The npm registry also packs special keys "created"/"modified" into `time`.
   time: { [version: string]: string };
   homepage?: string;
-  repository?: { type?: string; url?: string };
+  /**
+   * npm's repository field. Includes `directory` for monorepo packages
+   * (rxjs at packages/rxjs, @angular/* under packages/*, every Lerna /
+   * Nx / Yarn-workspaces setup) — without it, downstream callers that
+   * fetch the per-package CHANGELOG.md end up 404-ing on the repo root.
+   * Standard npm registry field; we just have to receive it.
+   */
+  repository?: { type?: string; url?: string; directory?: string };
   license?: string;
   maintainers?: Array<{ name: string; email?: string }>;
   author?: { name?: string; email?: string } | string;

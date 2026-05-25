@@ -27,11 +27,19 @@ import { RecommendationService } from '../../services/recommendation.service';
 import { PackageRelocationService, PackageRelocation } from '../../services/package-relocation.service';
 import { ReleaseDateService } from '../../services/release-date.service';
 import { MaintainerVitalityService, MaintainerVitality } from '../../services/maintainer-vitality.service';
-import { PackageTrustService, ProvenanceSignal, InstallScriptSignal, EngineSignal, FundingSignal, DeprecatedSignal } from '../../services/package-trust.service';
+import {
+  PackageTrustService, ProvenanceSignal, InstallScriptSignal, EngineSignal,
+  FundingSignal, DeprecatedSignal, TreeShakeableSignal, ModuleTypeSignal, MaturitySignal
+} from '../../services/package-trust.service';
 import { ScorecardService, ScorecardResult } from '../../services/scorecard.service';
 import { TyposquatService, TyposquatSuggestion } from '../../services/typosquat.service';
 import { AngularReadinessService, AngularReadiness } from '../../services/angular-readiness.service';
 import { AnnouncerService } from '../../services/announcer.service';
+import { BundlephobiaService } from '../../services/bundlephobia.service';
+import { DependentsService } from '../../services/dependents.service';
+import { CommitActivityService, CommitActivity } from '../../services/commit-activity.service';
+import { AdoptionCostService, AdoptionCost } from '../../services/adoption-cost.service';
+import { BundleSize } from '../../models/npm-package.model';
 
 import {
   Advisory,
@@ -48,6 +56,16 @@ import { TimelineComponent } from '../../components/timeline/timeline.component'
 import { SkeletonComponent } from '../../components/skeleton/skeleton.component';
 import { ErrorBoundaryComponent } from '../../components/error-boundary/error-boundary.component';
 import { AutocompleteInputComponent } from '../../components/autocomplete-input/autocomplete-input.component';
+import { ReadmePreviewComponent } from '../../components/readme-preview/readme-preview.component';
+import { ShareButtonComponent } from '../../components/share-button/share-button.component';
+import { ChangelogPreviewComponent } from '../../components/changelog-preview/changelog-preview.component';
+import { AskAiBoxComponent } from '../../components/ask-ai-box/ask-ai-box.component';
+import { CompetitorChipsComponent } from '../../components/competitor-chips/competitor-chips.component';
+import { ActivitySparklineComponent } from '../../components/activity-sparkline/activity-sparkline.component';
+import { DependencyMiniTreeComponent } from '../../components/dependency-mini-tree/dependency-mini-tree.component';
+import { VersionDiffLinkComponent } from '../../components/version-diff-link/version-diff-link.component';
+import { AdoptionCostChipComponent } from '../../components/adoption-cost-chip/adoption-cost-chip.component';
+import { LicenseService } from '../../services/license.service';
 
 interface StrategyOption { id: DetectionStrategy; label: string; hint: string; }
 
@@ -72,7 +90,16 @@ const STRATEGY_OPTIONS: StrategyOption[] = [
     TimelineComponent,
     SkeletonComponent,
     ErrorBoundaryComponent,
-    AutocompleteInputComponent
+    AutocompleteInputComponent,
+    ReadmePreviewComponent,
+    ShareButtonComponent,
+    ChangelogPreviewComponent,
+    AskAiBoxComponent,
+    CompetitorChipsComponent,
+    ActivitySparklineComponent,
+    DependencyMiniTreeComponent,
+    VersionDiffLinkComponent,
+    AdoptionCostChipComponent
   ],
   templateUrl: './search-page.component.html',
   styleUrls: ['./search-page.component.scss']
@@ -99,6 +126,11 @@ export class SearchPageComponent {
   private readonly typosquatSvc = inject(TyposquatService);
   private readonly readinessSvc = inject(AngularReadinessService);
   private readonly announcer = inject(AnnouncerService);
+  private readonly bundlephobia = inject(BundlephobiaService);
+  private readonly dependentsSvc = inject(DependentsService);
+  private readonly commitActivitySvc = inject(CommitActivityService);
+  private readonly adoptionCostSvc = inject(AdoptionCostService);
+  private readonly licenseSvc = inject(LicenseService);
 
   readonly strategyOptions = STRATEGY_OPTIONS;
 
@@ -115,6 +147,17 @@ export class SearchPageComponent {
   readonly relocation = signal<PackageRelocation | null>(null);
   readonly vitality = signal<MaintainerVitality | null>(null);
   readonly scorecard = signal<ScorecardResult | null>(null);
+  readonly bundleSize = signal<BundleSize | null>(null);
+  /**
+   * Dependents count from npm's /-/v1/search?text=depends: endpoint.
+   * Fetched on its own track (independent of the main package render)
+   * because the count is a popularity signal, not a correctness one —
+   * a slow or failing dependents lookup should never block the page.
+   * `null` = not yet fetched / failed; the chip just hides in that case.
+   */
+  readonly dependents = signal<number | null>(null);
+  /** 52-week commit-activity sparkline data. Empty array hides the chip. */
+  readonly commitActivity = signal<CommitActivity | null>(null);
 
   private lastQuery = '';
 
@@ -212,6 +255,52 @@ export class SearchPageComponent {
   readonly funding = computed<FundingSignal>(() => this.trustSvc.funding(this.pkg()));
   readonly deprecated = computed<DeprecatedSignal>(() => this.trustSvc.deprecated(this.pkg()));
   readonly readiness = computed<AngularReadiness>(() => this.readinessSvc.detect(this.pkg()));
+  readonly treeShakeable = computed<TreeShakeableSignal>(() => this.trustSvc.treeShakeable(this.pkg()));
+  readonly moduleType = computed<ModuleTypeSignal>(() => this.trustSvc.moduleType(this.pkg()));
+  readonly maturity = computed<MaturitySignal>(() => this.trustSvc.maturity(this.pkg()));
+
+  /**
+   * Direct dependencies of the latest published version. Reads from
+   * the packument we already fetched — no extra network calls.
+   * Returns `{}` (not null) when there are zero deps so the mini-tree
+   * can render its empty state without juggling null checks.
+   */
+  readonly directDeps = computed<Record<string, string>>(() => {
+    const p = this.pkg();
+    if (!p) return {};
+    const latest = p['dist-tags']?.['latest'];
+    if (!latest) return {};
+    return p.versions?.[latest]?.dependencies ?? {};
+  });
+
+  /**
+   * All known versions for the version-diff-link's "previous stable"
+   * derivation. Just the keys of pkg.versions.
+   */
+  readonly allVersionStrings = computed<string[]>(() => {
+    const p = this.pkg();
+    return p?.versions ? Object.keys(p.versions) : [];
+  });
+
+  /**
+   * Composite "Adoption Cost" score. Reactively recomputes whenever
+   * any of the input signals change. Returns null until the bundle
+   * size has at least started to resolve — that's the heaviest input
+   * and showing a 4-factor-only score before bundle data lands gives
+   * a misleadingly-low headline.
+   */
+  readonly adoptionCost = computed<AdoptionCost | null>(() => {
+    const pkg = this.pkg();
+    if (!pkg) return null;
+    return this.adoptionCostSvc.compute({
+      bundleGzipBytes: this.bundleSize()?.gzip ?? null,
+      transitiveDeps: this.bundleSize()?.dependencyCount ?? null,
+      installScripts: this.installScripts(),
+      vitalityTier: this.vitality()?.tier ?? null,
+      licenseTier: this.licenseSvc.classify(pkg.license)?.tier ?? null,
+      deprecated: this.deprecated()
+    });
+  });
 
   /**
    * Typosquat check runs against the query string (the user's typed
@@ -250,6 +339,9 @@ export class SearchPageComponent {
     this.advisoriesList.set(null);
     this.vitality.set(null);
     this.scorecard.set(null);
+    this.bundleSize.set(null);
+    this.dependents.set(null);
+    this.commitActivity.set(null);
     this.recoMajor.set(null);
     this.filtersSvc.reset();
 
@@ -294,6 +386,32 @@ export class SearchPageComponent {
         this.scorecardSvc.forRepoUrl(res.repository?.url).pipe(
           catchError(() => of(null))
         ).subscribe((s) => this.scorecard.set(s));
+        // Bundle size on its own track too — Bundlephobia can be slow
+        // for first-time computation of a new version (it triggers the
+        // build server-side on cache miss), but the result is shared
+        // across all users via the service's 7-day localStorage cache.
+        // Targets the LATEST version of the package since that's what
+        // the search page is showing; the Upgrade page does its own
+        // bundle-delta computation for the recommended version.
+        const latest = res['dist-tags']?.['latest'];
+        if (latest) {
+          this.bundlephobia.size(res.name, latest).pipe(
+            catchError(() => of(null))
+          ).subscribe((b) => this.bundleSize.set(b));
+        }
+        // Dependents count — independent track. Cached for 24h in
+        // localStorage so the same package on repeat visits doesn't
+        // re-hit npm. catchError swallows the failure so the rest of
+        // the meta panel still renders if the endpoint is unreachable.
+        this.dependentsSvc.fetch(res.name).pipe(
+          catchError(() => of(null))
+        ).subscribe((n) => this.dependents.set(n));
+        // Commit-activity sparkline — independent track too. Same
+        // rate-limit risk pattern as vitality/scorecard (api.github.com
+        // 60-req/hr), so catchError swallows failure cleanly.
+        this.commitActivitySvc.forRepoUrl(res.repository?.url).pipe(
+          catchError(() => of(null))
+        ).subscribe((ca) => this.commitActivity.set(ca));
         forkJoin({
           dl: this.downloads.weeklyTrend(res.name).pipe(catchError(() => of(null))),
           adv: this.advisories.forPackage(res.name).pipe(catchError(() => of(null)))
@@ -317,6 +435,21 @@ export class SearchPageComponent {
   /** Jump search to the relocated name shown in the banner. */
   searchNewName(relocation: PackageRelocation): void {
     this.query.set(relocation.to);
+    this.search();
+  }
+
+  /**
+   * User clicked an AI-suggested competitor chip. Navigate by switching
+   * the search to that alternative package. Same in-page state machine
+   * as a fresh autocomplete pick — the URL `?q=` sync effect keeps the
+   * back button working, and the user can return to the original
+   * package with one tap. We deliberately don't push them to /compare
+   * because the chip is "consider also" not "compare these two" — the
+   * compare flow is a different intent.
+   */
+  pickCompetitor(name: string): void {
+    if (!name) return;
+    this.query.set(name);
     this.search();
   }
 

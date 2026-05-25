@@ -40,6 +40,11 @@ import { ToastService } from '../../services/toast.service';
         </header>
         @if (drift().length) {
           <p class="lede">{{ 'workspace.drift' | transloco: { n: drift().length } }}</p>
+          <!-- .scroll-table caps height + sticky thead. Workspaces
+               with many shared deps across many projects produce
+               long, wide tables — both axes get scrollbars from the
+               global utility (overflow-x is also auto). -->
+          <div class="scroll-table">
           <table>
             <thead>
               <tr>
@@ -62,6 +67,7 @@ import { ToastService } from '../../services/toast.service';
               }
             </tbody>
           </table>
+          </div>
           <div class="cmd-row">
             <code>{{ alignNpm() || '—' }}</code>
             @if (alignNpm()) {

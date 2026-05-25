@@ -35,7 +35,99 @@
   "share": {
     "button": "Copy share link",
     "copied": "Link copied to clipboard!",
-    "loaded": "Loaded a shared analysis. You can re-run it freely."
+    "loaded": "Loaded a shared analysis. You can re-run it freely.",
+    "copy": "Share",
+    "failed": "Could not copy link — clipboard access blocked.",
+    "aria": "Copy link to this package view"
+  },
+  "readme": {
+    "title": "README",
+    "lengthHint": "≈ {{ kb }} KB",
+    "viewOnNpm": "View on npm",
+    "empty": "This package has no README on npm."
+  },
+  "commitActivity": {
+    "aria": "Commit activity over the last year",
+    "summary": "{{ total }} commits in {{ active }} active weeks, {{ recent }} in the last week",
+    "captionShort": "{{ total }} commits · {{ active }} active wks",
+    "recent": "{{ n }} this wk"
+  },
+  "depsMiniTree": {
+    "aria": "Top direct dependencies",
+    "title": "Direct dependencies ({{ n }})",
+    "showingTop": "showing {{ shown }} of {{ total }}",
+    "viewFull": "View full tree",
+    "none": "This package has no direct dependencies."
+  },
+  "versionDiff": {
+    "label": "What changed in v{{ latest }}?",
+    "fromVersion": "from {{ prev }}",
+    "aria": "Open migration analysis from {{ name }} {{ prev }} to {{ latest }} in the compare view"
+  },
+  "adoptionCost": {
+    "headline": "Adoption Cost",
+    "aria": "Adoption cost: {{ tier }} ({{ score }} of 100)",
+    "tier": {
+      "low": "Low",
+      "moderate": "Moderate",
+      "high": "High",
+      "heavy": "Heavy"
+    },
+    "lowData": "low data",
+    "lowDataTitle": "Score is computed from fewer than 4 of 6 factors — interpret as best-effort.",
+    "breakdownAria": "Adoption cost breakdown by factor",
+    "factor": {
+      "bundle": "Bundle size",
+      "installScripts": "Install scripts",
+      "transitiveDeps": "Transitive deps",
+      "vitality": "Maintenance",
+      "license": "License",
+      "deprecated": "Deprecated"
+    },
+    "disclaimer": "Adoption Cost is a heuristic summary — review individual chips for the full picture. Lower is better."
+  },
+  "changelogPreview": {
+    "title": "Recent release notes",
+    "loading": "Loading…",
+    "countSuffix": "· {{ n }} releases",
+    "viewAll": "View all releases",
+    "empty": "No release notes",
+    "emptyBody": "We couldn't find a CHANGELOG or GitHub release notes for this package.",
+    "error": "Could not load release notes.",
+    "noNotes": "(no notes provided for this release)",
+    "changelogMdNote": "Showing CHANGELOG.md — per-release segmentation may be approximate.",
+    "viewOnGithub": "View on GitHub",
+    "tryAgain": "Try again"
+  },
+  "askAi": {
+    "section": "Ask AI about this package",
+    "title": "Ask AI about {{ name }}",
+    "subtitle": "Free-form questions, grounded in this package's live facts. Answers cite the facts when relevant.",
+    "inputLabel": "Your question",
+    "placeholder": "e.g. \"Is {{ name }} still maintained?\" or \"What changed in v17?\"",
+    "enterHint": "Press Enter to submit, Shift+Enter for a newline.",
+    "submit": "Ask",
+    "submitAria": "Submit your question to the AI",
+    "thinking": "Thinking…",
+    "tryAsking": "Try asking:",
+    "examplesAria": "Example questions",
+    "examples": {
+      "maintained": "Is {{ name }} still actively maintained?",
+      "migration": "What's the migration story for {{ name }} between recent majors?",
+      "gotchas": "What are the common gotchas when using {{ name }}?",
+      "alternatives": "What are good alternatives to {{ name }}?"
+    },
+    "answerAria": "AI answer",
+    "caveatsAria": "Caveats about this answer",
+    "confidence": {
+      "high": "High confidence",
+      "medium": "Medium confidence",
+      "low": "Low confidence"
+    },
+    "cached": "cached",
+    "cachedTip": "Answer served from local cache — click Refresh for a fresh response.",
+    "poweredBy": "Answered by {{ provider }}",
+    "refresh": "Refresh"
   },
   "registry": {
     "title": "Private registry (Artifactory / GitHub Packages / Verdaccio)",
@@ -982,6 +1074,78 @@
     "deleteButton": "Delete account permanently",
     "deleting": "Deleting…"
   },
+  "apiMigration": {
+    "title": "Deep migration analysis",
+    "lede": "Type-definition-grounded analysis of {{ pkg }} {{ from }} → {{ to }}.",
+    "ctaBody": "Scan the API surface of {{ pkg }} from {{ from }} to {{ to }} and produce a migration report grounded in the actual .d.ts diff.",
+    "generate": "Run deep analysis",
+    "refresh": "Refresh",
+    "before": "Before",
+    "after": "After",
+    "example": {
+      "before": "Your code before",
+      "after": "Your code after"
+    },
+    "truncationNote": "Analysis covers the most-impactful changes. Omitted: {{ added }} additions, {{ removed }} removals, {{ changed }} signature changes.",
+    "emptyAllClear": "No structural or ecosystem changes detected between these versions. Safe drop-in upgrade.",
+    "poweredBy": "Powered by {{ provider }}",
+    "generatedIn": "{{ ms }} ms",
+    "sourceApiDiff": "with .d.ts diff",
+    "effortLabel": "Effort",
+    "stage1": {
+      "title": "Scanning API surface…",
+      "body": "Fetching type definitions and computing the structural diff."
+    },
+    "stage2": {
+      "title": "AI is analyzing changes…",
+      "bodyWithCount": "Found {{ changes }} API changes across {{ modules }} modules. Generating migration guidance.",
+      "bodyNarrative": "No type definitions available — operating from release notes and changelog. Generating best-effort guidance."
+    },
+    "sections": {
+      "ecosystem": "Ecosystem changes",
+      "breaking": "Breaking changes",
+      "renames": "Renames",
+      "deprecations": "Deprecations",
+      "capabilities": "New capabilities",
+      "additions": "New APIs",
+      "steps": "Migration steps"
+    },
+    "severity": {
+      "patch": "Patch — safe drop-in",
+      "minor": "Minor — additive",
+      "major-safe": "Major (no breaks)",
+      "major-breaking": "Major — breaking"
+    },
+    "effort": {
+      "minutes": "minutes",
+      "hours": "hours",
+      "day": "~ 1 day",
+      "days": "several days",
+      "unknown": "unknown"
+    },
+    "confidence": {
+      "high": "High confidence",
+      "medium": "Medium confidence",
+      "low": "Low confidence"
+    },
+    "changeKind": {
+      "added": "added",
+      "removed": "removed",
+      "renamed": "renamed",
+      "signature-changed": "signature changed",
+      "deprecated": "deprecated"
+    },
+    "ecosystemArea": {
+      "peer-dependencies": "peer deps",
+      "engines": "engines",
+      "runtime": "runtime",
+      "tooling": "tooling"
+    },
+    "error": {
+      "scanFailed": "Couldn't scan the API surface. The package may have no type definitions available.",
+      "analyzeFailed": "AI analysis failed."
+    }
+  },
   "versionMigration": {
     "cta": "Compare versions of {{ pkg }}",
     "modeBanner": "Migration mode — analyzing version-to-version changes for {{ pkg }}.",
@@ -1035,6 +1199,10 @@
     }
   },
   "packageMeta": {
+    "dependents": {
+      "label": "dependents",
+      "aria": "Used by {{ n }} dependent packages on npm"
+    },
     "deprecated": {
       "heading": "This package has been deprecated",
       "bodyGeneric": "The maintainer has marked the latest published version as deprecated. Consider switching to an alternative before adopting."
@@ -1070,6 +1238,32 @@
     },
     "openIssues": {
       "short": "open"
+    },
+    "bundle": {
+      "gzippedShort": "gzip",
+      "ariaLabel": "Gzipped bundle size: {{ size }}"
+    },
+    "treeShakeable": {
+      "labelYes": "Tree-shakeable",
+      "labelPartial": "Partially tree-shakeable",
+      "yes": "This package declares no side effects — bundlers can drop unused exports.",
+      "partial": "This package marks some files as side-effect-free — most exports are tree-shakeable."
+    },
+    "moduleType": {
+      "label": {
+        "esm": "ESM",
+        "cjs": "CJS",
+        "dual": "Dual"
+      },
+      "aria": {
+        "esm": "ES Modules only — modern import syntax required.",
+        "cjs": "CommonJS only — older require() format.",
+        "dual": "Dual package — ships both ES Modules and CommonJS."
+      }
+    },
+    "maturity": {
+      "label": "Published since {{ date }}",
+      "ariaLabel": "Package first published {{ date }}"
     },
     "provenance": {
       "verified": "Provenance verified",

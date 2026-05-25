@@ -2,7 +2,18 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
-export interface Crumb { label: string; link?: string | any[]; }
+export interface Crumb {
+  label: string;
+  link?: string | any[];
+  /**
+   * Optional query-params to append to the routerLink. Critical for
+   * crumbs that point back at the Search page — clicking the package
+   * name needs to land on `/?q=<pkg>` so the search-page effect
+   * re-hydrates the package, not on bare `/` (which renders the
+   * empty welcome state and loses the user's context).
+   */
+  queryParams?: Record<string, string | number | null>;
+}
 
 @Component({
   selector: 'app-breadcrumbs',
@@ -15,7 +26,7 @@ export interface Crumb { label: string; link?: string | any[]; }
         @for (c of crumbs(); track c.label; let last = $last) {
           <li [class.current]="last">
             @if (!last && c.link) {
-              <a [routerLink]="c.link">{{ c.label }}</a>
+              <a [routerLink]="c.link" [queryParams]="c.queryParams ?? null">{{ c.label }}</a>
               <span class="sep" aria-hidden="true">›</span>
             } @else {
               <span>{{ c.label }}</span>

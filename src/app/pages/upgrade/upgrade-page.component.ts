@@ -500,8 +500,12 @@ import { RouterLink } from '@angular/router';
           </article>
         }
 
-        <!-- Main per-dep table -->
-        <div class="table-wrap">
+        <!-- Main per-dep table. scroll-table-tall (800px / 80vh) instead
+             of the default 600px because this is THE main result table
+             on the page — users expect to see more rows at once than
+             on supporting tables, and uploads with 50+ deps need the
+             extra real estate. -->
+        <div class="table-wrap scroll-table scroll-table-tall">
           <table class="grid">
             <caption class="sr-only">{{ 'upgrade.table.caption' | transloco }}</caption>
             <thead>

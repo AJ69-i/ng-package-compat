@@ -65,7 +65,7 @@ import {
 // ---------------------------------------------------------------------------
 
 /** Identifier for each AI feature — keeps namespaces isolated. */
-export type AiCacheFeature = 'pros-cons' | 'usage-guide' | 'competitors' | 'version-migration';
+export type AiCacheFeature = 'pros-cons' | 'usage-guide' | 'competitors' | 'version-migration' | 'migration-intelligence' | 'ask-ai';
 
 export interface AiCacheKey {
   feature: AiCacheFeature;

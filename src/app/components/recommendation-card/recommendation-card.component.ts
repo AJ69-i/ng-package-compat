@@ -46,6 +46,12 @@ import { CopyOnClickDirective } from '../../directives/copy-on-click.directive';
     }
   `,
   styles: [`
+    /* Make the host a block so the component participates predictably
+       in the page's vertical rhythm even when it's the only child in
+       a defer block. The inner .card already owns the 1rem top
+       margin; this rule just guarantees the host doesn't collapse to
+       inline. */
+    :host { display: block; }
     .card {
       margin-top: 1rem; padding: 1rem 1.25rem;
       background: color-mix(in srgb, var(--accent) 7%, var(--surface-2));

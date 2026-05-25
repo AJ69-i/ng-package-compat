@@ -123,7 +123,56 @@
     [funding]="funding()"
     [deprecated]="deprecated()"
     [readiness]="readiness()"
+    [bundleSize]="bundleSize()"
+    [treeShakeable]="treeShakeable()"
+    [moduleType]="moduleType()"
+    [maturity]="maturity()"
+    [dependents]="dependents()"
   />
+
+  <!-- Phase 3 headline: composite Adoption Cost chip. Sits directly
+       below the package-meta because it's the single most-important
+       at-a-glance signal — the user can decide "is this expensive?"
+       before reading any individual chip. Click expands the breakdown
+       inline. -->
+  <app-adoption-cost-chip [cost]="adoptionCost()" />
+
+  <!-- Permalink/Share + Version-diff link row. Lives between the
+       package-meta and the reco-row so the share button is adjacent
+       to the package title (the thing being shared) without crowding
+       the meta header. The version-diff link is a discoverability hook
+       for /compare self-mode — most users don't know they can compare
+       two versions of the same package. On mobile both wrap. -->
+  <div class="share-row">
+    <app-version-diff-link
+      [pkgName]="p.name"
+      [latestVersion]="latestVersion()"
+      [allVersions]="allVersionStrings()"
+    />
+    <span class="share-spacer"></span>
+    <app-share-button
+      [shareTitle]="p.name"
+      [shareText]="p.description ?? null"
+    />
+    @if (commitActivity(); as ca) {
+      <app-activity-sparkline [weeklyTotals]="ca.weeklyTotals" />
+    }
+  </div>
+
+  <!-- AI-suggested popular alternatives (Phase 2 feature #5).
+       Reuses the CompetitorChipsComponent already proven on /compare.
+       siblingValue is intentionally empty here — on /compare the
+       sibling was the OTHER input; on /search there is no sibling,
+       so the chips are always visible once suggestions arrive. The
+       chip-pick handler switches the search query to the chosen
+       alternative, taking the user there with one tap. -->
+  @defer (on viewport; prefetch on idle) {
+    <app-competitor-chips
+      [targetPackage]="p.name"
+      [siblingValue]="''"
+      (picked)="pickCompetitor($event)"
+    />
+  } @placeholder { <div class="competitors-placeholder" aria-hidden="true"></div> }
 
   <div class="reco-row">
     <label for="reco-major">{{ 'search.recommendationFor' | transloco }}</label>
@@ -179,6 +228,74 @@
     [pkgName]="p.name"
     (copy)="handleCopy($event)"
   />
+
+  <!-- Top-N direct dependencies (Phase 3 feature #7). Uses data already
+       in the packument — zero new fetches. Links to /dependencies for
+       the full transitive tree. -->
+  @defer (on viewport; prefetch on idle) {
+    <app-dependency-mini-tree
+      [dependencies]="directDeps()"
+      [pkgName]="p.name"
+      [version]="latestVersion()"
+    />
+  } @placeholder { <div class="mini-tree-placeholder" aria-hidden="true"></div> }
+
+  <!-- AI Ask Box (Phase 2 feature #4). Scoped to the current package —
+       the box's prompt scope is locked to p.name, and the orchestrator
+       refuses off-topic questions. Cached for 1h. Below the versions
+       table because once a user has scrolled through the timeline +
+       versions, they often want to ask a clarifying question — having
+       it right there avoids a context switch. Lazy via @defer so the
+       chunk only loads when this region scrolls into view. -->
+  @defer (on viewport; prefetch on idle) {
+    <!-- latestVersion + repoUrl + repoDirectory unlock CHANGELOG
+         grounding inside the service: AskAiService fetches the
+         package's release notes in parallel with the metrics payload
+         and prepends them to the prompt envelope. Critical for
+         monorepo packages (rxjs, @angular/*, @nestjs/*) whose
+         CHANGELOG lives in a subdirectory. -->
+    <app-ask-ai-box
+      [pkgName]="p.name"
+      [latestVersion]="latestVersion()"
+      [repoUrl]="p.repository?.url ?? null"
+      [repoDirectory]="p.repository?.directory ?? null"
+    />
+  } @placeholder { <div class="ask-ai-placeholder" aria-hidden="true"></div> }
+
+  <!-- CHANGELOG preview (Phase 2 feature #2). Reuses ChangelogRagService
+       (originally built for /compare self-mode) to render the most
+       recent ~5 release entries. Collapsed by default — release notes
+       are deep-reading content, surfaced on demand. -->
+  @defer (on viewport; prefetch on idle) {
+    <!-- repoDirectory carries `pkg.repository.directory` so monorepo
+         packages resolve their per-package CHANGELOG.md instead of
+         404ing on the repo root. RxJS lives at packages/rxjs;
+         @angular/* under packages/<name>; every Lerna / Nx / Yarn-
+         workspace package follows the same pattern. -->
+    <app-changelog-preview
+      [pkgName]="p.name"
+      [latestVersion]="latestVersion()"
+      [repoUrl]="p.repository?.url ?? null"
+      [repoDirectory]="p.repository?.directory ?? null"
+    />
+  } @placeholder { <div class="changelog-placeholder" aria-hidden="true"></div> }
+
+  <!-- README preview — lazy by viewport so the rendered HTML doesn't
+       cost anything until the user actually scrolls down to it. The
+       README is one of the heaviest single inputs on the page (some
+       hit hundreds of KB of markdown), so deferring it both speeds up
+       first-paint and keeps the initial JS execution lean. Lives at
+       the bottom of the page because it's reference content — users
+       scan the chips, version table, and recommendation first; the
+       README is the deep-dive they reach when those signals raise a
+       question. -->
+  @defer (on viewport; prefetch on idle) {
+    <app-readme-preview
+      [markdown]="p.readme ?? null"
+      [repoUrl]="p.repository?.url ?? null"
+      [pkgName]="p.name"
+    />
+  } @placeholder { <div class="readme-placeholder" aria-hidden="true"></div> }
 }
 
 @if (!pkg() && !loading() && !error()) {

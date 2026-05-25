@@ -21,6 +21,11 @@ import { CommonModule } from '@angular/common';
     }
   `,
   styles: [`
+    /* Block host so the error boundary takes a full page row in the
+       layout. The inner .err already owns margin: 1rem 0 — this rule
+       just guarantees the host doesn't collapse to inline when no
+       error is present. */
+    :host { display: block; }
     .err {
       margin: 1rem 0; padding: 0.9rem 1rem;
       background: color-mix(in srgb, #ef4444 10%, transparent);

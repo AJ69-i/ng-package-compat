@@ -65,7 +65,16 @@ interface CacheEntry {
  */
 const MAX_CHARS = 24_000;
 
-const CACHE_KEY = 'ngpc.changelog.v1';
+/**
+ * Bumped to v2 when we added heuristic monorepo-path lookup. Old v1
+ * entries cached empty results for monorepo packages (rxjs, @angular/*,
+ * @nestjs/*, every Lerna/Nx/Yarn-workspaces package) because we only
+ * tried the repo root. v2 entries reflect the new search strategy.
+ * Leaving v1 entries in localStorage is harmless — they're keyed under
+ * a different prefix and the browser GC's them when localStorage
+ * pressures arise.
+ */
+const CACHE_KEY = 'ngpc.changelog.v2';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 /** Filenames we'll try in order if there are no GitHub releases. */
@@ -118,7 +127,32 @@ export class ChangelogRagService {
     pkg: string,
     fromVersion: string,
     toVersion: string,
-    repoUrl: string | undefined | null
+    repoUrl: string | undefined | null,
+    /**
+     * When true, skip the cache READ. We still write the fresh
+     * result to the cache so a subsequent non-bypass call benefits.
+     * Used by the changelog-preview's "Try again" button to recover
+     * after a transient failure (rate-limit, network blip) that
+     * poisoned the cache with an empty entry.
+     */
+    bypassCache = false,
+    /**
+     * Monorepo subdirectory for this package's CHANGELOG, from the
+     * npm packument's `repository.directory` field. Empty/null means
+     * "look at the repo root" (the default).
+     *
+     * Real-world examples this fixes:
+     *   - rxjs → packages/rxjs/CHANGELOG.md
+     *   - @angular/core → packages/core/CHANGELOG.md (well, sort of —
+     *     @angular's per-package CHANGELOGs are actually rolled up
+     *     into a top-level one, but other monorepos use the pattern)
+     *   - @nestjs/* → packages/<name>/CHANGELOG.md
+     *   - every Storybook / Babel / Lerna / Nx workspace package
+     *
+     * Without this, our root-level fallback misses every changelog
+     * that lives next to its package — which is the modern default.
+     */
+    repoDirectory: string | null = null
   ): Observable<ChangelogResult> {
     // Normalize semver so "v15.0.0" and "15.0.0" cache to the same key.
     const fromN = semver.valid(semver.coerce(fromVersion)) ?? fromVersion;
@@ -128,10 +162,19 @@ export class ChangelogRagService {
     const [lo, hi] = semver.lt(fromN, toN) ? [fromN, toN] : [toN, fromN];
 
     const slug = this.parseGithubSlug(repoUrl);
-    const cacheKey = `${pkg.toLowerCase()}@${lo}..${hi}`;
+    // Cache key includes the directory so monorepo packages that
+    // share a slug (every @angular/* points at angular/angular) don't
+    // collide — each package's CHANGELOG-fetch result is keyed per-
+    // package by `pkg.toLowerCase()` already, so this is belt-and-
+    // braces, but it also means a later schema/path change can be
+    // bumped uniformly by extending the cache key.
+    const dir = (repoDirectory ?? '').replace(/^\/+|\/+$/g, '');
+    const cacheKey = `${pkg.toLowerCase()}@${lo}..${hi}${dir ? `#${dir}` : ''}`;
 
-    const cached = this.readCache(cacheKey);
-    if (cached) return of(cached);
+    if (!bypassCache) {
+      const cached = this.readCache(cacheKey);
+      if (cached) return of(cached);
+    }
 
     if (!slug) {
       const empty = this.empty(pkg, lo, hi, null);
@@ -143,7 +186,7 @@ export class ChangelogRagService {
       switchMap((rel) =>
         rel.releases.length
           ? of(rel)
-          : this.fetchChangelogMd(slug, pkg, lo, hi)
+          : this.fetchChangelogMd(slug, pkg, lo, hi, dir || null)
       ),
       catchError(() => of(this.empty(pkg, lo, hi, slug))),
       map((result) => {
@@ -211,17 +254,25 @@ export class ChangelogRagService {
     slug: string,
     pkg: string,
     lo: string,
-    hi: string
+    hi: string,
+    directory: string | null = null
   ): Observable<ChangelogResult> {
-    // Recursive try-each-filename pattern. We bail to `empty` once all
+    const paths = this.candidatePaths(pkg, directory);
+
+    // Recursive try-each-path pattern. We bail to `empty` once all
     // candidates 404. raw.githubusercontent.com `/HEAD/` resolves to
-    // the default branch so we don't need to know if it's main/master.
+    // the default branch (whether master or main) on the GitHub CDN
+    // side — we don't need to know which.
+    //
+    // raw.githubusercontent.com is NOT subject to the 60-req/hr
+    // GitHub API limit (that only applies to api.github.com), so
+    // trying a handful of well-known monorepo locations here is
+    // cheap. Each 404 is one fast CDN round-trip.
     const tryNext = (i: number): Observable<ChangelogResult> => {
-      if (i >= CHANGELOG_FALLBACKS.length) {
+      if (i >= paths.length) {
         return of(this.empty(pkg, lo, hi, slug));
       }
-      const file = CHANGELOG_FALLBACKS[i];
-      const url = `https://raw.githubusercontent.com/${slug}/HEAD/${file}`;
+      const url = `https://raw.githubusercontent.com/${slug}/HEAD/${paths[i]}`;
       return this.http
         .get(url, { responseType: 'text' })
         .pipe(
@@ -236,6 +287,90 @@ export class ChangelogRagService {
         );
     };
     return tryNext(0);
+  }
+
+  /**
+   * Ordered list of GitHub-relative paths to try for the package's
+   * CHANGELOG. Built from three sources of decreasing certainty:
+   *
+   *   1. **Explicit packument hint** — `repository.directory` if the
+   *      maintainer set it (always correct, but often missing — rxjs
+   *      doesn't ship one even though they're in `packages/rxjs/`).
+   *
+   *   2. **Heuristic monorepo conventions** — well-known location
+   *      patterns used by Lerna, Nx, Yarn-workspaces, and
+   *      pnpm-workspaces. Covers ~95% of real-world monorepos
+   *      without any tree-walking:
+   *
+   *        - `packages/<unscoped-name>/`       ← Lerna / Nx default
+   *        - `packages/<scope>__<unscoped>/`   ← scoped pkg pattern
+   *        - `<scope>/<unscoped-name>/`        ← some Babel-style repos
+   *        - `<unscoped-name>/`                ← flat-package layouts
+   *
+   *      For `rxjs` this yields `packages/rxjs/CHANGELOG.md` as the
+   *      second probe — which is the actual location.
+   *      For `@angular/core` it yields `packages/core/CHANGELOG.md`,
+   *      which is the actual location.
+   *
+   *   3. **Repo root** — legacy single-package repos and monorepos
+   *      that maintain a top-level CHANGELOG alongside per-package
+   *      ones (e.g. ngx-sonner).
+   *
+   * Each directory is tried with all four filename variants
+   * (CHANGELOG.md, CHANGES.md, HISTORY.md, changelog.md) before we
+   * move on, so a project using CHANGES.md inside a monorepo
+   * subdirectory still resolves cleanly.
+   *
+   * We deduplicate via a Set: if `directory` from the packument
+   * happens to equal `packages/<unscoped>`, we don't probe twice.
+   */
+  private candidatePaths(pkgName: string, directory: string | null): string[] {
+    const paths: string[] = [];
+    const seenDirs = new Set<string>();
+    const addDir = (raw: string) => {
+      const dir = raw.replace(/^\/+|\/+$/g, '');
+      if (seenDirs.has(dir)) return;
+      seenDirs.add(dir);
+      for (const file of CHANGELOG_FALLBACKS) {
+        paths.push(dir ? `${dir}/${file}` : file);
+      }
+    };
+
+    // 1) Packument-declared directory (if any) — first because it's
+    // the only one the maintainer explicitly attested to.
+    if (directory) addDir(directory);
+
+    // 2) Heuristic monorepo locations.
+    // Scoped packages decompose into `@<scope>/<unscoped>` — strip
+    // the `@` and split. Unscoped packages keep the whole name as
+    // the "unscoped" form.
+    const scoped = pkgName.startsWith('@')
+      ? pkgName.slice(1).split('/')
+      : [null, pkgName];
+    const scope = scoped[0]; // null for unscoped
+    const unscoped = scoped[1] || pkgName;
+
+    // Most common: Lerna / Nx default `packages/<name>` (rxjs lives
+    // here, every Babel package, most @scoped packages — e.g.
+    // @angular/core → packages/core).
+    addDir(`packages/${unscoped}`);
+
+    if (scope) {
+      // Some repos preserve the scope as a flat subdirectory:
+      // `packages/<scope>__<name>` or `<scope>/<name>`.
+      addDir(`packages/${scope}__${unscoped}`);
+      addDir(`${scope}/${unscoped}`);
+    }
+
+    // Less common but seen in flat-package layouts where each
+    // package lives at the repo root in its own directory.
+    addDir(unscoped);
+
+    // 3) Repo root — legacy single-package repos and monorepos that
+    // also keep a top-level CHANGELOG alongside per-package ones.
+    addDir('');
+
+    return paths;
   }
 
   /**

@@ -12,7 +12,12 @@ import { AutocompleteInputComponent } from '../../components/autocomplete-input/
 import { ProsConsPanelComponent } from '../../components/pros-cons-panel/pros-cons-panel.component';
 import { UsageGuidePanelComponent } from '../../components/usage-guide-panel/usage-guide-panel.component';
 import { CompetitorChipsComponent } from '../../components/competitor-chips/competitor-chips.component';
-import { VersionMigrationPanelComponent } from '../../components/version-migration-panel/version-migration-panel.component';
+// V1's VersionMigrationPanelComponent is intentionally NOT imported
+// here — it was replaced by ApiMigrationPanelComponent (V2). The file
+// stays in the codebase for the moment because the Upgrade page may
+// briefly need it during the V2.1 rollout; once that lands we can
+// delete it cleanly.
+import { ApiMigrationPanelComponent } from '../../components/api-migration-panel/api-migration-panel.component';
 import { CompareHistoryService } from '../../services/compare-history.service';
 import { NpmRegistryResponse, VersionCompatibility } from '../../models/npm-package.model';
 
@@ -36,7 +41,7 @@ interface Side {
     ProsConsPanelComponent,
     UsageGuidePanelComponent,
     CompetitorChipsComponent,
-    VersionMigrationPanelComponent,
+    ApiMigrationPanelComponent,
     TranslocoModule
   ],
   template: `
@@ -247,8 +252,18 @@ interface Side {
       </section>
 
       @if (!sameVersionPicked() && versionFrom() && versionTo()) {
+        <!-- V2 panel — replaces V1's VersionMigrationPanelComponent.
+             V2's pipeline takes the structural .d.ts diff from the
+             server's /api/api-diff endpoint as ground truth, then
+             narrates it via AI. The user-visible UX is the same
+             pattern (Generate button → two-stage loading → result),
+             but the output is significantly richer: per-symbol
+             before/after signatures, severity-classified change
+             cards, and copy-pasteable migration examples grounded
+             in the actual type-definition diff rather than free-form
+             changelog prose. -->
         @defer (on viewport; prefetch on idle) {
-          <app-version-migration-panel
+          <app-api-migration-panel
             [pkg]="a().pkg!.name"
             [fromVersion]="versionFrom()"
             [toVersion]="versionTo()"

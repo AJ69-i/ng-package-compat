@@ -71,6 +71,10 @@ interface DiffRow {
             <span class="chip rm">−{{ d.removed }} {{ 'snapshotDiff.removed' | transloco }}</span>
             <span class="chip ch">~{{ d.changed }} {{ 'snapshotDiff.changed' | transloco }}</span>
           </section>
+          <!-- .scroll-table caps height + sticky thead for the diff
+               rows. Snapshot diffs can span hundreds of packages
+               across two versions of a monorepo. -->
+          <div class="scroll-table">
           <table class="diff-table">
             <thead>
               <tr>
@@ -91,6 +95,7 @@ interface DiffRow {
               }
             </tbody>
           </table>
+          </div>
         }
       }
     </main>

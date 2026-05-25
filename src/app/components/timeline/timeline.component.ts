@@ -50,6 +50,10 @@ interface Point {
     }
   `,
   styles: [`
+    /* Block host so the timeline participates in the page's vertical
+       rhythm. The inner .wrap already owns the 1rem top margin —
+       this rule just guarantees the host doesn't collapse to inline. */
+    :host { display: block; }
     .wrap { margin-top: 1rem; padding: 0.75rem 1rem; border: 1px solid var(--border);
             border-radius: 12px; background: var(--surface-1); color: var(--accent); }
     .wrap h3 { color: var(--fg); margin: 0 0 0.35rem; font-size: 0.95rem; }

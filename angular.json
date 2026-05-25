@@ -45,7 +45,7 @@
             "styles": ["src/styles.scss"],
             "scripts": [],
             "serviceWorker": "ngsw-config.json",
-            "allowedCommonJsDependencies": ["semver"]
+            "allowedCommonJsDependencies": ["semver", "typescript"]
           },
           "configurations": {
             "production": {

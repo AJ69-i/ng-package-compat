@@ -231,7 +231,7 @@ const STEPS: WizardStep[] = ['upload', 'blockers', 'bumps', 'pr'];
                 <app-bundle-delta-summary [report]="r" />
               } @placeholder { <div class="defer-spacer" aria-hidden="true"></div> }
 
-              <div class="bumps-table-wrap">
+              <div class="bumps-table-wrap scroll-table">
                 <table class="bumps">
                   <thead>
                     <tr>

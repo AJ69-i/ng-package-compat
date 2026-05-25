@@ -97,10 +97,16 @@ import { SortDir, SortKey, VersionCompatibility } from '../../models/npm-package
     </div>
   `,
   styles: [`
+    /* Block host so the filters bar participates in the page's
+       vertical rhythm. Bumped the inner .bar top margin from 0.5rem
+       to 1rem to match the rest of the search-page sections — the
+       previous value looked cramped against the recommendation-card
+       above it. */
+    :host { display: block; }
     .bar {
       display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.6rem;
       padding: 0.75rem; border: 1px solid var(--border); border-radius: 12px;
-      background: var(--surface-1); margin-top: 0.5rem;
+      background: var(--surface-1); margin-top: 1rem;
     }
     .field { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.75rem; color: var(--fg-dim); }
     .field.check { flex-direction: row; align-items: center; gap: 0.35rem; color: var(--fg); font-size: 0.85rem; }

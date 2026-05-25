@@ -1,0 +1,405 @@
+:host { display: block; }
+
+/* ─────────── Panel shell ─────────── */
+.vm2-panel {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl, 14px);
+  box-shadow: var(--shadow-1);
+}
+.vm2-busy { opacity: 0.92; }
+
+.vm2-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.vm2-head h3 { margin: 0; font-size: 1.1rem; color: var(--fg); }
+.vm2-lede { margin: 0.25rem 0 0; color: var(--fg-dim); font-size: 0.9rem; }
+.vm2-head-actions { display: flex; gap: 0.4rem; }
+.vm2-icon-btn, .vm2-refresh {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  color: var(--fg-dim);
+  padding: 6px 10px;
+  border-radius: var(--radius-md, 10px);
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.vm2-icon-btn:hover, .vm2-refresh:hover { color: var(--fg); border-color: var(--accent); }
+.vm2-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ─────────── CTA / Idle ─────────── */
+.vm2-cta {
+  padding: 1.25rem;
+  text-align: center;
+  background: var(--surface-1);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md, 10px);
+}
+.vm2-cta-body { margin: 0 0 0.85rem; color: var(--fg-dim); font-size: 0.9rem; }
+button.primary {
+  padding: 0.65rem 1.2rem;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid transparent;
+  background: var(--accent-gradient, var(--accent));
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+button.primary:hover { filter: brightness(1.05); }
+
+/* ─────────── Two-stage loading banner ─────────── */
+.vm2-stage {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface-1));
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  border-radius: var(--radius-md, 10px);
+}
+.vm2-stage-icon {
+  font-size: 1.5rem;
+  flex: 0 0 auto;
+  animation: vm2-spin 2.4s linear infinite;
+}
+@keyframes vm2-spin {
+  0%, 100% { transform: rotate(0deg); }
+  50%      { transform: rotate(180deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vm2-stage-icon { animation: none; }
+}
+.vm2-stage-text { flex: 1 1 auto; min-width: 0; }
+.vm2-stage-text strong { display: block; color: var(--fg); margin-bottom: 0.2rem; }
+.vm2-stage-text span { color: var(--fg-dim); font-size: 0.88rem; line-height: 1.4; }
+
+/* Indeterminate progress bar — pure CSS, theme-aware. */
+.vm2-bar {
+  flex: 0 0 6rem;
+  height: 4px;
+  background: var(--surface-1);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+.vm2-bar > span {
+  position: absolute;
+  inset: 0;
+  width: 30%;
+  background: var(--accent-gradient, var(--accent));
+  border-radius: inherit;
+  animation: vm2-bar-slide 1.4s ease-in-out infinite;
+}
+@keyframes vm2-bar-slide {
+  0%   { transform: translateX(-100%); }
+  50%  { transform: translateX(220%); }
+  100% { transform: translateX(220%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vm2-bar > span { animation: none; width: 100%; opacity: 0.5; }
+}
+
+/* ─────────── Chip strip ─────────── */
+.vm2-chips {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+.vm2-sev {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem; font-weight: 500;
+  border: 1px solid var(--border);
+}
+.sev-patch {
+  background: color-mix(in srgb, var(--ok) 10%, transparent);
+  border-color: color-mix(in srgb, var(--ok) 40%, var(--border));
+  color: var(--ok);
+}
+.sev-minor {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  color: var(--accent);
+}
+.sev-major-safe {
+  background: color-mix(in srgb, var(--warn) 10%, transparent);
+  border-color: color-mix(in srgb, var(--warn) 40%, var(--border));
+  color: var(--warn);
+}
+.sev-major-breaking {
+  background: color-mix(in srgb, var(--bad) 10%, transparent);
+  border-color: color-mix(in srgb, var(--bad) 40%, var(--border));
+  color: var(--bad);
+}
+.vm2-effort, .vm2-confidence {
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--fg-dim);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+}
+.conf-low {
+  background: color-mix(in srgb, var(--warn) 10%, transparent);
+  border-color: color-mix(in srgb, var(--warn) 35%, var(--border));
+  color: var(--warn);
+}
+.conf-high {
+  background: color-mix(in srgb, var(--ok) 10%, transparent);
+  border-color: color-mix(in srgb, var(--ok) 35%, var(--border));
+  color: var(--ok);
+}
+
+.vm2-summary {
+  margin: 0 0 1rem;
+  color: var(--fg);
+  line-height: 1.55;
+}
+
+.vm2-truncation {
+  margin: 0 0 1rem;
+  padding: 0.55rem 0.85rem;
+  background: color-mix(in srgb, var(--warn) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--warn) 35%, var(--border));
+  border-radius: var(--radius-md);
+  color: var(--warn);
+  font-size: 0.85rem;
+}
+
+/* ─────────── Sections ─────────── */
+.vm2-section {
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--border);
+}
+.vm2-section h4 {
+  margin: 0 0 0.7rem;
+  font-size: 0.95rem;
+  color: var(--fg);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.vm2-count {
+  font-size: 0.7rem;
+  background: var(--surface-1); border: 1px solid var(--border);
+  padding: 1px 8px; border-radius: 999px;
+  color: var(--fg-dim);
+}
+
+/* ─────────── Ecosystem list ─────────── */
+.vm2-eco-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+.vm2-eco-item {
+  padding: 0.55rem 0.85rem;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  display: flex; gap: 0.6rem; align-items: baseline;
+}
+.eco-breaking {
+  border-left: 3px solid var(--bad);
+  background: color-mix(in srgb, var(--bad) 5%, var(--surface-1));
+}
+.vm2-eco-area {
+  font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--accent);
+  padding: 1px 7px; border-radius: 4px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.vm2-eco-desc { color: var(--fg); font-size: 0.88rem; line-height: 1.45; }
+
+/* ─────────── Change cards ─────────── */
+.vm2-changes { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.85rem; }
+.vm2-change {
+  padding: 0.85rem;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+}
+.vm2-change-head {
+  display: flex; flex-wrap: wrap;
+  align-items: baseline; gap: 0.5rem;
+  margin-bottom: 0.45rem;
+}
+.vm2-symbol {
+  font-family: var(--code-font, ui-monospace, Menlo, Consolas, monospace);
+  font-size: 0.92rem;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  padding: 1px 7px;
+  border-radius: 4px;
+}
+.vm2-kind {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--fg-dim);
+  padding: 1px 6px; border-radius: 999px;
+  background: var(--surface-2);
+}
+.vm2-module {
+  font-size: 0.72rem; color: var(--fg-dim);
+}
+.vm2-changetype {
+  margin-left: auto;
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--bad);
+}
+.vm2-arrow { color: var(--accent); font-size: 1rem; }
+
+.vm2-sigdiff {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+  margin: 0.45rem 0;
+}
+@media (max-width: 700px) {
+  .vm2-sigdiff { grid-template-columns: 1fr; }
+}
+.vm2-sig {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 6px);
+  padding: 0.45rem 0.6rem;
+}
+.vm2-sig-before { border-left: 2px solid var(--bad); }
+.vm2-sig-after { border-left: 2px solid var(--ok); }
+.vm2-sig-label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fg-dim);
+  margin-bottom: 0.25rem;
+}
+.vm2-sig pre {
+  margin: 0;
+  font: 0.8rem var(--code-font, ui-monospace, Menlo, Consolas, monospace);
+  color: var(--fg);
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.vm2-summary-line {
+  margin: 0.4rem 0 0;
+  color: var(--fg);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Side-by-side migration example */
+.vm2-example {
+  margin-top: 0.6rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+}
+@media (max-width: 700px) {
+  .vm2-example { grid-template-columns: 1fr; }
+}
+.vm2-example-col {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  padding: 0.5rem 0.7rem;
+  position: relative;
+}
+.vm2-example-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 0.4rem;
+}
+.vm2-example-label {
+  font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.04em; color: var(--fg-dim);
+}
+.vm2-example pre {
+  margin: 0;
+  font: 0.82rem var(--code-font, ui-monospace, Menlo, Consolas, monospace);
+  color: var(--fg);
+  white-space: pre;
+  overflow-x: auto;
+}
+.vm2-copy {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  color: var(--fg-dim);
+  font-size: 0.7rem; padding: 2px 8px;
+  border-radius: 6px; cursor: pointer;
+}
+.vm2-copy:hover { color: var(--fg); border-color: var(--accent); }
+
+/* Additions block is collapsed by default — different visual weight. */
+.vm2-additions summary {
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--fg);
+  list-style: revert; /* keep the disclosure arrow */
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  margin-bottom: 0.7rem;
+}
+.vm2-addition { background: color-mix(in srgb, var(--accent) 4%, var(--surface-1)); }
+
+.vm2-cap-list { padding-left: 1.4rem; margin: 0; color: var(--fg); }
+.vm2-cap-list li { padding: 0.25rem 0; }
+
+/* Migration steps */
+.vm2-step-list { padding-left: 1.4rem; margin: 0; display: grid; gap: 0.8rem; }
+.vm2-step::marker { color: var(--accent); font-weight: 600; }
+.vm2-step-text { color: var(--fg); margin-bottom: 0.4rem; }
+.vm2-code-wrap {
+  position: relative;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 10px);
+  padding: 0.5rem 0.75rem 0.6rem;
+}
+.vm2-lang {
+  display: inline-block;
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--fg-dim);
+  margin-bottom: 0.25rem;
+}
+.vm2-code-wrap pre {
+  margin: 0;
+  font: 0.82rem var(--code-font, ui-monospace, Menlo, Consolas, monospace);
+  color: var(--fg);
+  white-space: pre;
+  overflow-x: auto;
+}
+.vm2-copy-corner {
+  position: absolute; top: 0.4rem; right: 0.4rem;
+  background: var(--surface-2);
+}
+
+.vm2-empty {
+  margin: 0; padding: 0.9rem;
+  background: color-mix(in srgb, var(--ok) 8%, var(--surface-1));
+  border: 1px solid color-mix(in srgb, var(--ok) 35%, var(--border));
+  border-radius: var(--radius-md, 10px);
+  color: var(--ok);
+}
+
+.vm2-error {
+  padding: 1rem;
+  background: color-mix(in srgb, var(--bad) 8%, var(--surface-1));
+  border: 1px solid color-mix(in srgb, var(--bad) 35%, var(--border));
+  border-radius: var(--radius-md, 10px);
+}
+.vm2-err-stage {
+  margin: 0 0 0.35rem;
+  font-weight: 600;
+  color: var(--bad);
+}
+.vm2-err-msg { color: var(--fg); margin: 0 0 0.65rem; font-size: 0.88rem; }
+
+.vm2-meta {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  color: var(--fg-dim);
+  font-size: 0.75rem;
+  display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;
+}

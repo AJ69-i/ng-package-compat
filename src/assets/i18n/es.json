@@ -216,7 +216,99 @@
   "share": {
     "button": "Copiar enlace",
     "copied": "¡Enlace copiado!",
-    "loaded": "Análisis compartido cargado. Puedes reejecutarlo libremente."
+    "loaded": "Análisis compartido cargado. Puedes reejecutarlo libremente.",
+    "copy": "Compartir",
+    "failed": "No se pudo copiar el enlace; acceso al portapapeles bloqueado.",
+    "aria": "Copiar enlace a esta vista del paquete"
+  },
+  "readme": {
+    "title": "LÉAME",
+    "lengthHint": "≈ {{ kb }} KB",
+    "viewOnNpm": "Ver en npm",
+    "empty": "Este paquete no tiene README en npm."
+  },
+  "commitActivity": {
+    "aria": "Actividad de commits del último año",
+    "summary": "{{ total }} commits en {{ active }} semanas activas, {{ recent }} la última semana",
+    "captionShort": "{{ total }} commits · {{ active }} semanas activas",
+    "recent": "{{ n }} esta sem."
+  },
+  "depsMiniTree": {
+    "aria": "Dependencias directas principales",
+    "title": "Dependencias directas ({{ n }})",
+    "showingTop": "mostrando {{ shown }} de {{ total }}",
+    "viewFull": "Ver árbol completo",
+    "none": "Este paquete no tiene dependencias directas."
+  },
+  "versionDiff": {
+    "label": "¿Qué cambió en v{{ latest }}?",
+    "fromVersion": "desde {{ prev }}",
+    "aria": "Abrir análisis de migración de {{ name }} {{ prev }} a {{ latest }} en la vista de comparación"
+  },
+  "adoptionCost": {
+    "headline": "Coste de adopción",
+    "aria": "Coste de adopción: {{ tier }} ({{ score }} de 100)",
+    "tier": {
+      "low": "Bajo",
+      "moderate": "Moderado",
+      "high": "Alto",
+      "heavy": "Elevado"
+    },
+    "lowData": "datos parciales",
+    "lowDataTitle": "Puntuación calculada con menos de 4 de 6 factores — interprétala como aproximación.",
+    "breakdownAria": "Desglose del coste de adopción por factor",
+    "factor": {
+      "bundle": "Tamaño del bundle",
+      "installScripts": "Scripts de instalación",
+      "transitiveDeps": "Deps transitivas",
+      "vitality": "Mantenimiento",
+      "license": "Licencia",
+      "deprecated": "Obsoleto"
+    },
+    "disclaimer": "Coste de adopción es un resumen heurístico — revisa las chips individuales para el contexto completo. Menos es mejor."
+  },
+  "changelogPreview": {
+    "title": "Notas de versión recientes",
+    "loading": "Cargando…",
+    "countSuffix": "· {{ n }} versiones",
+    "viewAll": "Ver todas las versiones",
+    "empty": "Sin notas de versión",
+    "emptyBody": "No encontramos CHANGELOG ni notas de versión en GitHub para este paquete.",
+    "error": "No se pudieron cargar las notas de versión.",
+    "noNotes": "(no hay notas para esta versión)",
+    "changelogMdNote": "Mostrando CHANGELOG.md — la segmentación por versión puede ser aproximada.",
+    "viewOnGithub": "Ver en GitHub",
+    "tryAgain": "Reintentar"
+  },
+  "askAi": {
+    "section": "Pregunta a la IA sobre este paquete",
+    "title": "Pregunta a la IA sobre {{ name }}",
+    "subtitle": "Preguntas abiertas, basadas en los datos en vivo de este paquete. Las respuestas citan los hechos cuando es relevante.",
+    "inputLabel": "Tu pregunta",
+    "placeholder": "p. ej. «¿Sigue mantenido {{ name }}?» o «¿Qué cambió en v17?»",
+    "enterHint": "Pulsa Entrar para enviar, Shift+Entrar para salto de línea.",
+    "submit": "Preguntar",
+    "submitAria": "Enviar tu pregunta a la IA",
+    "thinking": "Pensando…",
+    "tryAsking": "Prueba con:",
+    "examplesAria": "Preguntas de ejemplo",
+    "examples": {
+      "maintained": "¿Sigue {{ name }} activamente mantenido?",
+      "migration": "¿Cuál es la historia de migración de {{ name }} entre las últimas mayores?",
+      "gotchas": "¿Cuáles son los problemas comunes al usar {{ name }}?",
+      "alternatives": "¿Cuáles son buenas alternativas a {{ name }}?"
+    },
+    "answerAria": "Respuesta de la IA",
+    "caveatsAria": "Salvedades sobre esta respuesta",
+    "confidence": {
+      "high": "Confianza alta",
+      "medium": "Confianza media",
+      "low": "Confianza baja"
+    },
+    "cached": "en caché",
+    "cachedTip": "Respuesta servida desde caché local — pulsa Refrescar para una respuesta nueva.",
+    "poweredBy": "Respondido por {{ provider }}",
+    "refresh": "Refrescar"
   },
   "orgScan": {
     "title": "Escanear una org npm entera",
@@ -982,6 +1074,78 @@
     "deleteButton": "Eliminar cuenta permanentemente",
     "deleting": "Eliminando…"
   },
+  "apiMigration": {
+    "title": "Análisis de migración profundo",
+    "lede": "Análisis basado en definiciones de tipos para {{ pkg }} {{ from }} → {{ to }}.",
+    "ctaBody": "Escanea la superficie API de {{ pkg }} de {{ from }} a {{ to }} y genera un informe de migración basado en el diff real de .d.ts.",
+    "generate": "Ejecutar análisis profundo",
+    "refresh": "Refrescar",
+    "before": "Antes",
+    "after": "Después",
+    "example": {
+      "before": "Tu código antes",
+      "after": "Tu código después"
+    },
+    "truncationNote": "El análisis cubre los cambios más impactantes. Omitidos: {{ added }} adiciones, {{ removed }} eliminaciones, {{ changed }} cambios de firma.",
+    "emptyAllClear": "No se detectaron cambios estructurales ni de ecosistema entre estas versiones. Actualización directa segura.",
+    "poweredBy": "Generado por {{ provider }}",
+    "generatedIn": "{{ ms }} ms",
+    "sourceApiDiff": "con diff de .d.ts",
+    "effortLabel": "Esfuerzo",
+    "stage1": {
+      "title": "Escaneando superficie API…",
+      "body": "Obteniendo definiciones de tipos y calculando el diff estructural."
+    },
+    "stage2": {
+      "title": "La IA está analizando los cambios…",
+      "bodyWithCount": "Se encontraron {{ changes }} cambios de API en {{ modules }} módulos. Generando guía de migración.",
+      "bodyNarrative": "No hay definiciones de tipos disponibles — operando con notas de versión y changelog. Generando guía de mejor esfuerzo."
+    },
+    "sections": {
+      "ecosystem": "Cambios de ecosistema",
+      "breaking": "Cambios disruptivos",
+      "renames": "Renombrados",
+      "deprecations": "Obsolescencias",
+      "capabilities": "Nuevas capacidades",
+      "additions": "Nuevas APIs",
+      "steps": "Pasos de migración"
+    },
+    "severity": {
+      "patch": "Parche — actualización directa",
+      "minor": "Menor — aditivo",
+      "major-safe": "Mayor (sin rupturas)",
+      "major-breaking": "Mayor — disruptiva"
+    },
+    "effort": {
+      "minutes": "minutos",
+      "hours": "horas",
+      "day": "~ 1 día",
+      "days": "varios días",
+      "unknown": "desconocido"
+    },
+    "confidence": {
+      "high": "Confianza alta",
+      "medium": "Confianza media",
+      "low": "Confianza baja"
+    },
+    "changeKind": {
+      "added": "añadido",
+      "removed": "eliminado",
+      "renamed": "renombrado",
+      "signature-changed": "firma cambiada",
+      "deprecated": "obsoleto"
+    },
+    "ecosystemArea": {
+      "peer-dependencies": "peer deps",
+      "engines": "engines",
+      "runtime": "runtime",
+      "tooling": "herramientas"
+    },
+    "error": {
+      "scanFailed": "No se pudo escanear la superficie API. El paquete puede no tener definiciones de tipos disponibles.",
+      "analyzeFailed": "El análisis de IA falló."
+    }
+  },
   "versionMigration": {
     "cta": "Comparar versiones de {{ pkg }}",
     "modeBanner": "Modo migración — analizando los cambios entre versiones de {{ pkg }}.",
@@ -1035,6 +1199,10 @@
     }
   },
   "packageMeta": {
+    "dependents": {
+      "label": "dependientes",
+      "aria": "Usado por {{ n }} paquetes dependientes en npm"
+    },
     "deprecated": {
       "heading": "Este paquete ha sido marcado como obsoleto",
       "bodyGeneric": "El mantenedor ha marcado la última versión publicada como obsoleta. Considera una alternativa antes de adoptarlo."
@@ -1070,6 +1238,32 @@
     },
     "openIssues": {
       "short": "abiertos"
+    },
+    "bundle": {
+      "gzippedShort": "gzip",
+      "ariaLabel": "Tamaño del paquete comprimido: {{ size }}"
+    },
+    "treeShakeable": {
+      "labelYes": "Tree-shakeable",
+      "labelPartial": "Parcialmente tree-shakeable",
+      "yes": "Este paquete declara que no tiene efectos secundarios — los bundlers pueden descartar las exportaciones no usadas.",
+      "partial": "Este paquete marca algunos archivos como libres de efectos secundarios — la mayoría de las exportaciones son tree-shakeables."
+    },
+    "moduleType": {
+      "label": {
+        "esm": "ESM",
+        "cjs": "CJS",
+        "dual": "Dual"
+      },
+      "aria": {
+        "esm": "Solo ES Modules — se requiere sintaxis import moderna.",
+        "cjs": "Solo CommonJS — formato require() antiguo.",
+        "dual": "Paquete dual — incluye ES Modules y CommonJS."
+      }
+    },
+    "maturity": {
+      "label": "Publicado desde {{ date }}",
+      "ariaLabel": "Paquete publicado por primera vez en {{ date }}"
     },
     "provenance": {
       "verified": "Procedencia verificada",

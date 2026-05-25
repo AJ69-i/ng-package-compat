@@ -110,8 +110,20 @@ export class DependenciesPageComponent {
   readonly installCmd = computed(() => this.pm.installCommand(this.pkgName(), this.version()));
 
   readonly crumbs = computed<Crumb[]>(() => [
+    // First crumb deliberately lands on the empty search welcome
+    // state — clicking "Search" is the user's "start over" affordance.
     { label: 'Search', link: '/' },
-    { label: this.pkgName() || '—', link: '/' },
+    // Second crumb carries the package name back into the search
+    // page via the ?q= query param. The search-page effect picks
+    // this up and re-hydrates the full package view (chips, version
+    // table, mini-tree, etc.) — without it, clicking the package
+    // name drops the user on the empty welcome state and silently
+    // discards the context they were in.
+    {
+      label: this.pkgName() || '—',
+      link: '/',
+      queryParams: this.pkgName() ? { q: this.pkgName() } : undefined
+    },
     { label: this.version() || '—' }
   ]);
 

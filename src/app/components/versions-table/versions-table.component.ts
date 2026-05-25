@@ -11,7 +11,14 @@ import { CopyOnClickDirective } from '../../directives/copy-on-click.directive';
   imports: [CommonModule, DatePipe, RouterLink, CopyOnClickDirective],
   template: `
     @if ((rows() ?? []).length) {
-      <div class="table-wrap" role="region" aria-label="Versions">
+      <!-- .scroll-table is the global utility (styles.scss) that caps
+           height at min(600px, 70vh) and keeps the thead sticky.
+           .table-wrap retains the component-specific border + bg
+           (a thin border + surface-2 background that distinguishes
+           the table block from the panel around it). The classes
+           compose cleanly — the existing thead sticky rule is more
+           specific and stays in charge of its own background. -->
+      <div class="table-wrap scroll-table" role="region" aria-label="Versions">
         <table class="versions" aria-live="polite">
           <thead>
             <tr>

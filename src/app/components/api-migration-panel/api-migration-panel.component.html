@@ -1,0 +1,353 @@
+@if (pkg() && fromVersion() && toVersion()) {
+  <section class="vm2-panel" [class.vm2-busy]="state().kind === 'scanning' || state().kind === 'analyzing'">
+
+    <!-- ── Header ── -->
+    <header class="vm2-head">
+      <div class="vm2-head-text">
+        <h3>{{ 'apiMigration.title' | transloco }}</h3>
+        <p class="vm2-lede">
+          {{ 'apiMigration.lede' | transloco: { pkg: pkg(), from: fromVersion(), to: toVersion() } }}
+        </p>
+      </div>
+      <div class="vm2-head-actions">
+        <button
+          type="button"
+          class="vm2-icon-btn"
+          (click)="openSettings()"
+          [attr.aria-label]="'aiSettings.openButton' | transloco"
+        >
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="8" r="2"/>
+            <path d="M8 1v2M8 13v2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M1 8h2M13 8h2M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/>
+          </svg>
+        </button>
+        @if (state().kind === 'ready' || state().kind === 'error') {
+          <button
+            type="button"
+            class="vm2-refresh"
+            (click)="generate(true)"
+            [attr.aria-label]="'apiMigration.refresh' | transloco"
+            [disabled]="state().kind === 'scanning' || state().kind === 'analyzing'"
+          >
+            {{ 'apiMigration.refresh' | transloco }}
+          </button>
+        }
+      </div>
+    </header>
+
+    @switch (state().kind) {
+
+      <!-- ── Idle: opt-in CTA ── -->
+      @case ('idle') {
+        <div class="vm2-cta">
+          <p class="vm2-cta-body">
+            {{ 'apiMigration.ctaBody' | transloco: { pkg: pkg(), from: fromVersion(), to: toVersion() } }}
+          </p>
+          <button type="button" class="primary" (click)="generate(false)" data-testid="apiMigration.generate">
+            {{ 'apiMigration.generate' | transloco }}
+          </button>
+        </div>
+      }
+
+      <!-- ── Stage 1: scanning API surface ── -->
+      @case ('scanning') {
+        <div class="vm2-stage" role="status" aria-live="polite">
+          <div class="vm2-stage-icon">⏳</div>
+          <div class="vm2-stage-text">
+            <strong>{{ 'apiMigration.stage1.title' | transloco }}</strong>
+            <span>{{ 'apiMigration.stage1.body' | transloco }}</span>
+          </div>
+          <div class="vm2-bar"><span></span></div>
+        </div>
+      }
+
+      <!-- ── Stage 2: AI analysis (with real numbers from Stage 1) ── -->
+      @case ('analyzing') {
+        @let a = asAnalyzing(state());
+        <div class="vm2-stage" role="status" aria-live="polite">
+          <div class="vm2-stage-icon">🤖</div>
+          <div class="vm2-stage-text">
+            <strong>{{ 'apiMigration.stage2.title' | transloco }}</strong>
+            @if (changeCount(a.diff) > 0) {
+              <span>{{ 'apiMigration.stage2.bodyWithCount' | transloco: { changes: changeCount(a.diff), modules: moduleCount(a.diff) } }}</span>
+            } @else {
+              <span>{{ 'apiMigration.stage2.bodyNarrative' | transloco }}</span>
+            }
+          </div>
+          <div class="vm2-bar"><span></span></div>
+        </div>
+      }
+
+      <!-- ── Ready: full report ── -->
+      @case ('ready') {
+        @let r = asReady(state());
+        <div class="vm2-result">
+
+          <!-- Severity / effort / confidence chip strip -->
+          <div class="vm2-chips">
+            <span
+              class="vm2-sev"
+              [class.sev-patch]="r.report.severity === 'patch'"
+              [class.sev-minor]="r.report.severity === 'minor'"
+              [class.sev-major-safe]="r.report.severity === 'major-safe'"
+              [class.sev-major-breaking]="r.report.severity === 'major-breaking'"
+            >
+              {{ ('apiMigration.severity.' + r.report.severity) | transloco }}
+            </span>
+            <span class="vm2-effort">
+              {{ 'apiMigration.effortLabel' | transloco }}:
+              {{ ('apiMigration.effort.' + r.report.effort) | transloco }}
+            </span>
+            <span class="vm2-confidence" [class]="'conf-' + r.report.confidence">
+              {{ ('apiMigration.confidence.' + r.report.confidence) | transloco }}
+            </span>
+          </div>
+
+          <p class="vm2-summary">{{ r.report.summary }}</p>
+
+          <!-- Truncation banner — only when the diff was capped -->
+          @if (r.diff && (r.diff.truncation.added + r.diff.truncation.removed + r.diff.truncation.signatureChanged) > 0) {
+            <p class="vm2-truncation">
+              {{ 'apiMigration.truncationNote' | transloco: {
+                added: r.diff.truncation.added,
+                removed: r.diff.truncation.removed,
+                changed: r.diff.truncation.signatureChanged
+              } }}
+            </p>
+          }
+
+          <!-- Ecosystem changes (peer-deps, engines) — high-level, separate from API -->
+          @if (r.report.ecosystemChanges.length) {
+            <section class="vm2-section vm2-ecosystem">
+              <h4>{{ 'apiMigration.sections.ecosystem' | transloco }}</h4>
+              <ul class="vm2-eco-list">
+                @for (e of r.report.ecosystemChanges; track e.description) {
+                  <li class="vm2-eco-item" [class.eco-breaking]="e.severity === 'breaking'">
+                    <span class="vm2-eco-area">{{ ('apiMigration.ecosystemArea.' + e.area) | transloco }}</span>
+                    <span class="vm2-eco-desc">{{ e.description }}</span>
+                  </li>
+                }
+              </ul>
+            </section>
+          }
+
+          <!-- Breaking changes — highest priority -->
+          @let breakingChanges = changesBySeverity(r.report, 'breaking');
+          @if (breakingChanges.length) {
+            <section class="vm2-section vm2-breaking">
+              <h4>
+                <span aria-hidden="true">⚠️</span>
+                {{ 'apiMigration.sections.breaking' | transloco }}
+                <span class="vm2-count">{{ breakingChanges.length }}</span>
+              </h4>
+              <ul class="vm2-changes">
+                @for (c of breakingChanges; track c.symbolName + c.change) {
+                  <li class="vm2-change">
+                    <div class="vm2-change-head">
+                      <code class="vm2-symbol">{{ c.symbolName }}</code>
+                      <span class="vm2-kind">{{ c.symbolKind }}</span>
+                      @if (c.modulePath && c.modulePath !== 'index') {
+                        <span class="vm2-module">@ {{ c.modulePath }}</span>
+                      }
+                      <span class="vm2-changetype">{{ ('apiMigration.changeKind.' + c.change) | transloco }}</span>
+                    </div>
+                    @if (c.before || c.after) {
+                      <div class="vm2-sigdiff">
+                        @if (c.before) {
+                          <div class="vm2-sig vm2-sig-before">
+                            <span class="vm2-sig-label">{{ 'apiMigration.before' | transloco }}</span>
+                            <pre><code>{{ c.before }}</code></pre>
+                          </div>
+                        }
+                        @if (c.after) {
+                          <div class="vm2-sig vm2-sig-after">
+                            <span class="vm2-sig-label">{{ 'apiMigration.after' | transloco }}</span>
+                            <pre><code>{{ c.after }}</code></pre>
+                          </div>
+                        }
+                      </div>
+                    }
+                    <p class="vm2-summary-line">{{ c.humanSummary }}</p>
+                    @if (c.migrationExample && (c.migrationExample.before || c.migrationExample.after)) {
+                      <div class="vm2-example">
+                        <div class="vm2-example-col">
+                          <div class="vm2-example-head">
+                            <span class="vm2-example-label">{{ 'apiMigration.example.before' | transloco }}</span>
+                            <button type="button" class="vm2-copy" (click)="copy(c.migrationExample.before, 'b-' + $index)">
+                              {{ (copiedCodeIndex() === 'b-' + $index ? 'common.copied' : 'common.copy') | transloco }}
+                            </button>
+                          </div>
+                          <pre><code>{{ c.migrationExample.before }}</code></pre>
+                        </div>
+                        <div class="vm2-example-col">
+                          <div class="vm2-example-head">
+                            <span class="vm2-example-label">{{ 'apiMigration.example.after' | transloco }}</span>
+                            <button type="button" class="vm2-copy" (click)="copy(c.migrationExample.after, 'a-' + $index)">
+                              {{ (copiedCodeIndex() === 'a-' + $index ? 'common.copied' : 'common.copy') | transloco }}
+                            </button>
+                          </div>
+                          <pre><code>{{ c.migrationExample.after }}</code></pre>
+                        </div>
+                      </div>
+                    }
+                  </li>
+                }
+              </ul>
+            </section>
+          }
+
+          <!-- Renames — same shape, different name -->
+          @let renames = changesByKind(r.report, 'renamed');
+          @if (renames.length) {
+            <section class="vm2-section vm2-renames">
+              <h4>
+                <span aria-hidden="true">↔</span>
+                {{ 'apiMigration.sections.renames' | transloco }}
+                <span class="vm2-count">{{ renames.length }}</span>
+              </h4>
+              <ul class="vm2-changes">
+                @for (c of renames; track c.symbolName) {
+                  <li class="vm2-change">
+                    <div class="vm2-change-head">
+                      <code class="vm2-symbol">{{ c.symbolName }}</code>
+                      <span class="vm2-arrow" aria-hidden="true">→</span>
+                      <code class="vm2-symbol">{{ c.renamedTo }}</code>
+                    </div>
+                    <p class="vm2-summary-line">{{ c.humanSummary }}</p>
+                  </li>
+                }
+              </ul>
+            </section>
+          }
+
+          <!-- Deprecations — yellow accent, lower priority than breaking -->
+          @let deprecations = changesByKind(r.report, 'deprecated');
+          @if (deprecations.length) {
+            <section class="vm2-section vm2-deprecations">
+              <h4>
+                <span aria-hidden="true">⚠</span>
+                {{ 'apiMigration.sections.deprecations' | transloco }}
+                <span class="vm2-count">{{ deprecations.length }}</span>
+              </h4>
+              <ul class="vm2-changes">
+                @for (c of deprecations; track c.symbolName) {
+                  <li class="vm2-change">
+                    <div class="vm2-change-head">
+                      <code class="vm2-symbol">{{ c.symbolName }}</code>
+                      <span class="vm2-kind">{{ c.symbolKind }}</span>
+                    </div>
+                    <p class="vm2-summary-line">{{ c.humanSummary }}</p>
+                  </li>
+                }
+              </ul>
+            </section>
+          }
+
+          <!-- New capabilities — pulled from release notes, not from API diff -->
+          @if (r.report.newCapabilities.length) {
+            <section class="vm2-section vm2-capabilities">
+              <h4>
+                <span aria-hidden="true">✨</span>
+                {{ 'apiMigration.sections.capabilities' | transloco }}
+              </h4>
+              <ul class="vm2-cap-list">
+                @for (cap of r.report.newCapabilities; track cap) {
+                  <li>{{ cap }}</li>
+                }
+              </ul>
+            </section>
+          }
+
+          <!-- Additions — collapsed by default to keep the page focused -->
+          @let additions = changesByKind(r.report, 'added');
+          @if (additions.length) {
+            <details class="vm2-section vm2-additions">
+              <summary>
+                <span aria-hidden="true">✨</span>
+                {{ 'apiMigration.sections.additions' | transloco }}
+                <span class="vm2-count">{{ additions.length }}</span>
+              </summary>
+              <ul class="vm2-changes">
+                @for (c of additions; track c.symbolName) {
+                  <li class="vm2-change vm2-addition">
+                    <div class="vm2-change-head">
+                      <code class="vm2-symbol">{{ c.symbolName }}</code>
+                      <span class="vm2-kind">{{ c.symbolKind }}</span>
+                      @if (c.modulePath && c.modulePath !== 'index') {
+                        <span class="vm2-module">@ {{ c.modulePath }}</span>
+                      }
+                    </div>
+                    <p class="vm2-summary-line">{{ c.humanSummary }}</p>
+                  </li>
+                }
+              </ul>
+            </details>
+          }
+
+          <!-- Migration steps — the "what to actually do" payoff -->
+          @if (r.report.migrationSteps.length) {
+            <section class="vm2-section vm2-steps">
+              <h4>
+                <span aria-hidden="true">🛠</span>
+                {{ 'apiMigration.sections.steps' | transloco }}
+              </h4>
+              <ol class="vm2-step-list">
+                @for (s of r.report.migrationSteps; track $index) {
+                  <li class="vm2-step">
+                    <div class="vm2-step-text">{{ s.step }}</div>
+                    @if (s.code) {
+                      <div class="vm2-code-wrap">
+                        @if (s.language) {
+                          <span class="vm2-lang">{{ s.language }}</span>
+                        }
+                        <pre><code>{{ s.code }}</code></pre>
+                        <button type="button" class="vm2-copy vm2-copy-corner" (click)="copy(s.code, 's-' + $index)">
+                          {{ (copiedCodeIndex() === 's-' + $index ? 'common.copied' : 'common.copy') | transloco }}
+                        </button>
+                      </div>
+                    }
+                  </li>
+                }
+              </ol>
+            </section>
+          }
+
+          <!-- All-clear case -->
+          @if (!r.report.apiChanges.length && !r.report.ecosystemChanges.length && !r.report.migrationSteps.length) {
+            <p class="vm2-empty">{{ 'apiMigration.emptyAllClear' | transloco }}</p>
+          }
+
+          <!-- Attribution footer -->
+          <footer class="vm2-meta">
+            <span>{{ 'apiMigration.poweredBy' | transloco: { provider: providerLabel(r.provider) } }}</span>
+            <span>·</span>
+            <span>{{ 'apiMigration.generatedIn' | transloco: { ms: r.latencyMs } }}</span>
+            @if (r.report.sourcesUsed.apiDiff) {
+              <span>· {{ 'apiMigration.sourceApiDiff' | transloco }}</span>
+            }
+          </footer>
+        </div>
+      }
+
+      <!-- ── Error state ── -->
+      @case ('error') {
+        @let e = asError(state());
+        <div class="vm2-error" role="alert">
+          <p class="vm2-err-stage">
+            @if (e.stage === 'scan') {
+              {{ 'apiMigration.error.scanFailed' | transloco }}
+            } @else {
+              {{ 'apiMigration.error.analyzeFailed' | transloco }}
+            }
+          </p>
+          <p class="vm2-err-msg">{{ e.message }}</p>
+          <button type="button" class="primary" (click)="generate(false)">
+            {{ 'common.retry' | transloco }}
+          </button>
+        </div>
+      }
+    }
+  </section>
+
+  <app-ai-settings-dialog #settingsDialog />
+}

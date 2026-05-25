@@ -1,3 +1,8 @@
+/* Block host so the versions table takes a full page row in the
+   layout. The inner .table-wrap already owns the 1rem top margin —
+   this rule just guarantees the host doesn't collapse to inline. */
+:host { display: block; }
+
 .table-wrap {
   margin-top: 1rem;
   border: 1px solid var(--border);

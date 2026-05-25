@@ -23,6 +23,7 @@
  */
 
 import express from 'express';
+import { apiDiffHandler } from './api-diff-engine.mjs';
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
@@ -156,8 +157,8 @@ function validateBody(body, models) {
   }
   if (body.max_tokens !== undefined) {
     const n = Number(body.max_tokens);
-    if (!Number.isFinite(n) || n < 1 || n > 4096) {
-      return 'max_tokens must be an integer between 1 and 4096';
+    if (!Number.isFinite(n) || n < 1 || n > 8192) {
+      return 'max_tokens must be an integer between 1 and 8192';
     }
     out.max_tokens = Math.floor(n);
   }
@@ -252,6 +253,14 @@ app.post('/api/ai/complete', async (req, res) => {
   }
 });
 
+// V2 — server-side API surface diff. Mirrors the SSR Express route in
+// src/server/api-diff/route.ts so the Compare-page Migration panel works
+// the same in `ng serve` + `npm run dev:proxy` as it does in
+// `npm run serve:ssr`. The engine module ports the fetch/parse/diff
+// logic to plain JS; the typescript npm dep is already present and
+// is the only thing the parser needs from outside.
+app.get('/api/api-diff', apiDiffHandler);
+
 app.get('/api/ai/health', (_req, res) => {
   res.json({
     configured: !!groqKey(),
@@ -268,7 +277,7 @@ app.get('/api/ai/health', (_req, res) => {
 // the wrong path", which is much more useful than a default Express 404.
 app.use((req, res) => {
   res.status(404).json({
-    error: `dev-proxy.mjs only serves /api/ai/*. Got: ${req.method} ${req.path}.`
+    error: `dev-proxy.mjs serves /api/ai/* and /api/api-diff. Got: ${req.method} ${req.path}.`
   });
 });
 
@@ -278,5 +287,6 @@ app.listen(port, () => {
   console.log(`\n  Dev proxy listening on http://localhost:${port}`);
   console.log(`  GROQ_API_KEY: ${configured ? 'configured ✓' : 'MISSING — set it in .env'}`);
   console.log(`  Health probe: http://localhost:${port}/api/ai/health`);
-  console.log(`  Endpoint:     POST http://localhost:${port}/api/ai/complete\n`);
+  console.log(`  Endpoints:    POST http://localhost:${port}/api/ai/complete`);
+  console.log(`                GET  http://localhost:${port}/api/api-diff?pkg=…&from=…&to=…\n`);
 });

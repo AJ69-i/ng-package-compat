@@ -659,3 +659,137 @@ dialog, .modal, .popover, .dropdown, .tooltip {
   from { opacity: 1; transform: translateY(0); }
   to { opacity: 0; transform: translateY(-6px); }
 }
+
+/* ─────────────────────────────────────────────────────────────────────
+   .scroll-table — reusable scrollable container for long-row tables
+   ─────────────────────────────────────────────────────────────────────
+   Drop this class on a div wrapping any <table> (or table-like
+   component) to cap visible height and keep the page compact when
+   the data set is large — version histories, snapshot diffs,
+   upgrade bumps, etc.
+
+   # Why max-height + min(600px, 70vh) instead of fixed height
+     - `max-height` lets short tables collapse to their content
+       height (no wasted whitespace when a package only has 5 versions)
+     - `min(600px, 70vh)` adapts to viewport: full 600px on big screens,
+       70% of the available height on laptops / split-screen / mobile
+
+   # Why sticky thead instead of separate scroll regions per column
+     - One scroll context for the user — predictable Cmd+End / End key
+       behavior, no nested scrolling traps
+     - Sticky `<thead>` keeps column labels visible while scrolling, so
+       users always know what they're looking at without scrolling back
+     - z-index: 2 keeps it above the cells but below tooltips/popovers
+       at z-index: 10+
+
+   # What's intentionally NOT styled
+     - Pagination, "show all" toggle, search-within-table — these are
+       per-feature decisions, not global UX. The bare scroll container
+       is the baseline; individual tables can layer richer affordances
+       on top when warranted.
+     - The CDK virtual-scroll container on the upgrade page is NOT
+       wrapped — it has its own scroll context and stacking another
+       container would create competing scroll surfaces.
+
+   # Usage
+     <div class="scroll-table">
+       <app-versions-table [rows]="rows()" />
+     </div>
+
+   Or with the modifier classes for height variants:
+     <div class="scroll-table scroll-table-tall">   // up to 800px / 80vh
+     <div class="scroll-table scroll-table-short">  // up to 400px / 50vh
+   ───────────────────────────────────────────────────────────────────── */
+
+.scroll-table {
+  max-height: min(600px, 70vh);
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: var(--radius-md, 10px);
+  /* iOS momentum scrolling for touch devices. */
+  -webkit-overflow-scrolling: touch;
+  /* Reserve space for the scrollbar so layout doesn't shift when
+     the table grows past the cap. Browsers that don't support this
+     fall back gracefully (no scrollbar gutter, slight reflow). */
+  scrollbar-gutter: stable;
+  position: relative;
+}
+
+.scroll-table-tall  { max-height: min(800px, 80vh); }
+.scroll-table-short { max-height: min(400px, 50vh); }
+
+/* Sticky header — works on both <thead> and any element with the
+   .scroll-table-head class for components that don't use a real
+   table element. The background is --surface-2 (matches the panel
+   containers tables typically live inside) so the header reads as
+   a continuous part of the container, not a floating banner. */
+.scroll-table thead,
+.scroll-table .scroll-table-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface-2);
+  /* Subtle bottom shadow that only appears once the user has scrolled
+     past the first row — creates a clean depth cue without a hard
+     border that would look wrong on short tables. */
+  box-shadow: 0 1px 0 var(--border);
+}
+
+/* Per-cell background fallback for <th> — some browsers don't
+   inherit the thead background into individual cells when sticky
+   positioning is involved. Belt-and-suspenders. */
+.scroll-table thead th,
+.scroll-table .scroll-table-head > * {
+  background: var(--surface-2);
+}
+
+/* Theme-aware minimal scrollbar styling. Keeps the chrome quiet
+   when not in use and uses --fg-dim on hover so it picks up the
+   right tone in both themes. */
+.scroll-table::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-table::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-table::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.scroll-table::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-dim);
+  background-clip: content-box;
+}
+
+/* Firefox scrollbar (uses different properties — keep both in sync). */
+.scroll-table {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* Print rule — when the user exports to PDF or hits Ctrl+P, the
+   scroll cap defeats the purpose (they need the full table on the
+   page). Lift the cap for print. */
+@media print {
+  .scroll-table,
+  .scroll-table-tall,
+  .scroll-table-short {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .scroll-table thead,
+  .scroll-table .scroll-table-head {
+    position: static;
+    box-shadow: none;
+  }
+}
+
+/* Respect prefers-reduced-motion: the smooth-scroll on the parent
+   is already disabled globally elsewhere, but explicitly anchor
+   scroll behavior here too for users who've opted out. */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-table { scroll-behavior: auto; }
+}

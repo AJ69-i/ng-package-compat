@@ -58,6 +58,53 @@ export interface DeprecatedSignal {
 }
 
 /**
+ * Tree-shakeability signal. Three states because the `sideEffects`
+ * field has three meaningful shapes in the wild:
+ *   - false           → strong: bundler can drop unused exports
+ *   - array of paths  → partial: only listed files have side effects
+ *   - true / missing  → conservative: assume side effects everywhere
+ *
+ * For a chip on the search page we collapse the array case into
+ * `partial` and the rest into `yes` / `unknown`.
+ */
+export interface TreeShakeableSignal {
+  state: 'yes' | 'partial' | 'unknown';
+  /** Raw value for the "Show technical details" path if we ever add one. */
+  raw: boolean | string[] | undefined;
+}
+
+/**
+ * Module-format signal. Decided from `type` + `exports` + legacy
+ * fields. Critical for modern Angular apps that have opted into
+ * zoneless / standalone — they typically expect ESM-clean deps.
+ *
+ * # State semantics
+ *   - 'esm'      ESM-only (no CJS path)
+ *   - 'cjs'      CJS-only (no ESM path)
+ *   - 'dual'     ships both ESM and CJS via conditional exports
+ *   - 'unknown'  package.json doesn't declare clearly — assume CJS legacy
+ */
+export interface ModuleTypeSignal {
+  state: 'esm' | 'cjs' | 'dual' | 'unknown';
+}
+
+/**
+ * Maturity signal — how long the package has been on npm. Pulled
+ * from `pkg.time.created`. A package's first-publish date is a
+ * useful complement to the "last updated" recency signal: a
+ * recently-updated v0.1.0 from yesterday reads very differently
+ * than a recently-updated v15.3.0 in active development since 2017.
+ */
+export interface MaturitySignal {
+  /** ISO date of the first publish; null when missing. */
+  createdAt: string | null;
+  /** Months between createdAt and now; null when missing. */
+  monthsActive: number | null;
+  /** Pre-formatted label like "Published Mar 2019". Null when missing. */
+  publishedLabel: string | null;
+}
+
+/**
  * Stateless extractor for the three supply-chain trust signals that
  * live inside the npm packument we already fetch on every search.
  *
@@ -213,6 +260,115 @@ export class PackageTrustService {
       return { isDeprecated: false, message: null };
     }
     return { isDeprecated: true, message: dep.trim() };
+  }
+
+  /**
+   * Tree-shakeability via the `sideEffects` field. Three-state result
+   * because mid-tier "I only have side effects in these specific files"
+   * declarations are real and shouldn't be conflated with "yes" or
+   * "no" — they imply the consumer has to verify their imports don't
+   * land on a side-effecting file.
+   */
+  treeShakeable(pkg: NpmRegistryResponse | null | undefined): TreeShakeableSignal {
+    const meta = this.latestMeta(pkg);
+    // `sideEffects` is officially a top-level package.json field but
+    // npm sometimes carries it on the version metadata too. The
+    // packument's `versions[v]` block is the most authoritative copy
+    // for that specific release.
+    const raw = (meta as unknown as { sideEffects?: boolean | string[] } | null)?.sideEffects;
+    if (raw === false) return { state: 'yes', raw: false };
+    if (Array.isArray(raw)) {
+      return { state: raw.length === 0 ? 'yes' : 'partial', raw };
+    }
+    return { state: 'unknown', raw };
+  }
+
+  /**
+   * Module-format detection. Three signals are considered, in order
+   * of authority:
+   *
+   *   1. `exports` field with both `.import` AND `.require` conditions
+   *      anywhere in the export map → DUAL
+   *   2. `type: "module"` OR `exports` has `.import` only → ESM
+   *   3. `type: "commonjs"` OR no signals at all → CJS (the npm default
+   *      for the field's absence)
+   *
+   * Both conditional and unconditional `exports` shapes are accepted —
+   * the "anywhere in the export map" pass walks one level deep, which
+   * covers the majority of multi-entry packages without recursing into
+   * pathological nested conditions.
+   */
+  moduleType(pkg: NpmRegistryResponse | null | undefined): ModuleTypeSignal {
+    const meta = this.latestMeta(pkg);
+    if (!meta) return { state: 'unknown' };
+
+    const exportsField = (meta as unknown as { exports?: unknown }).exports;
+    const declaredType = (meta as unknown as { type?: string }).type;
+
+    // Walk the exports map looking for both ESM (`import`) and CJS
+    // (`require`) condition keys. Returns the union of conditions
+    // observed anywhere in the map (top level or one level deep).
+    const conditions = new Set<string>();
+    const collect = (value: unknown): void => {
+      if (!value || typeof value !== 'object') return;
+      for (const [key, v] of Object.entries(value as Record<string, unknown>)) {
+        if (key === 'import' || key === 'require' || key === 'default' || key === 'node' || key === 'browser') {
+          conditions.add(key);
+        } else if (v && typeof v === 'object') {
+          collect(v);
+        }
+      }
+    };
+    if (exportsField && typeof exportsField === 'object') collect(exportsField);
+
+    const hasImport = conditions.has('import');
+    const hasRequire = conditions.has('require');
+
+    if (hasImport && hasRequire) return { state: 'dual' };
+    if (declaredType === 'module' || hasImport) return { state: 'esm' };
+    if (declaredType === 'commonjs' || hasRequire) return { state: 'cjs' };
+
+    // Legacy: no exports map, no type field. Default to CJS — that's
+    // what npm assumes when these aren't declared, and the consumer's
+    // build tools will behave accordingly.
+    return { state: 'cjs' };
+  }
+
+  /**
+   * Maturity from `pkg.time.created`. Returns a pre-formatted label
+   * (en-US default; UI templates can pass through transloco if/when
+   * we localize date formatting). The `monthsActive` integer is for
+   * downstream consumers that want to score / band the value
+   * themselves (e.g. a composite health score).
+   */
+  maturity(pkg: NpmRegistryResponse | null | undefined): MaturitySignal {
+    const createdRaw = pkg?.time?.['created'];
+    if (!createdRaw) return { createdAt: null, monthsActive: null, publishedLabel: null };
+
+    const parsed = new Date(createdRaw);
+    if (isNaN(parsed.getTime())) {
+      return { createdAt: null, monthsActive: null, publishedLabel: null };
+    }
+
+    const now = new Date();
+    const months =
+      (now.getFullYear() - parsed.getFullYear()) * 12 +
+      (now.getMonth() - parsed.getMonth());
+
+    // Month-Year format — short enough for a chip, specific enough
+    // to communicate maturity at a glance. We intentionally do NOT
+    // show the day — chip space is limited and day-precision adds
+    // noise for a "how long has this existed" signal.
+    const label = parsed.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short'
+    });
+
+    return {
+      createdAt: parsed.toISOString(),
+      monthsActive: months,
+      publishedLabel: label
+    };
   }
 
   /** Locate the version metadata block for the `latest` dist-tag, or null. */
